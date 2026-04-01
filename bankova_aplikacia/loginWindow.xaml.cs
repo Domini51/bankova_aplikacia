@@ -14,14 +14,32 @@ using System.Windows.Shapes;
 
 namespace bankova_aplikacia
 {
-    /// <summary>
-    /// Interaction logic for Window1.xaml
-    /// </summary>
     public partial class Window1 : Window
     {
         public Window1()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow main = new MainWindow();
+            main.Show();
+            this.Close();
+        }
+
+        private void BtnLogin_Click(object sender, RoutedEventArgs e)
+        {
+            MainButton.Content = "Login";
+            Login.Background = new SolidColorBrush(Color.FromRgb(30, 200, 255));    // svetlejšia - aktívne
+            Register.Background = new SolidColorBrush(Color.FromRgb(20, 155, 210)); // pôvodná - neaktívne
+        }
+
+        private void BtnRegister_Click(object sender, RoutedEventArgs e)
+        {
+            MainButton.Content = "Register";
+            Register.Background = new SolidColorBrush(Color.FromRgb(30, 200, 255)); // svetlejšia - aktívne
+            Login.Background = new SolidColorBrush(Color.FromRgb(20, 155, 210));    // pôvodná - neaktívne
         }
     }
 }

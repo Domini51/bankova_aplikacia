@@ -5,8 +5,55 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bankova_aplikacia"
         mc:Ignorable="d"
-        Title="Window1" Height="450" Width="800">
+        Title="Investičná Banka" Height="450" Width="800"
+        MinHeight="400" MinWidth="600">
     <Grid>
-        
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="Black"/>
+                <GradientStop Color="#FF15A1E5" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button x:Name="Login"
+                    Content="Login"
+                    Click="BtnLogin_Click"
+                    Width="95" Height="32"
+                    Background="#FF1EC8FF"
+                    FontSize="20"
+                    Foreground="White"
+                    BorderBrush="#FF1EB4DD"
+                    Margin="0,0,5,0"/>
+            <Button x:Name="Register"
+                    Content="Register"
+                    Click="BtnRegister_Click"
+                    Width="95" Height="32"
+                    Background="#FF149BD2"
+                    FontSize="20"
+                    Foreground="White"
+                    BorderBrush="#FF27B3DA"/>
+        </StackPanel>
+        <Image Grid.Row="1"
+               Source="pack://application:,,,/Assets/investicna_banka_logo-1-removebg-preview.png"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Width="350"
+               Height="140"
+               RenderOptions.BitmapScalingMode="HighQuality"/>
+        <Button x:Name="MainButton"
+                Grid.Row="2"
+                Content="Login"
+                Click="Button_Click"
+                Margin="50,10,50,20"
+                Height="73"
+                Background="#FF149BD2"
+                Foreground="White"
+                FontSize="48"
+                BorderBrush="#FF1FD5EB"/>
     </Grid>
 </Window>

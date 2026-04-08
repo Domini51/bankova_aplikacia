@@ -6,7 +6,38 @@
         xmlns:local="clr-namespace:bankova_aplikacia"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+        
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="Black"/>
+                <GradientStop Color="#FF15A1E5" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Image
+            Source="/Assets/investicna_banka_logo-1-removebg-preview.png"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Width="207"
+            Height="61"
+            RenderOptions.BitmapScalingMode="HighQuality" Margin="10,10,0,0"/>
+        <TextBlock Margin="53,115,0,0" TextWrapping="Wrap" Text="Mesačný príjem:" Padding="5" FontSize="20" Foreground="White" Height="82" Width="164" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TextBlock.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF1093CD" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBlock.Background>
+        </TextBlock>
+        <Border BorderThickness="4" Margin="7,111,537,233" Width ="172" Height="90" CornerRadius="10" Padding="10">
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF278585" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+        </Border>
+        <TextBox HorizontalAlignment="Left" Margin="64,156,0,0" TextWrapping="Wrap" Padding="3" Text="0" VerticalAlignment="Top" FontSize="17" Width="142" Height="29" Background="#FF3C65B0" BorderThickness="0"/>
 
     </Grid>
 </Window>

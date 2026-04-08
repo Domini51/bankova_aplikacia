@@ -31,15 +31,24 @@ namespace bankova_aplikacia
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
             MainButton.Content = "Login";
-            Login.Background = new SolidColorBrush(Color.FromRgb(30, 200, 255));    // svetlejšia - aktívne
-            Register.Background = new SolidColorBrush(Color.FromRgb(20, 155, 210)); // pôvodná - neaktívne
+            PanelLogin.Visibility = Visibility.Visible;
+            PanelRegister.Visibility = Visibility.Collapsed;
+            Login.Background = new SolidColorBrush(Color.FromRgb(30, 200, 255));
+            Register.Background = new SolidColorBrush(Color.FromRgb(20, 155, 210));
         }
 
         private void BtnRegister_Click(object sender, RoutedEventArgs e)
         {
             MainButton.Content = "Register";
-            Register.Background = new SolidColorBrush(Color.FromRgb(30, 200, 255)); // svetlejšia - aktívne
-            Login.Background = new SolidColorBrush(Color.FromRgb(20, 155, 210));    // pôvodná - neaktívne
+            PanelLogin.Visibility = Visibility.Collapsed;
+            PanelRegister.Visibility = Visibility.Visible;
+            Register.Background = new SolidColorBrush(Color.FromRgb(30, 200, 255));
+            Login.Background = new SolidColorBrush(Color.FromRgb(20, 155, 210));
+        }
+
+        private void LoginMeno_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            
         }
     }
 }

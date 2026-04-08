@@ -16,9 +16,12 @@
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+
+        <!-- login register-->
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <Button x:Name="Login"
                     Content="Login"
@@ -38,15 +41,176 @@
                     Foreground="White"
                     BorderBrush="#FF27B3DA"/>
         </StackPanel>
+
         <Image Grid.Row="1"
                Source="pack://application:,,,/Assets/investicna_banka_logo-1-removebg-preview.png"
                HorizontalAlignment="Center"
                VerticalAlignment="Center"
-               Width="350"
-               Height="140"
+               Width="250" Height="100"
                RenderOptions.BitmapScalingMode="HighQuality"/>
+
+        <!-- Formulár Login -->
+        <StackPanel x:Name="PanelLogin" Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Width="300"
+                    Visibility="Visible">
+            <TextBox x:Name="LoginMeno"
+                     Height="35" Margin="0,0,0,10"
+                     FontSize="16" Padding="5"
+                     BorderBrush="#FF0040FF">
+                <TextBox.Style>
+                    <Style TargetType="{x:Type TextBox}">
+                        <Style.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="Meno" FontSize="16" Foreground="#FFB1FFF6"/>
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+            <Grid Margin="0,0,0,10">
+                <PasswordBox x:Name="LoginHeslo"
+                             Height="35"
+                             FontSize="16" Padding="5"
+                             BorderBrush="#FF0040FF">
+                    <PasswordBox.Style>
+                        <Style TargetType="PasswordBox">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="PasswordBox">
+                                        <Border Background="Transparent"
+                                                BorderBrush="#FF0040FF"
+                                                BorderThickness="1"
+                                                CornerRadius="3">
+                                            <ScrollViewer x:Name="PART_ContentHost" Margin="5"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </PasswordBox.Style>
+                </PasswordBox>
+                <TextBlock
+                           Foreground="#FF848BC9"
+                           FontSize="16"
+                           Padding="7,4,0,0"
+                           IsHitTestVisible="False">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Password, ElementName=LoginHeslo}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                           
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+        </StackPanel>
+
+        <!-- Formulár Register -->
+        <StackPanel x:Name="PanelRegister" Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Width="300"
+                    Visibility="Collapsed">
+            <TextBox x:Name="RegisterGmail"
+                     Height="35" Margin="0,0,0,10"
+                     FontSize="16" Padding="5" BorderBrush="#FF0040FF">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Style.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="Gmail" FontSize="16" Foreground="#FFBBFFFD"/>
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+            <TextBox x:Name="RegisterMeno"
+                     Height="35" Margin="0,0,0,10"
+                     FontSize="16" Padding="5" BorderBrush="#FF0040FF">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Style.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="Meno" FontSize="16" Foreground="#FFDEFCFD"/>
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+            <Grid Margin="0,0,0,10">
+                <PasswordBox x:Name="RegisterHeslo"
+                             Height="35"
+                             FontSize="16" Padding="5"
+                             BorderBrush="#FF0040FF">
+                    <PasswordBox.Style>
+                        <Style TargetType="PasswordBox">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="PasswordBox">
+                                        <Border Background="{x:Null}"
+                                                BorderBrush="#FF0040FF"
+                                                BorderThickness="1"
+                                                CornerRadius="3">
+                                            <ScrollViewer x:Name="PART_ContentHost" Margin="5"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </PasswordBox.Style>
+                </PasswordBox>
+                <TextBlock 
+                           Foreground="#FFD7FCFF"
+                           FontSize="16"
+                           Padding="7,8,0,0"
+                           IsHitTestVisible="False" >
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=RegisterHeslo, Path=Password}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+        </StackPanel>
+
+        <!-- Hlavné tlačidlo -->
         <Button x:Name="MainButton"
-                Grid.Row="2"
+                Grid.Row="3"
                 Content="Login"
                 Click="Button_Click"
                 Margin="50,10,50,20"

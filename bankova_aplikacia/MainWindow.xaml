@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bankova_aplikacia"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-        
+        Title="MainWindow" Height="900" Width="1600">
+
     <Grid>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -18,10 +18,10 @@
             Source="/Assets/investicna_banka_logo-1-removebg-preview.png"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Width="207"
-            Height="61"
+            Width="343"
+            Height="132"
             RenderOptions.BitmapScalingMode="HighQuality" Margin="10,10,0,0"/>
-        <TextBlock Margin="53,115,0,0" TextWrapping="Wrap" Text="Mesačný príjem:" Padding="5" FontSize="20" Foreground="White" Height="82" Width="164" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <TextBlock Margin="0,0,1144,472" TextWrapping="Wrap" Text="Mesačný príjem:" Padding="5" FontSize="20" Foreground="White" Height="143" Width="248" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <TextBlock.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Black"/>
@@ -29,7 +29,7 @@
                 </LinearGradientBrush>
             </TextBlock.Background>
         </TextBlock>
-        <Border BorderThickness="4" Margin="7,111,537,233" Width ="172" Height="90" CornerRadius="10" Padding="10">
+        <Border BorderThickness="8" Margin="0,0,1138,465" CornerRadius="10" Padding="10" Height="157" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="260">
             <Border.BorderBrush>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Black"/>
@@ -37,7 +37,7 @@
                 </LinearGradientBrush>
             </Border.BorderBrush>
         </Border>
-        <TextBox HorizontalAlignment="Left" Margin="64,156,0,0" TextWrapping="Wrap" Padding="3" Text="0" VerticalAlignment="Top" FontSize="17" Width="142" Height="29" Background="#FF3C65B0" BorderThickness="0"/>
+        <TextBox Margin="0,0,1161,493" TextWrapping="Wrap" Padding="5" Text="0" FontSize="30" Background="#FF3C65B0" BorderThickness="0" HorizontalAlignment="Right" Width="214" Height="50" VerticalAlignment="Bottom"/>
 
     </Grid>
 </Window>

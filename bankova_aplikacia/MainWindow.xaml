@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bankova_aplikacia"
         mc:Ignorable="d"
-        Title="MainWindow" Height="900" Width="1600">
+        Title="MainWindow" Height="900" Width="1600"
+        ResizeMode="NoResize">
 
     <Grid>
         <Grid.Background>
@@ -21,7 +22,7 @@
             Width="343"
             Height="132"
             RenderOptions.BitmapScalingMode="HighQuality" Margin="10,10,0,0"/>
-        <TextBlock Margin="0,0,1144,472" TextWrapping="Wrap" Text="Mesačný príjem:" Padding="5" FontSize="20" Foreground="White" Height="143" Width="248" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+        <TextBlock Margin="0,0,494,616" TextWrapping="Wrap" Text="Mesačný príjem:" Padding="10" FontSize="35" Foreground="White" Height="190" Width="587" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <TextBlock.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Black"/>
@@ -29,7 +30,7 @@
                 </LinearGradientBrush>
             </TextBlock.Background>
         </TextBlock>
-        <Border BorderThickness="8" Margin="0,0,1138,465" CornerRadius="10" Padding="10" Height="157" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="260">
+        <Border BorderThickness="8" Margin="0,0,490,611" CornerRadius="10" Padding="10" Height="200" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="595">
             <Border.BorderBrush>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Black"/>
@@ -37,7 +38,80 @@
                 </LinearGradientBrush>
             </Border.BorderBrush>
         </Border>
-        <TextBox Margin="0,0,1161,493" TextWrapping="Wrap" Padding="5" Text="0" FontSize="30" Background="#FF3C65B0" BorderThickness="0" HorizontalAlignment="Right" Width="214" Height="50" VerticalAlignment="Bottom"/>
+        <TextBox Margin="0,0,535,648" TextWrapping="Wrap" Padding="7" Name="MPrijem" Text="0" FontSize="35" Background="#FF3C65B0" BorderThickness="0" HorizontalAlignment="Right" Width="505" Height="67" VerticalAlignment="Bottom"/>
+        <Label Content="€" HorizontalAlignment="Right" Margin="0,0,535,648" VerticalAlignment="Bottom" FontSize="40" Height="67" Width="40"/>
+        <TextBlock Margin="0,0,950,317" TextWrapping="Wrap" Text="Mesačný príjem:" Padding="10" FontSize="35" Foreground="White" Height="240" Width="468" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <TextBlock.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF1093CD" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBlock.Background>
+        </TextBlock>
+        <Border BorderThickness="8" Margin="0,0,949,311" CornerRadius="10" Padding="10" Height="253" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="470">
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF278585" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+        </Border>
+        <TextBox Margin="0,0,982,357" TextWrapping="Wrap" Padding="10" x:Name="MPrijem_Copy" Text="0" FontSize="45" Background="#FF3C65B0" BorderThickness="0" HorizontalAlignment="Right" Width="403" Height="85" VerticalAlignment="Bottom"/>
+        <Label Content="€" HorizontalAlignment="Right" Margin="0,0,982,357" VerticalAlignment="Bottom" FontSize="45" Height="85" Width="58" Padding="10"/>
+        <TextBlock Margin="0,0,223,317" TextWrapping="Wrap" Text="Mesačný príjem:" Padding="10" FontSize="35" Foreground="White" Height="240" Width="468" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <TextBlock.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF1093CD" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBlock.Background>
+        </TextBlock>
+        <Border BorderThickness="8" Margin="0,0,222,311" CornerRadius="10" Padding="10" Height="253" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="470">
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF278585" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+        </Border>
+        <TextBox Margin="0,0,255,357" TextWrapping="Wrap" Padding="10" x:Name="MPrijem_Copy1" Text="0" FontSize="45" Background="#FF3C65B0" BorderThickness="0" HorizontalAlignment="Right" Width="403" Height="85" VerticalAlignment="Bottom"/>
+        <Label Content="€" HorizontalAlignment="Right" Margin="0,0,255,357" VerticalAlignment="Bottom" FontSize="45" Height="85" Width="58" Padding="10"/>
+        <TextBlock Margin="0,0,223,31" TextWrapping="Wrap" Text="Mesačný príjem:" Padding="10" FontSize="35" Foreground="White" Height="240" Width="468" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <TextBlock.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF1093CD" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBlock.Background>
+        </TextBlock>
+        <Border BorderThickness="8" Margin="0,0,222,25" CornerRadius="10" Padding="10" Height="253" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="470">
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF278585" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+        </Border>
+        <TextBox Margin="0,0,255,71" TextWrapping="Wrap" Padding="10" x:Name="MPrijem_Copy2" Text="0" FontSize="45" Background="#FF3C65B0" BorderThickness="0" HorizontalAlignment="Right" Width="403" Height="85" VerticalAlignment="Bottom"/>
+        <Label Content="€" HorizontalAlignment="Right" Margin="0,0,255,71" VerticalAlignment="Bottom" FontSize="45" Height="85" Width="58" Padding="10"/>
+        <TextBlock Margin="0,0,950,31" TextWrapping="Wrap" Text="Mesačný príjem:" Padding="10" FontSize="35" Foreground="White" Height="240" Width="468" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <TextBlock.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF1093CD" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBlock.Background>
+        </TextBlock>
+        <Border BorderThickness="8" Margin="0,0,949,25" CornerRadius="10" Padding="10" Height="253" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="470">
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF278585" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+        </Border>
+        <TextBox Margin="0,0,982,71" TextWrapping="Wrap" Padding="10" x:Name="MPrijem_Copy3" Text="0" FontSize="45" Background="#FF3C65B0" BorderThickness="0" HorizontalAlignment="Right" Width="403" Height="85" VerticalAlignment="Bottom"/>
+        <Label Content="€" HorizontalAlignment="Right" Margin="0,0,982,71" VerticalAlignment="Bottom" FontSize="45" Height="85" Width="58" Padding="10"/>
 
     </Grid>
 </Window>

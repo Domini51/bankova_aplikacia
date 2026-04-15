@@ -41,7 +41,7 @@
         Width="471" VerticalAlignment="Top" Text="Názov výdavku" TextWrapping="Wrap" Padding="7" Margin="306,428,0,0" Height="58" HorizontalAlignment="Left" FontSize="30"/>
         <Label Name="Content1" Content="- Názov výdavku" HorizontalAlignment="Left" Margin="309,361,0,0" VerticalAlignment="Top" FontSize="25" Height="55" Width="469" Padding="7"/>
         <Label Name="Sum1" Content="0 €" HorizontalAlignment="Left" Margin="606,361,0,0" VerticalAlignment="Top" Height="55" Width="153" FontSize="25" Padding="7"/>
-        <Button Content="+" HorizontalAlignment="Left" Margin="682,501,0,0" VerticalAlignment="Top" Height="55" Width="95" FontSize="35" Padding="0" Click="Button_Click"/>
+     
 
     </Grid>
 </Window>

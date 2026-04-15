@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\investicna_banka_logo-1-removebg-preview.png" />
+    <None Remove="Assets\investicna_banka_logo-1-removebg-preview.png.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,7 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\investicna_banka_logo-1-removebg-preview.png" />
+    <Resource Include="Assets\investicna_banka_logo-1-removebg-preview.png.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

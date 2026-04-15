@@ -25,19 +25,31 @@ namespace bankova_aplikacia
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
             MainButton.Content = "Login";
-            PanelLogin.Visibility = Visibility.Visible;
-            PanelRegister.Visibility = Visibility.Collapsed;
-            Login.Background = new SolidColorBrush(Color.FromRgb(30, 200, 255));
-            Register.Background = new SolidColorBrush(Color.FromRgb(20, 155, 210));
+            PanelLoginBorder.Visibility = Visibility.Visible;
+            PanelRegisterBorder.Visibility = Visibility.Collapsed;
+
+            // Login je aktivny - svetlejsi
+            Login.Background = new SolidColorBrush(Color.FromRgb(85, 85, 85));
+            Login.Foreground = Brushes.White;
+
+            // Register je neaktivny - tmavy
+            Register.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
+            Register.Foreground = Brushes.White;
         }
 
         private void BtnRegister_Click(object sender, RoutedEventArgs e)
         {
-            MainButton.Content = "Register";
-            PanelLogin.Visibility = Visibility.Collapsed;
-            PanelRegister.Visibility = Visibility.Visible;
-            Register.Background = new SolidColorBrush(Color.FromRgb(30, 200, 255));
-            Login.Background = new SolidColorBrush(Color.FromRgb(20, 155, 210));
+            MainButton.Content = "Registrovať";
+            PanelLoginBorder.Visibility = Visibility.Collapsed;
+            PanelRegisterBorder.Visibility = Visibility.Visible;
+
+            // Register je aktivny - svetlejsi
+            Register.Background = new SolidColorBrush(Color.FromRgb(85, 85, 85));
+            Register.Foreground = Brushes.White;
+
+            // Login je neaktivny - tmavy
+            Login.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
+            Login.Foreground = Brushes.White;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

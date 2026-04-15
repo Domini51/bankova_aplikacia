@@ -1,19 +1,9 @@
-﻿using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace bankova_aplikacia
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -23,70 +13,174 @@ namespace bankova_aplikacia
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string nazov = NazovV1.Text;
-            string sumaText = Suma1.Text;
+            // zistim ktore tlacidlo + bolo stlacene
+            Button btn = (Button)sender;
+            TextBox nazovBox;
+            TextBox sumaBox;
+            ListBox zoznam;
 
-            double suma;
+            if (btn.Parent is Grid grid)
+            {
+                // najdem spravny nazov a suma box podla parenta
+                if (grid.Children.Contains(NazovV1))
+                {
+                    nazovBox = NazovV1; sumaBox = Suma1; zoznam = ZoznamVydavkov;
+                }
+                else if (grid.Children.Contains(NazovV1_Copy))
+                {
+                    nazovBox = NazovV1_Copy; sumaBox = Suma1_Copy; zoznam = ZoznamVydavkov_Copy;
+                }
+                else if (grid.Children.Contains(NazovV1_Copy1))
+                {
+                    nazovBox = NazovV1_Copy1; sumaBox = Suma1_Copy1; zoznam = ZoznamVydavkov_Copy1;
+                }
+                else
+                {
+                    nazovBox = NazovV1_Copy2; sumaBox = Suma1_Copy2; zoznam = ZoznamVydavkov_Copy2;
+                }
+            }
+            else return;
 
-            if (string.IsNullOrWhiteSpace(nazov))
+            string nazov = nazovBox.Text;
+            string sumaText = sumaBox.Text;
+
+            if (string.IsNullOrWhiteSpace(nazov) || nazov == "Názov výdavku")
                 return;
 
-            if (!double.TryParse(sumaText, out suma))
+            if (!double.TryParse(sumaText, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.CurrentCulture, out double suma))
             {
                 MessageBox.Show("Zadaj platnú číselnú hodnotu!");
                 return;
             }
 
-            ZoznamVydavkov.Items.Add($"{nazov} - {suma} €");
+            double prijem = 0;
+            double.TryParse(MPrijem.Text, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.CurrentCulture, out prijem);
 
-            NazovV1.Clear();
-            Suma1.Clear();
+            double celkom = 0;
+            foreach (var item in ZoznamVydavkov.Items) celkom += ParseSuma(item.ToString());
+            foreach (var item in ZoznamVydavkov_Copy.Items) celkom += ParseSuma(item.ToString());
+            foreach (var item in ZoznamVydavkov_Copy1.Items) celkom += ParseSuma(item.ToString());
+            foreach (var item in ZoznamVydavkov_Copy2.Items) celkom += ParseSuma(item.ToString());
 
-            if (string.IsNullOrWhiteSpace(NazovV1.Text))
+            if (celkom + suma > prijem)
             {
-                NazovV1.Text = "Názov výdavku";
-                NazovV1.Foreground = Brushes.Gray;
+                MessageBox.Show($"Nemáš dostatok peňazí! Zostatok: {prijem - celkom:F2} €", "Nedostatok financií", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
-            if (string.IsNullOrWhiteSpace(Suma1.Text))
-            {
-                Suma1.Text = "0";
-                Suma1.Foreground = Brushes.Gray;
-            }
+
+            zoznam.Items.Add($"{nazov} - {suma} €");
+
+            nazovBox.Text = "Názov výdavku";
+            nazovBox.Foreground = Brushes.Gray;
+            sumaBox.Text = "0";
+            sumaBox.Foreground = Brushes.Gray;
         }
+
         private void NazovBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (NazovV1.Text == "Názov výdavku")
+            TextBox box = (TextBox)sender;
+            if (box.Text == "Názov výdavku")
             {
-                NazovV1.Text = "";
-                NazovV1.Foreground = Brushes.Black;
+                box.Text = "";
+                box.Foreground = Brushes.Black;
             }
         }
 
         private void NazovBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(NazovV1.Text))
+            TextBox box = (TextBox)sender;
+            if (string.IsNullOrWhiteSpace(box.Text))
             {
-                NazovV1.Text = "Názov výdavku";
-                NazovV1.Foreground = Brushes.Gray;
+                box.Text = "Názov výdavku";
+                box.Foreground = Brushes.Gray;
             }
         }
 
         private void SumaBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (Suma1.Text == "0")
+            TextBox box = (TextBox)sender;
+            if (box.Text == "0")
             {
-                Suma1.Text = "";
-                Suma1.Foreground = Brushes.Black;
+                box.Text = "";
+                box.Foreground = Brushes.Black;
             }
         }
 
         private void SumaBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(Suma1.Text))
+            TextBox box = (TextBox)sender;
+            if (string.IsNullOrWhiteSpace(box.Text))
             {
-                Suma1.Text = "0";
-                Suma1.Foreground = Brushes.Gray;
+                box.Text = "0";
+                box.Foreground = Brushes.Gray;
             }
+        }
+
+        private void BtnVypocitat_Click(object sender, RoutedEventArgs e)
+        {
+            double prijem = 0;
+            double.TryParse(MPrijem.Text, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.CurrentCulture, out prijem);
+
+            double celkom = 0;
+
+            foreach (var item in ZoznamVydavkov.Items)
+                celkom += ParseSuma(item.ToString());
+            foreach (var item in ZoznamVydavkov_Copy.Items)
+                celkom += ParseSuma(item.ToString());
+            foreach (var item in ZoznamVydavkov_Copy1.Items)
+                celkom += ParseSuma(item.ToString());
+            foreach (var item in ZoznamVydavkov_Copy2.Items)
+                celkom += ParseSuma(item.ToString());
+
+            double zostatok = prijem - celkom;
+
+            TxtMinute.Text = $"{celkom:F2} €";
+            TxtZostatok.Text = $"{zostatok:F2} €";
+
+            // farba podla zostatku
+            double percento = prijem > 0 ? (celkom / prijem) : 0;
+            if (percento >= 0.85)
+                ProgressBar.Foreground = new SolidColorBrush(Color.FromRgb(220, 50, 50));
+            else if (percento >= 0.6)
+                ProgressBar.Foreground = new SolidColorBrush(Color.FromRgb(255, 165, 0));
+            else
+                ProgressBar.Foreground = new SolidColorBrush(Color.FromRgb(50, 180, 50));
+
+            ProgressBar.Value = Math.Min(percento * 100, 100);
+        }
+
+        private double ParseSuma(string? item)
+        {
+            if (item == null) return 0;
+            // format je "Nazov - 123 €"
+            var parts = item.Split('-');
+            if (parts.Length < 2) return 0;
+            var sumaStr = parts[^1].Replace("€", "").Trim();
+            double.TryParse(sumaStr, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.CurrentCulture, out double suma);
+            return suma;
+        }
+        private void BtnInvestovat_Click(object sender, RoutedEventArgs e)
+        {
+            double prijem = 0;
+            double.TryParse(MPrijem.Text, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.CurrentCulture, out prijem);
+
+            double celkom = 0;
+            foreach (var item in ZoznamVydavkov.Items) celkom += ParseSuma(item.ToString());
+            foreach (var item in ZoznamVydavkov_Copy.Items) celkom += ParseSuma(item.ToString());
+            foreach (var item in ZoznamVydavkov_Copy1.Items) celkom += ParseSuma(item.ToString());
+            foreach (var item in ZoznamVydavkov_Copy2.Items) celkom += ParseSuma(item.ToString());
+
+            double zostatok = prijem - celkom;
+
+            InvestWindow investWindow = new InvestWindow(zostatok, prijem);
+            investWindow.Show();
+            this.Close();
         }
     }
 }
+

@@ -9,11 +9,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\investicna_banka_logo-1-removebg-preview.png.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.5" />
     <PackageReference Include="System.Data.SQLite" Version="2.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\investicna_banka_logo-1-removebg-preview.png.png" />
+    <Resource Include="Assets\investicna_banka_logo-1-removebg-preview.png.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

@@ -28,11 +28,9 @@ namespace bankova_aplikacia
             PanelLoginBorder.Visibility = Visibility.Visible;
             PanelRegisterBorder.Visibility = Visibility.Collapsed;
 
-            // Login je aktivny - svetlejsi
             Login.Background = new SolidColorBrush(Color.FromRgb(85, 85, 85));
             Login.Foreground = Brushes.White;
 
-            // Register je neaktivny - tmavy
             Register.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
             Register.Foreground = Brushes.White;
         }
@@ -43,11 +41,9 @@ namespace bankova_aplikacia
             PanelLoginBorder.Visibility = Visibility.Collapsed;
             PanelRegisterBorder.Visibility = Visibility.Visible;
 
-            // Register je aktivny - svetlejsi
             Register.Background = new SolidColorBrush(Color.FromRgb(85, 85, 85));
             Register.Foreground = Brushes.White;
 
-            // Login je neaktivny - tmavy
             Login.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
             Login.Foreground = Brushes.White;
         }
@@ -58,6 +54,12 @@ namespace bankova_aplikacia
             {
                 string gmail = LoginMeno.Text;
                 string heslo = LoginHeslo.Password;
+
+                if (string.IsNullOrEmpty(gmail) || string.IsNullOrEmpty(heslo))
+                {
+                    MessageBox.Show("Vyplň všetky polia!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
                 if (Database.Prihlas(gmail, heslo))
                 {

@@ -9,39 +9,63 @@
         ResizeMode="NoResize">
 
     <Grid Height="884" VerticalAlignment="Center" HorizontalAlignment="Left" Width="1600" Background="White">
-        <Image
-            Source="/Assets/investicna_banka_logo-1-removebg-preview.png"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Width="343"
-            Height="132"
-            RenderOptions.BitmapScalingMode="HighQuality" Margin="10,10,0,0"/>
-        <TextBlock Margin="0,0,494,616" TextWrapping="Wrap" Text="Mesačný príjem:" Padding="10" FontSize="35" Foreground="White" Height="190" Width="587" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="Silver"/>
-        <Border BorderThickness="8" Margin="0,0,490,611" CornerRadius="10" Padding="10" Height="200" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="595" BorderBrush="#FF686868"/>
-        <TextBox Margin="0,0,535,648" TextWrapping="Wrap" Padding="7" Name="MPrijem" Text="0" FontSize="35" Background="White" BorderThickness="0" HorizontalAlignment="Right" Width="505" Height="67" VerticalAlignment="Bottom"/>
-        <Label Content="€" HorizontalAlignment="Right" Margin="0,0,535,648" VerticalAlignment="Bottom" FontSize="40" Height="67" Width="40"/>
+        <TextBlock Margin="0,0,500,651" TextWrapping="Wrap" Text="Mesačný príjem:" Padding="10" FontSize="35" Foreground="White" Height="190" Width="587" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="Silver"/>
+        <Border BorderThickness="8" Margin="0,0,496,646" CornerRadius="10" Padding="10" Height="200" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="595" BorderBrush="#FF686868"/>
+        <TextBox Margin="0,0,541,683" TextWrapping="Wrap" Padding="7" Name="MPrijem" Text="0" FontSize="35" Background="White" BorderThickness="0" HorizontalAlignment="Right" Width="505" Height="67" VerticalAlignment="Bottom"/>
+        <Label Content="€" HorizontalAlignment="Right" Margin="0,0,541,683" VerticalAlignment="Bottom" FontSize="40" Height="67" Width="40"/>
         <TextBlock
-        Width="547" VerticalAlignment="Bottom" Text="Nutné výdavky:" TextWrapping="Wrap" Padding="15" Margin="0,0,785,318" Height="276" HorizontalAlignment="Right" FontSize="40" Foreground="White" Background="#FFB4B4B4"/>
+        Width="535" VerticalAlignment="Bottom" Text="Nutné výdavky:" TextWrapping="Wrap" Padding="15" Margin="0,0,791,353" Height="276" HorizontalAlignment="Right" FontSize="40" Foreground="White" Background="#FFB4B4B4"/>
         <Border
-        Width="549" VerticalAlignment="Top" Padding="10" Margin="263,281,0,0" Height="292" HorizontalAlignment="Left" CornerRadius="10" BorderThickness="8" BorderBrush="#FF646464" RenderTransformOrigin="0.5,0.5">
-            <Border.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="0.348"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Border.RenderTransform>
+        Width="548" VerticalAlignment="Top" Padding="10" Margin="268,247,0,0" Height="292" HorizontalAlignment="Left" CornerRadius="10" BorderThickness="8" BorderBrush="#FF646464" RenderTransformOrigin="0.5,0.5">
         </Border>
         <TextBox    Name="Suma1"
-        Width="365" VerticalAlignment="Bottom" Text="0" TextWrapping="Wrap" Padding="5" Margin="0,0,928,328" Height="55" Foreground="Gray" HorizontalAlignment="Right" FontSize="35" Background="White" BorderThickness="0" GotFocus="SumaBox_GotFocus" LostFocus="SumaBox_LostFocus"/>
+        Width="365" VerticalAlignment="Bottom" Text="0" TextWrapping="Wrap" Padding="5" Margin="0,0,934,363" Height="55" Foreground="Gray" HorizontalAlignment="Right" FontSize="35" Background="White" BorderThickness="0" GotFocus="SumaBox_GotFocus" LostFocus="SumaBox_LostFocus"/>
         <Label
-        Width="67" VerticalAlignment="Bottom" Padding="10" Margin="0,0,928,328" Height="71" HorizontalAlignment="Right" FontSize="45" Content="€"/>
+        Width="67" VerticalAlignment="Bottom" Padding="10" Margin="0,0,934,363" Height="71" HorizontalAlignment="Right" FontSize="45" Content="€"/>
         <TextBox Name="NazovV1"
-        Width="471" VerticalAlignment="Top" Text="Názov výdavku" TextWrapping="Wrap" Padding="7" Margin="306,428,0,0" Height="58" HorizontalAlignment="Left" FontSize="30" BorderThickness="0" GotFocus="NazovBox_GotFocus"
+        Width="471" VerticalAlignment="Top" Text="Názov výdavku" TextWrapping="Wrap" Padding="7" Margin="300,393,0,0" Height="58" HorizontalAlignment="Left" FontSize="30" BorderThickness="0" GotFocus="NazovBox_GotFocus"
          LostFocus="NazovBox_LostFocus" Foreground="Gray"/>
-        <Button Content="+" HorizontalAlignment="Left" Margin="682,501,0,0" VerticalAlignment="Top" Height="55" Width="95" FontSize="35" Padding="0" Click="Button_Click"/>
-        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Padding="7" FontSize="30" Margin="307,364,823,467" Name="ZoznamVydavkov"/>
-        
+        <Button Content="+" HorizontalAlignment="Left" Margin="676,466,0,0" VerticalAlignment="Top" Height="55" Width="95" FontSize="35" Padding="0" Click="Button_Click"/>
+        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Padding="7" FontSize="30" Margin="301,329,829,502" Name="ZoznamVydavkov"/>
+        <TextBlock
+            Width="535" VerticalAlignment="Bottom" Text="Hlavné výdavky:" TextWrapping="Wrap" Padding="15" Margin="0,0,197,353" Height="276" HorizontalAlignment="Right" FontSize="40" Foreground="White" Background="#FFB4B4B4"/>
+        <Border
+            Width="548" VerticalAlignment="Top" Padding="10" Margin="862,247,0,0" Height="292" HorizontalAlignment="Left" CornerRadius="10" BorderThickness="8" BorderBrush="#FF646464" RenderTransformOrigin="0.5,0.5"/>
+        <TextBox    x:Name="Suma1_Copy"
+            Width="365" VerticalAlignment="Bottom" Text="0" TextWrapping="Wrap" Padding="5" Margin="0,0,340,363" Height="55" Foreground="Gray" HorizontalAlignment="Right" FontSize="35" Background="White" BorderThickness="0" GotFocus="SumaBox_GotFocus" LostFocus="SumaBox_LostFocus"/>
+        <Label
+            Width="67" VerticalAlignment="Bottom" Padding="10" Margin="0,0,340,363" Height="71" HorizontalAlignment="Right" FontSize="45" Content="€"/>
+        <TextBox x:Name="NazovV1_Copy"
+            Width="471" VerticalAlignment="Top" Text="Názov výdavku" TextWrapping="Wrap" Padding="7" Margin="894,393,0,0" Height="58" HorizontalAlignment="Left" FontSize="30" BorderThickness="0" GotFocus="NazovBox_GotFocus"
+            LostFocus="NazovBox_LostFocus" Foreground="Gray"/>
+        <Button Content="+" HorizontalAlignment="Left" Margin="1270,466,0,0" VerticalAlignment="Top" Height="55" Width="95" FontSize="35" Padding="0" Click="Button_Click"/>
+        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Padding="7" FontSize="30" Margin="895,329,235,502" x:Name="ZoznamVydavkov_Copy"/>
+        <TextBlock
+            Width="535" VerticalAlignment="Bottom" Text="Osobné výdavky:" TextWrapping="Wrap" Padding="15" Margin="0,0,791,50" Height="276" HorizontalAlignment="Right" FontSize="40" Foreground="White" Background="#FFB4B4B4"/>
+        <Border
+            Width="548" VerticalAlignment="Top" Padding="10" Margin="268,550,0,0" Height="292" HorizontalAlignment="Left" CornerRadius="10" BorderThickness="8" BorderBrush="#FF646464" RenderTransformOrigin="0.5,0.5"/>
+        <TextBox    x:Name="Suma1_Copy1"
+            Width="365" VerticalAlignment="Bottom" Text="0" TextWrapping="Wrap" Padding="5" Margin="0,0,934,60" Height="55" Foreground="Gray" HorizontalAlignment="Right" FontSize="35" Background="White" BorderThickness="0" GotFocus="SumaBox_GotFocus" LostFocus="SumaBox_LostFocus"/>
+        <Label
+            Width="67" VerticalAlignment="Bottom" Padding="10" Margin="0,0,934,60" Height="71" HorizontalAlignment="Right" FontSize="45" Content="€"/>
+        <TextBox x:Name="NazovV1_Copy1"
+            Width="471" VerticalAlignment="Top" Text="Názov výdavku" TextWrapping="Wrap" Padding="7" Margin="300,696,0,0" Height="58" HorizontalAlignment="Left" FontSize="30" BorderThickness="0" GotFocus="NazovBox_GotFocus"
+            LostFocus="NazovBox_LostFocus" Foreground="Gray"/>
+        <Button Content="+" HorizontalAlignment="Left" Margin="676,769,0,0" VerticalAlignment="Top" Height="55" Width="95" FontSize="35" Padding="0" Click="Button_Click"/>
+        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Padding="7" FontSize="30" Margin="301,632,829,199" x:Name="ZoznamVydavkov_Copy1"/>
+        <TextBlock
+            Width="535" VerticalAlignment="Bottom" Text="Voľné výdavky:" TextWrapping="Wrap" Padding="15" Margin="0,0,197,50" Height="276" HorizontalAlignment="Right" FontSize="40" Foreground="White" Background="#FFB4B4B4"/>
+        <Border
+            Width="548" VerticalAlignment="Top" Padding="10" Margin="862,550,0,0" Height="292" HorizontalAlignment="Left" CornerRadius="10" BorderThickness="8" BorderBrush="#FF646464" RenderTransformOrigin="0.5,0.5"/>
+        <TextBox    x:Name="Suma1_Copy2"
+            Width="365" VerticalAlignment="Bottom" Text="0" TextWrapping="Wrap" Padding="5" Margin="0,0,340,60" Height="55" Foreground="Gray" HorizontalAlignment="Right" FontSize="35" Background="White" BorderThickness="0" GotFocus="SumaBox_GotFocus" LostFocus="SumaBox_LostFocus"/>
+        <Label
+            Width="67" VerticalAlignment="Bottom" Padding="10" Margin="0,0,340,60" Height="71" HorizontalAlignment="Right" FontSize="45" Content="€"/>
+        <TextBox x:Name="NazovV1_Copy2"
+            Width="471" VerticalAlignment="Top" Text="Názov výdavku" TextWrapping="Wrap" Padding="7" Margin="894,696,0,0" Height="58" HorizontalAlignment="Left" FontSize="30" BorderThickness="0" GotFocus="NazovBox_GotFocus"
+            LostFocus="NazovBox_LostFocus" Foreground="Gray"/>
+        <Button Content="+" HorizontalAlignment="Left" Margin="1270,769,0,0" VerticalAlignment="Top" Height="55" Width="95" FontSize="35" Padding="0" Click="Button_Click"/>
+        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Padding="7" FontSize="30" Margin="895,632,235,199" x:Name="ZoznamVydavkov_Copy2"/>
+
     </Grid>
 </Window>

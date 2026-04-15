@@ -19,13 +19,7 @@ namespace bankova_aplikacia
         public Window1()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow main = new MainWindow();
-            main.Show();
-            this.Close();
+            Database.Init();
         }
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
@@ -46,9 +40,46 @@ namespace bankova_aplikacia
             Login.Background = new SolidColorBrush(Color.FromRgb(20, 155, 210));
         }
 
-        private void LoginMeno_TextChanged(object sender, TextChangedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            
+            if (MainButton.Content.ToString() == "Login")
+            {
+                string gmail = LoginMeno.Text;
+                string heslo = LoginHeslo.Password;
+
+                if (Database.Prihlas(gmail, heslo))
+                {
+                    MainWindow main = new MainWindow();
+                    main.Show();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Nesprávny email alebo heslo!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                string meno = RegisterMeno.Text;
+                string gmail = RegisterGmail.Text;
+                string heslo = RegisterHeslo.Password;
+
+                if (string.IsNullOrEmpty(meno) || string.IsNullOrEmpty(gmail) || string.IsNullOrEmpty(heslo))
+                {
+                    MessageBox.Show("Vyplň všetky polia!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (Database.Registruj(meno, gmail, heslo))
+                {
+                    MessageBox.Show("Registrácia úspešná! Teraz sa prihláste.", "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
+                    BtnLogin_Click(null!, null!);
+                }
+                else
+                {
+                    MessageBox.Show("Tento email už existuje!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
     }
 }

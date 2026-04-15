@@ -10,8 +10,8 @@
     <Grid>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="Black"/>
-                <GradientStop Color="#FF15A1E5" Offset="1"/>
+                <GradientStop Color="#FFF5F5F5"/>
+                <GradientStop Color="#FF2F4356" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
         <Grid.RowDefinitions>
@@ -27,19 +27,19 @@
                     Content="Login"
                     Click="BtnLogin_Click"
                     Width="95" Height="32"
-                    Background="#FF1EC8FF"
+                    Background="#FFB0B0B0"
                     FontSize="20"
                     Foreground="White"
-                    BorderBrush="#FF1EB4DD"
+                    BorderBrush="#FF9E9E9E"
                     Margin="0,0,5,0"/>
             <Button x:Name="Register"
                     Content="Register"
                     Click="BtnRegister_Click"
                     Width="95" Height="32"
-                    Background="#FF149BD2"
+                    Background="#FFD0D0D0"
                     FontSize="20"
                     Foreground="White"
-                    BorderBrush="#FF27B3DA"/>
+                    BorderBrush="#FFBDBDBD"/>
         </StackPanel>
 
         <Image Grid.Row="1"
@@ -58,7 +58,7 @@
             <TextBox x:Name="LoginMeno"
                      Height="35" Margin="0,0,0,10"
                      FontSize="16" Padding="5"
-                     BorderBrush="#FF0040FF">
+                     BorderBrush="#FFBDBDBD">
                 <TextBox.Style>
                     <Style TargetType="{x:Type TextBox}">
                         <Style.Triggers>
@@ -67,7 +67,7 @@
                                     <Setter.Value>
                                         <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                             <VisualBrush.Visual>
-                                                <Label Content="Meno" FontSize="16" Foreground="#FFB1FFF6"/>
+                                                <Label Content="Meno" FontSize="16" Foreground="#FF9E9E9E"/>
                                             </VisualBrush.Visual>
                                         </VisualBrush>
                                     </Setter.Value>
@@ -81,14 +81,14 @@
                 <PasswordBox x:Name="LoginHeslo"
                              Height="35"
                              FontSize="16" Padding="5"
-                             BorderBrush="#FF0040FF">
+                             BorderBrush="#FFBDBDBD">
                     <PasswordBox.Style>
                         <Style TargetType="PasswordBox">
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="PasswordBox">
-                                        <Border Background="Transparent"
-                                                BorderBrush="#FF0040FF"
+                                        <Border Background="White"
+                                                BorderBrush="#FFBDBDBD"
                                                 BorderThickness="1"
                                                 CornerRadius="3">
                                             <ScrollViewer x:Name="PART_ContentHost" Margin="5"/>
@@ -100,7 +100,7 @@
                     </PasswordBox.Style>
                 </PasswordBox>
                 <TextBlock
-                           Foreground="#FF848BC9"
+                           Foreground="#FF9E9E9E"
                            FontSize="16"
                            Padding="7,4,0,0"
                            IsHitTestVisible="False">
@@ -110,7 +110,6 @@
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Password, ElementName=LoginHeslo}" Value="">
                                     <Setter Property="Visibility" Value="Visible"/>
-                           
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -127,7 +126,7 @@
                     Visibility="Collapsed">
             <TextBox x:Name="RegisterGmail"
                      Height="35" Margin="0,0,0,10"
-                     FontSize="16" Padding="5" BorderBrush="#FF0040FF">
+                     FontSize="16" Padding="5" BorderBrush="#FFBDBDBD">
                 <TextBox.Style>
                     <Style TargetType="TextBox">
                         <Style.Triggers>
@@ -136,7 +135,7 @@
                                     <Setter.Value>
                                         <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                             <VisualBrush.Visual>
-                                                <Label Content="Gmail" FontSize="16" Foreground="#FFBBFFFD"/>
+                                                <Label Content="Gmail" FontSize="16" Foreground="#FF9E9E9E"/>
                                             </VisualBrush.Visual>
                                         </VisualBrush>
                                     </Setter.Value>
@@ -148,7 +147,7 @@
             </TextBox>
             <TextBox x:Name="RegisterMeno"
                      Height="35" Margin="0,0,0,10"
-                     FontSize="16" Padding="5" BorderBrush="#FF0040FF">
+                     FontSize="16" Padding="5" BorderBrush="#FFBDBDBD">
                 <TextBox.Style>
                     <Style TargetType="TextBox">
                         <Style.Triggers>
@@ -157,7 +156,7 @@
                                     <Setter.Value>
                                         <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                             <VisualBrush.Visual>
-                                                <Label Content="Meno" FontSize="16" Foreground="#FFDEFCFD"/>
+                                                <Label Content="Meno" FontSize="16" Foreground="#FF9E9E9E"/>
                                             </VisualBrush.Visual>
                                         </VisualBrush>
                                     </Setter.Value>
@@ -171,14 +170,14 @@
                 <PasswordBox x:Name="RegisterHeslo"
                              Height="35"
                              FontSize="16" Padding="5"
-                             BorderBrush="#FF0040FF">
+                             BorderBrush="#FFBDBDBD">
                     <PasswordBox.Style>
                         <Style TargetType="PasswordBox">
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="PasswordBox">
-                                        <Border Background="{x:Null}"
-                                                BorderBrush="#FF0040FF"
+                                        <Border Background="White"
+                                                BorderBrush="#FFBDBDBD"
                                                 BorderThickness="1"
                                                 CornerRadius="3">
                                             <ScrollViewer x:Name="PART_ContentHost" Margin="5"/>
@@ -189,11 +188,11 @@
                         </Style>
                     </PasswordBox.Style>
                 </PasswordBox>
-                <TextBlock 
-                           Foreground="#FFD7FCFF"
+                <TextBlock
+                           Foreground="#FF9E9E9E"
                            FontSize="16"
                            Padding="7,8,0,0"
-                           IsHitTestVisible="False" >
+                           IsHitTestVisible="False">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -215,9 +214,9 @@
                 Click="Button_Click"
                 Margin="50,10,50,20"
                 Height="73"
-                Background="#FF149BD2"
+                Background="#FFB5BABD"
                 Foreground="White"
                 FontSize="48"
-                BorderBrush="#FF1FD5EB"/>
+                BorderBrush="#FFBDBDBD"/>
     </Grid>
 </Window>

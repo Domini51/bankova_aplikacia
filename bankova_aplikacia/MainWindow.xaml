@@ -23,7 +23,16 @@
         <TextBlock
         Width="547" VerticalAlignment="Bottom" Text="Nutné výdavky:" TextWrapping="Wrap" Padding="15" Margin="0,0,785,318" Height="276" HorizontalAlignment="Right" FontSize="40" Foreground="White" Background="#FFB4B4B4"/>
         <Border
-        Width="549" VerticalAlignment="Bottom" Padding="10" Margin="0,0,784,311" Height="291" HorizontalAlignment="Right" CornerRadius="10" BorderThickness="8" BorderBrush="#FF646464"/>
+        Width="549" VerticalAlignment="Top" Padding="10" Margin="263,281,0,0" Height="292" HorizontalAlignment="Left" CornerRadius="10" BorderThickness="8" BorderBrush="#FF646464" RenderTransformOrigin="0.5,0.5">
+            <Border.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="0.348"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Border.RenderTransform>
+        </Border>
         <TextBox    Name="Suma1"
         Width="365" VerticalAlignment="Bottom" Text="0" TextWrapping="Wrap" Padding="5" Margin="0,0,928,328" Height="55" HorizontalAlignment="Right" FontSize="35" BorderThickness="0" Background="White"/>
         <Label

@@ -21,7 +21,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" Name="MPrijem" Text="0" FontSize="28" LostFocus="SumaBox_LostFocus" GotFocus="SumaBox_GotFocus"
+                        <TextBox Grid.Column="0" Name="MPrijem" KeyDown="MPrijem_KeyDown" Text="0" FontSize="28" LostFocus="SumaBox_LostFocus" GotFocus="SumaBox_GotFocus"
                                  BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="50" TextChanged="MPrijem_TextChanged" Foreground="Gray"/>
                         <Label Grid.Column="1" Content="€" FontSize="28" Padding="10,8"/>
                     </Grid>
@@ -40,10 +40,10 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="50"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" x:Name="NazovV1" Text="Názov výdavku" FontSize="18"
+                        <TextBox Grid.Column="0" x:Name="NazovV1" KeyDown="NazovVydavok_KeyDown" Text="Názov výdavku" FontSize="18"
                                  BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="45"
                                  Foreground="Gray" GotFocus="NazovBox_GotFocus" LostFocus="NazovBox_LostFocus"/>
-                        <TextBox Grid.Column="1" x:Name="Suma1" Text="0" FontSize="18" Margin="10,0,0,0"
+                        <TextBox Grid.Column="1" x:Name="Suma1" KeyDown="SumaVydavok_KeyDown" Text="0" FontSize="18" Margin="10,0,0,0"
                                  BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="45"
                                  Foreground="Gray" GotFocus="SumaBox_GotFocus" LostFocus="SumaBox_LostFocus"/>
                         <Label Grid.Column="2" Content="€" FontSize="22" Padding="6,8"/>
@@ -68,10 +68,10 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="50"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" x:Name="NazovV1_Copy" Text="Názov výdavku" FontSize="18"
+                        <TextBox Grid.Column="0" x:Name="NazovV1_Copy" KeyDown="NazovVydavok_KeyDown" Text="Názov výdavku" FontSize="18"
                                  BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="45"
                                  Foreground="Gray" GotFocus="NazovBox_GotFocus" LostFocus="NazovBox_LostFocus"/>
-                        <TextBox Grid.Column="1" x:Name="Suma1_Copy" Text="0" FontSize="18" Margin="10,0,0,0"
+                        <TextBox Grid.Column="1" x:Name="Suma1_Copy" KeyDown="SumaVydavok_KeyDown" Text="0" FontSize="18" Margin="10,0,0,0"
                                  BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="45"
                                  Foreground="Gray" GotFocus="SumaBox_GotFocus" LostFocus="SumaBox_LostFocus"/>
                         <Label Grid.Column="2" Content="€" FontSize="22" Padding="6,8"/>
@@ -96,10 +96,10 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="50"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" x:Name="NazovV1_Copy1" Text="Názov výdavku" FontSize="18"
+                        <TextBox Grid.Column="0" x:Name="NazovV1_Copy1" KeyDown="NazovVydavok_KeyDown" Text="Názov výdavku" FontSize="18"
                                  BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="45"
                                  Foreground="Gray" GotFocus="NazovBox_GotFocus" LostFocus="NazovBox_LostFocus"/>
-                        <TextBox Grid.Column="1" x:Name="Suma1_Copy1" Text="0" FontSize="18" Margin="10,0,0,0"
+                        <TextBox Grid.Column="1" x:Name="Suma1_Copy1" KeyDown="SumaVydavok_KeyDown" Text="0" FontSize="18" Margin="10,0,0,0"
                                  BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="45"
                                  Foreground="Gray" GotFocus="SumaBox_GotFocus" LostFocus="SumaBox_LostFocus"/>
                         <Label Grid.Column="2" Content="€" FontSize="22" Padding="6,8"/>
@@ -124,10 +124,10 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="50"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" x:Name="NazovV1_Copy2" Text="Názov výdavku" FontSize="18"
+                        <TextBox Grid.Column="0" x:Name="NazovV1_Copy2" KeyDown="NazovVydavok_KeyDown" Text="Názov výdavku" FontSize="18"
                                  BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="45"
                                  Foreground="Gray" GotFocus="NazovBox_GotFocus" LostFocus="NazovBox_LostFocus"/>
-                        <TextBox Grid.Column="1" x:Name="Suma1_Copy2" Text="0" FontSize="18" Margin="10,0,0,0"
+                        <TextBox Grid.Column="1" x:Name="Suma1_Copy2" KeyDown="SumaVydavok_KeyDown" Text="0" FontSize="18" Margin="10,0,0,0"
                                  BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="45"
                                  Foreground="Gray" GotFocus="SumaBox_GotFocus" LostFocus="SumaBox_LostFocus"/>
                         <Label Grid.Column="2" Content="€" FontSize="22" Padding="6,8"/>

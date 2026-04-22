@@ -9,7 +9,7 @@
         MinHeight="400" MinWidth="600"
         Background="#F5F5F5">
 
-    <!-- hl. okno -->
+   
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -130,7 +130,7 @@
                     <!-- placeholder pre heslo  -->
                     <TextBlock Foreground="#AAAAAA"
                                FontSize="14"
-                               Padding="10,11,0,0"
+                               Padding="9,11,0,0"
                                IsHitTestVisible="False">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">

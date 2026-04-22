@@ -13,7 +13,7 @@ namespace bankova_aplikacia
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            // zistim ktore tlacidlo + bolo stlacene
+            // tlacidlo + ktore
             Button btn = (Button)sender;
             TextBox nazovBox;
             TextBox sumaBox;
@@ -21,7 +21,7 @@ namespace bankova_aplikacia
 
             if (btn.Parent is Grid grid)
             {
-                // najdem spravny nazov a suma box podla parenta
+                //  spravny nazov a suma box 
                 if (grid.Children.Contains(NazovV1))
                 {
                     nazovBox = NazovV1; sumaBox = Suma1; zoznam = ZoznamVydavkov;
@@ -180,6 +180,11 @@ namespace bankova_aplikacia
             InvestWindow investWindow = new InvestWindow(zostatok, prijem);
             investWindow.Show();
             this.Close();
+        }
+
+        private void MPrijem_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }

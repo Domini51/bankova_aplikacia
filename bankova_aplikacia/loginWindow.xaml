@@ -177,5 +177,16 @@
                 Click="Button_Click" Margin="40,10,40,20" Height="46"
                 Background="#1A1A1A" Foreground="White" FontSize="18"
                 FontWeight="SemiBold" BorderThickness="0" IsDefault="True"/>
+        <!-- zabudnute heslo -->
+        <Button Content="Forgot password?" Grid.Row="2" 
+        Background="#F5F5F5" 
+        Foreground="#555555"
+        FontWeight="SemiBold" 
+        BorderBrush="White"
+        BorderThickness="0" 
+        HorizontalAlignment="Center" 
+        Width="218" Height="28"
+        VerticalAlignment="Bottom"
+        Click="Button_Click_1"/>
     </Grid>
 </Window>

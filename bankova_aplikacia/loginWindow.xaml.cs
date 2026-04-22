@@ -19,7 +19,6 @@ namespace bankova_aplikacia
         public loginWindow()
         {
             InitializeComponent();
-            Database.Init();
         }
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
@@ -44,18 +43,21 @@ namespace bankova_aplikacia
             Login.Foreground = Brushes.White;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             if (MainButton.Content.ToString() == "Login")
             {
                 string gmail = LoginMeno.Text;
                 string heslo = LoginHeslo.Password;
+
                 if (string.IsNullOrEmpty(gmail) || string.IsNullOrEmpty(heslo))
                 {
                     MessageBox.Show("Vyplň všetky polia!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                if (Database.Prihlas(gmail, heslo))
+
+                bool uspech = await Database.Prihlas(gmail, heslo);
+                if (uspech)
                 {
                     MainWindow main = new MainWindow();
                     main.Show();
@@ -71,12 +73,15 @@ namespace bankova_aplikacia
                 string meno = RegisterMeno.Text;
                 string gmail = RegisterGmail.Text;
                 string heslo = RegisterHeslo.Password;
+
                 if (string.IsNullOrEmpty(meno) || string.IsNullOrEmpty(gmail) || string.IsNullOrEmpty(heslo))
                 {
                     MessageBox.Show("Vyplň všetky polia!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                if (Database.Registruj(meno, gmail, heslo))
+
+                bool uspech = await Database.Registruj(meno, gmail, heslo);
+                if (uspech)
                 {
                     MessageBox.Show("Registrácia úspešná! Teraz sa prihláste.", "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
                     BtnLogin_Click(null!, null!);
@@ -102,6 +107,36 @@ namespace bankova_aplikacia
                 RegisterHesloHint.Visibility = RegisterHeslo.Password.Length == 0
                     ? Visibility.Visible
                     : Visibility.Collapsed;
+        }
+
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            // Krok 1 - zadaj email
+            string gmail = Microsoft.VisualBasic.Interaction.InputBox(
+                "Zadaj svoj email:", "Reset hesla", "");
+
+            if (string.IsNullOrEmpty(gmail))
+                return;
+
+            bool existuje = await Database.EmailExistuje(gmail);
+            if (!existuje)
+            {
+                MessageBox.Show("Email neexistuje!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Krok 2 - zadaj nove heslo
+            string noveHeslo = Microsoft.VisualBasic.Interaction.InputBox(
+                "Zadaj nové heslo:", "Reset hesla", "");
+
+            if (string.IsNullOrEmpty(noveHeslo))
+                return;
+
+            bool uspech = await Database.ZmenHeslo(gmail, noveHeslo);
+            if (uspech)
+                MessageBox.Show("Heslo bolo úspešne zmenené!", "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
+            else
+                MessageBox.Show("Chyba pri zmene hesla!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

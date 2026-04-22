@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace bankova_aplikacia
@@ -13,7 +14,6 @@ namespace bankova_aplikacia
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            // tlacidlo + ktore
             Button btn = (Button)sender;
             TextBox nazovBox;
             TextBox sumaBox;
@@ -21,7 +21,6 @@ namespace bankova_aplikacia
 
             if (btn.Parent is Grid grid)
             {
-                //  spravny nazov a suma box 
                 if (grid.Children.Contains(NazovV1))
                 {
                     nazovBox = NazovV1; sumaBox = Suma1; zoznam = ZoznamVydavkov;
@@ -125,7 +124,6 @@ namespace bankova_aplikacia
                 System.Globalization.CultureInfo.CurrentCulture, out prijem);
 
             double celkom = 0;
-
             foreach (var item in ZoznamVydavkov.Items)
                 celkom += ParseSuma(item.ToString());
             foreach (var item in ZoznamVydavkov_Copy.Items)
@@ -140,7 +138,6 @@ namespace bankova_aplikacia
             TxtMinute.Text = $"{celkom:F2} €";
             TxtZostatok.Text = $"{zostatok:F2} €";
 
-            // farba podla zostatku
             double percento = prijem > 0 ? (celkom / prijem) : 0;
             if (percento >= 0.85)
                 ProgressBar.Foreground = new SolidColorBrush(Color.FromRgb(220, 50, 50));
@@ -155,7 +152,6 @@ namespace bankova_aplikacia
         private double ParseSuma(string? item)
         {
             if (item == null) return 0;
-            // format je "Nazov - 123 €"
             var parts = item.Split('-');
             if (parts.Length < 2) return 0;
             var sumaStr = parts[^1].Replace("€", "").Trim();
@@ -163,6 +159,7 @@ namespace bankova_aplikacia
                 System.Globalization.CultureInfo.CurrentCulture, out double suma);
             return suma;
         }
+
         private void BtnInvestovat_Click(object sender, RoutedEventArgs e)
         {
             double prijem = 0;
@@ -184,8 +181,38 @@ namespace bankova_aplikacia
 
         private void MPrijem_TextChanged(object sender, TextChangedEventArgs e)
         {
+        }
 
+        private void MPrijem_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (sender is not TextBox tb) return;
+                tb.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            }
+        }
+
+        private void NazovVydavok_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (sender is not TextBox tb) return;
+                if (tb.Parent is not Grid grid) return;
+                var sumaBox = grid.Children.OfType<TextBox>().FirstOrDefault(x => x != tb);
+                sumaBox?.Focus();
+                sumaBox?.SelectAll();
+            }
+        }
+
+        private void SumaVydavok_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (sender is not TextBox tb) return;
+                if (tb.Parent is not Grid grid) return;
+                var btn = grid.Children.OfType<Button>().FirstOrDefault();
+                btn?.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            }
         }
     }
 }
-

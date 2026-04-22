@@ -14,9 +14,9 @@ using System.Windows.Shapes;
 
 namespace bankova_aplikacia
 {
-    public partial class Window1 : Window
+    public partial class loginWindow : Window
     {
-        public Window1()
+        public loginWindow()
         {
             InitializeComponent();
             Database.Init();
@@ -27,10 +27,8 @@ namespace bankova_aplikacia
             MainButton.Content = "Login";
             PanelLoginBorder.Visibility = Visibility.Visible;
             PanelRegisterBorder.Visibility = Visibility.Collapsed;
-
             Login.Background = new SolidColorBrush(Color.FromRgb(85, 85, 85));
             Login.Foreground = Brushes.White;
-
             Register.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
             Register.Foreground = Brushes.White;
         }
@@ -40,10 +38,8 @@ namespace bankova_aplikacia
             MainButton.Content = "Registrovať";
             PanelLoginBorder.Visibility = Visibility.Collapsed;
             PanelRegisterBorder.Visibility = Visibility.Visible;
-
             Register.Background = new SolidColorBrush(Color.FromRgb(85, 85, 85));
             Register.Foreground = Brushes.White;
-
             Login.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
             Login.Foreground = Brushes.White;
         }
@@ -54,13 +50,11 @@ namespace bankova_aplikacia
             {
                 string gmail = LoginMeno.Text;
                 string heslo = LoginHeslo.Password;
-
                 if (string.IsNullOrEmpty(gmail) || string.IsNullOrEmpty(heslo))
                 {
                     MessageBox.Show("Vyplň všetky polia!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-
                 if (Database.Prihlas(gmail, heslo))
                 {
                     MainWindow main = new MainWindow();
@@ -77,13 +71,11 @@ namespace bankova_aplikacia
                 string meno = RegisterMeno.Text;
                 string gmail = RegisterGmail.Text;
                 string heslo = RegisterHeslo.Password;
-
                 if (string.IsNullOrEmpty(meno) || string.IsNullOrEmpty(gmail) || string.IsNullOrEmpty(heslo))
                 {
                     MessageBox.Show("Vyplň všetky polia!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-
                 if (Database.Registruj(meno, gmail, heslo))
                 {
                     MessageBox.Show("Registrácia úspešná! Teraz sa prihláste.", "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -94,6 +86,22 @@ namespace bankova_aplikacia
                     MessageBox.Show("Tento email už existuje!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        private void LoginHeslo_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (LoginHesloHint != null)
+                LoginHesloHint.Visibility = LoginHeslo.Password.Length == 0
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+        }
+
+        private void RegisterHeslo_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (RegisterHesloHint != null)
+                RegisterHesloHint.Visibility = RegisterHeslo.Password.Length == 0
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
         }
     }
 }

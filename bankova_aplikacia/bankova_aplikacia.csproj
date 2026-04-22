@@ -13,7 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Cloud.Firestore" Version="4.2.0" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.6" />
+    <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
     <PackageReference Include="System.Data.SQLite" Version="2.0.3" />
     <PackageReference Include="YahooFinanceApi" Version="2.3.3" />
   </ItemGroup>
@@ -22,6 +24,12 @@
     <Resource Include="Assets\investicna_banka_logo-1-removebg-preview.png.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="firebase-key.json.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

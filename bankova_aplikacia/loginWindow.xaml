@@ -8,6 +8,7 @@
         Title="Investičná Banka" Height="450" Width="800"
         MinHeight="400" MinWidth="600"
         Background="#F5F5F5">
+    
 
 
     <Grid>
@@ -26,7 +27,7 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="15,10">
 
             <!-- tlacidlo login -->
-         <Button x:Name="Login"
+            <Button x:Name="Login"
         Content="Login"
         Click="BtnLogin_Click"
         Width="90"
@@ -80,7 +81,7 @@
                          FontSize="14"
                          Padding="10,9"
                          BorderBrush="#D0D0D0"
-                         BorderThickness="1">
+                         BorderThickness="1" TextChanged="LoginMeno_TextChanged">
                     <TextBox.Style>
                         <Style TargetType="{x:Type TextBox}">
                             <Style.Triggers>
@@ -273,6 +274,17 @@
                 FontWeight="SemiBold"
                 BorderThickness="0"
                 IsDefault="True"/>
+        <!-- zabudnute heslo -->
+        <Button Content="Forgot password?" Grid.Row="2" 
+                Background="#F5F5F5" 
+                Foreground="#555555"
+                FontWeight="SemiBold" 
+                BorderBrush="White"
+                BorderThickness="0" 
+                HorizontalAlignment="Center" 
+                Width="218" Height="28"
+                VerticalAlignment="Bottom"
+                Click="Button_Click_1"/>
 
     </Grid>
 </Window>

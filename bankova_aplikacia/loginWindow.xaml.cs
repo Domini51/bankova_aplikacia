@@ -95,5 +95,15 @@ namespace bankova_aplikacia
                 }
             }
         }
+
+        private void LoginMeno_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

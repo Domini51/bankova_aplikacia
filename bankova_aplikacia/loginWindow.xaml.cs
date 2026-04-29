@@ -29,6 +29,7 @@ namespace bankova_aplikacia
         {
             MainButton.Content = "Login";
             PanelLoginBorder.Visibility = Visibility.Visible;
+            ForgotPasswordButton.Visibility = Visibility.Visible;
             PanelRegisterBorder.Visibility = Visibility.Collapsed;
             Login.Background = new SolidColorBrush(Color.FromRgb(85, 85, 85));
             Login.Foreground = Brushes.White;
@@ -40,6 +41,7 @@ namespace bankova_aplikacia
         {
             MainButton.Content = "Registrovať";
             PanelLoginBorder.Visibility = Visibility.Collapsed;
+            ForgotPasswordButton.Visibility = Visibility.Collapsed;
             PanelRegisterBorder.Visibility = Visibility.Visible;
             Register.Background = new SolidColorBrush(Color.FromRgb(85, 85, 85));
             Register.Foreground = Brushes.White;
@@ -53,7 +55,6 @@ namespace bankova_aplikacia
             {
                 string gmail = LoginMeno.Text;
                 string heslo = LoginHeslo.Password;
-
                 if (string.IsNullOrEmpty(gmail) || string.IsNullOrEmpty(heslo))
                 {
                     MessageBox.Show("Vyplň všetky polia!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -84,7 +85,6 @@ namespace bankova_aplikacia
                 string meno = RegisterMeno.Text;
                 string gmail = RegisterGmail.Text;
                 string heslo = RegisterHeslo.Password;
-
                 if (string.IsNullOrEmpty(meno) || string.IsNullOrEmpty(gmail) || string.IsNullOrEmpty(heslo))
                 {
                     MessageBox.Show("Vyplň všetky polia!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -125,6 +125,8 @@ namespace bankova_aplikacia
                     ? Visibility.Visible
                     : Visibility.Collapsed;
         }
+
+       
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {

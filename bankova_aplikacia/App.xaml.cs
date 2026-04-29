@@ -4,6 +4,8 @@ namespace bankova_aplikacia
 {
     public partial class App : Application
     {
+        public static string PrihlasenyEmail { get; set; } = "";
+
         protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);

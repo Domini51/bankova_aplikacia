@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bankova_aplikacia"
         mc:Ignorable="d"
+        WindowState="Maximized"
         Title="Investičná Banka" Height="900" Width="800"
         Background="#F5F5F5">
 

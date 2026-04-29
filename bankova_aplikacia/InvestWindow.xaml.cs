@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Net.Http;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -97,7 +97,7 @@ namespace bankova_aplikacia
             }
         }
 
-        private void BtnPotvrdit_Click(object sender, RoutedEventArgs e)
+        private async void BtnPotvrdit_Click(object sender, RoutedEventArgs e)
         {
             double total = SliderSPY.Value + SliderURTH.Value + SliderAAPL.Value +
                            SliderTSLA.Value + SliderNVDA.Value + SliderBTC.Value + SliderETH.Value;
@@ -109,8 +109,36 @@ namespace bankova_aplikacia
                 return;
             }
 
+            var investicia = new Dictionary<string, object>
+            {
+                { "Gmail", App.PrihlasenyEmail },
+                { "Datum", DateTime.Now.ToString("dd.MM.yyyy HH:mm") },
+                { "SPY", $"{SliderSPY.Value:F0}% ({_zostatok * SliderSPY.Value / 100:F2} €)" },
+                { "URTH", $"{SliderURTH.Value:F0}% ({_zostatok * SliderURTH.Value / 100:F2} €)" },
+                { "AAPL", $"{SliderAAPL.Value:F0}% ({_zostatok * SliderAAPL.Value / 100:F2} €)" },
+                { "TSLA", $"{SliderTSLA.Value:F0}% ({_zostatok * SliderTSLA.Value / 100:F2} €)" },
+                { "NVDA", $"{SliderNVDA.Value:F0}% ({_zostatok * SliderNVDA.Value / 100:F2} €)" },
+                { "BTC", $"{SliderBTC.Value:F0}% ({_zostatok * SliderBTC.Value / 100:F2} €)" },
+                { "ETH", $"{SliderETH.Value:F0}% ({_zostatok * SliderETH.Value / 100:F2} €)" },
+                { "Celkom", $"{_zostatok * total / 100:F2} €" }
+            };
+
+            await Database.UlozHistoriu(App.PrihlasenyEmail, investicia);
+
             MessageBox.Show($"Investície potvrdené!\nCelkom investované: {_zostatok * total / 100:F2} €",
                 "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private async void BtnHistoria_Click(object sender, RoutedEventArgs e)
+        {
+            var historia = await Database.NacitajHistoriu(App.PrihlasenyEmail);
+            ZoznamHistorie.Items.Clear();
+            foreach (var inv in historia)
+            {
+                ZoznamHistorie.Items.Add($"{inv["Datum"]} - Celkom: {inv["Celkom"]}");
+            }
+            if (historia.Count == 0)
+                ZoznamHistorie.Items.Add("Žiadna história investícií.");
         }
     }
 }

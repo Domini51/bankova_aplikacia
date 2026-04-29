@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace bankova_aplikacia
 {
@@ -19,6 +10,19 @@ namespace bankova_aplikacia
         public loginWindow()
         {
             InitializeComponent();
+        }
+
+        private bool JeValidnyEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
@@ -57,9 +61,16 @@ namespace bankova_aplikacia
                     return;
                 }
 
+                if (!JeValidnyEmail(gmail))
+                {
+                    MessageBox.Show("Zadaj platný email!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 bool uspech = await Database.Prihlas(gmail, heslo);
                 if (uspech)
                 {
+                    App.PrihlasenyEmail = gmail;
                     MainWindow main = new MainWindow();
                     main.Show();
                     this.Close();
@@ -77,6 +88,12 @@ namespace bankova_aplikacia
                 if (string.IsNullOrEmpty(meno) || string.IsNullOrEmpty(gmail) || string.IsNullOrEmpty(heslo))
                 {
                     MessageBox.Show("Vyplň všetky polia!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (!JeValidnyEmail(gmail))
+                {
+                    MessageBox.Show("Zadaj platný email!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -109,21 +126,21 @@ namespace bankova_aplikacia
                     : Visibility.Collapsed;
         }
 
-        private void LoginMeno_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
        
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            // Krok 1 - zadaj email
             string gmail = Microsoft.VisualBasic.Interaction.InputBox(
                 "Zadaj svoj email:", "Reset hesla", "");
 
             if (string.IsNullOrEmpty(gmail))
                 return;
+
+            if (!JeValidnyEmail(gmail))
+            {
+                MessageBox.Show("Zadaj platný email!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             bool existuje = await Database.EmailExistuje(gmail);
             if (!existuje)
@@ -132,7 +149,6 @@ namespace bankova_aplikacia
                 return;
             }
 
-            // Krok 2 - zadaj nove heslo
             string noveHeslo = Microsoft.VisualBasic.Interaction.InputBox(
                 "Zadaj nové heslo:", "Reset hesla", "");
 

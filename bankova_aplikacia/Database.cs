@@ -105,5 +105,39 @@ namespace bankova_aplikacia
                 return false;
             }
         }
+
+        public static async Task UlozHistoriu(string gmail, Dictionary<string, object> investicia)
+        {
+            try
+            {
+                CollectionReference col = db!.Collection("Historia");
+                await col.AddAsync(investicia);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+            }
+        }
+
+        public static async Task<List<Dictionary<string, object>>> NacitajHistoriu(string gmail)
+        {
+            try
+            {
+                CollectionReference col = db!.Collection("Historia");
+                Query query = col.WhereEqualTo("Gmail", gmail);
+                QuerySnapshot snapshot = await query.GetSnapshotAsync();
+                var historia = new List<Dictionary<string, object>>();
+                foreach (var doc in snapshot.Documents)
+                {
+                    historia.Add(doc.ToDictionary());
+                }
+                return historia;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                return new List<Dictionary<string, object>>();
+            }
+        }
     }
 }

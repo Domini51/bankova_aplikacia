@@ -114,10 +114,7 @@ namespace bankova_aplikacia
 
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
+       
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {

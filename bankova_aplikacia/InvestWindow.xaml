@@ -5,7 +5,7 @@
         Title="Investičná Banka - Investície" Height="900" Width="900"
         Background="#F5F5F5">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,0,-6">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="30,20">
 
             <!-- HLAVICKA -->

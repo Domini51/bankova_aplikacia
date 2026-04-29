@@ -78,27 +78,27 @@
             </Grid.RowDefinitions>
 
             <!-- topbar -->
-            <!-- topbar -->
             <Border Grid.Row="0" Background="White"
-        BorderBrush="#D0D0D0" BorderThickness="0,0,0,1">
+                    BorderBrush="#D0D0D0" BorderThickness="0,0,0,1">
                 <Grid Margin="30,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock x:Name="TopbarTitle"
-                   Grid.Column="0"
-                   Text=""
-                   FontSize="20" FontWeight="SemiBold"
-                   VerticalAlignment="Center" Foreground="#FF1A1A1A"/>
+                               Grid.Column="0"
+                               Text=""
+                               FontSize="20" FontWeight="SemiBold"
+                               Foreground="#1A1A1A"
+                               VerticalAlignment="Center"/>
                     <TextBlock x:Name="TopbarVitaj"
-                   Grid.Column="1"
-                   Text=""
-                   FontSize="17" Foreground="Black"
-                   VerticalAlignment="Center"/>
+                               Grid.Column="1"
+                               Text=""
+                               FontSize="15" Foreground="black"
+                               VerticalAlignment="Center"
+                               Margin="1000,0,10,0"/>
                 </Grid>
             </Border>
-
             <!-- ===== PANEL PREHLAD ===== -->
             <ScrollViewer x:Name="PanelPrehlad" Grid.Row="1"
                           VerticalScrollBarVisibility="Auto"

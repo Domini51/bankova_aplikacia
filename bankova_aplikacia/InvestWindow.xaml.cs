@@ -129,16 +129,10 @@ namespace bankova_aplikacia
                 "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private async void BtnHistoria_Click(object sender, RoutedEventArgs e)
+        private void BtnHistoria_Click(object sender, RoutedEventArgs e)
         {
-            var historia = await Database.NacitajHistoriu(App.PrihlasenyEmail);
-            ZoznamHistorie.Items.Clear();
-            foreach (var inv in historia)
-            {
-                ZoznamHistorie.Items.Add($"{inv["Datum"]} - Celkom: {inv["Celkom"]}");
-            }
-            if (historia.Count == 0)
-                ZoznamHistorie.Items.Add("Žiadna história investícií.");
+            HistoriaWindow historiaWindow = new HistoriaWindow();
+            historiaWindow.Show();
         }
     }
 }

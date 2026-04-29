@@ -5,7 +5,7 @@
         Title="Investičná Banka - Investície" Height="900" Width="900"
         Background="#F5F5F5">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,0,-6">
         <StackPanel Margin="30,20">
 
             <!-- HLAVICKA -->
@@ -228,8 +228,7 @@
                 <StackPanel>
                     <TextBlock Text="História investícií" FontSize="22" FontWeight="SemiBold"
                                Foreground="#1A1A1A" Margin="0,0,0,15"/>
-                    <ListBox x:Name="ZoznamHistorie" FontSize="14" MinHeight="60"
-                             BorderBrush="#D0D0D0" BorderThickness="1" Padding="5"/>
+                    
                     <Button Content="Načítať históriu"
                             Height="46" Margin="0,15,0,0"
                             Background="#555555" Foreground="White"

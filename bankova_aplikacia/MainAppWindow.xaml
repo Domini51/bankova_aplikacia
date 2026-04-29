@@ -14,7 +14,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- ===== SIDEBAR ===== -->
-        <Grid Grid.Column="0" Background="#1A1A1A">
+        <Grid Grid.Column="0" Background="#FF1A1A1A">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -32,7 +32,7 @@
             <!-- navigacia -->
             <StackPanel Grid.Row="1" Margin="0,8,0,0">
                 <Button x:Name="BtnPrehlad"
-                        Content="  Prehľad"
+                        Content="  Výpočet výdavkou"
                         Height="44" HorizontalContentAlignment="Left"
                         Background="#2A2A2A" Foreground="White"
                         BorderThickness="3,0,0,0" BorderBrush="White"
@@ -73,21 +73,30 @@
         <!-- ===== OBSAH ===== -->
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <!-- topbar -->
                 <RowDefinition Height="60"/>
-                <!-- panel -->
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <!-- topbar -->
+            <!-- topbar -->
             <Border Grid.Row="0" Background="White"
-                    BorderBrush="#D0D0D0" BorderThickness="0,0,0,1">
-                <TextBlock x:Name="TopbarTitle"
-                           Text="Prehľad"
-                           FontSize="20" FontWeight="SemiBold"
-                           Foreground="#1A1A1A"
-                           VerticalAlignment="Center"
-                           Margin="30,0,0,0"/>
+        BorderBrush="#D0D0D0" BorderThickness="0,0,0,1">
+                <Grid Margin="30,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="TopbarTitle"
+                   Grid.Column="0"
+                   Text=""
+                   FontSize="20" FontWeight="SemiBold"
+                   VerticalAlignment="Center" Foreground="#FF1A1A1A"/>
+                    <TextBlock x:Name="TopbarVitaj"
+                   Grid.Column="1"
+                   Text=""
+                   FontSize="17" Foreground="Black"
+                   VerticalAlignment="Center"/>
+                </Grid>
             </Border>
 
             <!-- ===== PANEL PREHLAD ===== -->
@@ -264,27 +273,6 @@
                             </Grid>
                             <ListBox x:Name="ZoznamVydavkov4" FontSize="16" MinHeight="50"
                                      BorderBrush="#D0D0D0" BorderThickness="1" Padding="5"/>
-                        </StackPanel>
-                    </Border>
-
-                    <!-- suhrn -->
-                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,20"
-                            BorderBrush="#D0D0D0" BorderThickness="1">
-                        <StackPanel>
-                            <TextBlock Text="Súhrn" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,15"/>
-                            <TextBlock Text="Miera výdavkov" FontSize="13" Foreground="#888888" Margin="0,0,0,5"/>
-                            <ProgressBar x:Name="ProgressBar" Height="18" Minimum="0" Maximum="100" Value="0"
-                                         Background="#E0E0E0" BorderThickness="0" Margin="0,0,0,15"/>
-                            <Button Content="Vypočítať"
-                                    Height="44" Margin="0,0,0,10"
-                                    Background="#1A1A1A" Foreground="White"
-                                    FontSize="15" FontWeight="SemiBold" BorderThickness="0"
-                                    Click="BtnVypocitat_Click"/>
-                            <Button Content="Ako investovať zostatok"
-                                    Height="44"
-                                    Background="#555555" Foreground="White"
-                                    FontSize="15" FontWeight="SemiBold" BorderThickness="0"
-                                    Click="BtnInvestovat_Click"/>
                         </StackPanel>
                     </Border>
 

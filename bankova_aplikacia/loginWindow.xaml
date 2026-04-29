@@ -6,240 +6,270 @@
         xmlns:local="clr-namespace:bankova_aplikacia"
         mc:Ignorable="d"
         WindowState="Maximized"
-        Title="Investičná Banka" Height="450" Width="800"
-        MinHeight="400" MinWidth="600">
-    <Window.Background>
-        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-            <GradientStop Color="Black"/>
-            <GradientStop Color="White" Offset="1"/>
-            <GradientStop Color="#FFD4CBD0" Offset="0"/>
-        </LinearGradientBrush>
-    </Window.Background>
-    <Grid Background="White">
-        <Grid.RowDefinitions>
-            <!-- riadok 0: tlacidla hore -->
-            <RowDefinition Height="Auto"/>
-            <!-- riadok 1: logo -->
-            <RowDefinition Height="Auto"/>
-            <!-- riadok 2: formular -->
-            <RowDefinition Height="*"/>
-            <!-- riadok 3: hlavne tlacidlo dole -->
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        Title="Investičná Banka" Height="600" Width="1000"
+        MinHeight="400" MinWidth="700">
 
-        <!-- tlacidla login a register hore vpravo -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="15,10">
-            <Button x:Name="Login"
-                    Content="Login"
-                    Click="BtnLogin_Click"
-                    Width="90" Height="30"
-                    Background="#555555"
-                    FontSize="14"
-                    Foreground="White"
-                    BorderThickness="0"
-                    Margin="0,0,6,0"/>
-            <Button x:Name="Register"
-                    Content="Register"
-                    Click="BtnRegister_Click"
-                    Width="90" Height="30"
-                    Background="#1A1A1A"
-                    FontSize="14"
-                    Foreground="White"
-                    BorderThickness="0"/>
-        </StackPanel>
+    <Grid Background="Black">
+        <Grid.ColumnDefinitions>
+            <!-- lava tmava strana -->
+            <ColumnDefinition Width="550"/>
+            <!-- prava biela strana -->
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <!-- logo banky -->
-        <Image Grid.Row="1"
-               Source="/Assets/investicna_banka_logo-1-removebg-preview.png.png"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Top"
-               Width="226" Height="90"
-               RenderOptions.BitmapScalingMode="HighQuality"
-               Margin="0,5,0,0"/>
-
-        <!-- login formular - zobrazeny na zaciatku -->
-        <Border x:Name="PanelLoginBorder"
-                Grid.Row="2"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Width="320"
-                Background="White"
-                CornerRadius="8"
-                Padding="24,20"
-                Visibility="Visible">
-            <StackPanel x:Name="PanelLogin">
-
-                <!-- pole pre meno s placeholderom -->
-                <TextBox x:Name="LoginMeno"
-                         Height="38" Margin="0,0,0,10"
-                         FontSize="14" Padding="10,9"
-                         BorderBrush="#D0D0D0" BorderThickness="1">
-                    <TextBox.Style>
-                        <Style TargetType="{x:Type TextBox}">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                <VisualBrush.Visual>
-                                                    <Label Content="Meno" FontSize="14" Foreground="#AAAAAA"/>
-                                                </VisualBrush.Visual>
-                                            </VisualBrush>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
-
-                <!-- pole pre heslo s placeholderom -->
-                <Grid Margin="0,0,0,0">
-                    <PasswordBox x:Name="LoginHeslo"
-                                 Height="38" FontSize="14"
-                                 Padding="10,9" BorderBrush="#D0D0D0"
-                                 PasswordChanged="LoginHeslo_PasswordChanged">
-                        <PasswordBox.Style>
-                            <Style TargetType="PasswordBox">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="PasswordBox">
-                                            <Border Background="White" BorderBrush="#D0D0D0"
-                                                    BorderThickness="1" CornerRadius="3">
-                                                <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </PasswordBox.Style>
-                    </PasswordBox>
-                    <!-- placeholder text pre heslo -->
-                    <TextBlock x:Name="LoginHesloHint" Text="Heslo"
-                               Foreground="#AAAAAA" FontSize="14"
-                               Padding="10,9,0,0" IsHitTestVisible="False"
-                               Visibility="Visible"/>
-                </Grid>
-
+        <!-- ===== LAVA STRANA ===== -->
+        <Grid Grid.Column="0">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="Black" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Image Source="/Assets/investicna_banka_logo-1-removebg-preview.png.png"
+                       Width="200" HorizontalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       Margin="0,0,0,24"/>
+                <Border Height="2" Width="40" Background="White" Margin="0,0,0,24"/>
+                <TextBlock Text="Spravujte svoje financie"
+                           FontSize="14" Foreground="#666666"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="a investície na jednom mieste."
+                           FontSize="14" Foreground="#666666"
+                           HorizontalAlignment="Center" Margin="0,4,0,0"/>
             </StackPanel>
-        </Border>
+        </Grid>
 
-        <!-- register formular - skryty na zaciatku -->
-        <Border x:Name="PanelRegisterBorder"
-                Grid.Row="2"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Width="320"
-                Background="White"
-                CornerRadius="8"
-                Padding="24,20"
-                Visibility="Collapsed">
-            <StackPanel x:Name="PanelRegister">
+        <!-- ===== PRAVA STRANA ===== -->
+        <Grid Grid.Column="1" Background="#F5F5F5">
+            <Border Background="White"
+                    CornerRadius="12"
+                    BorderBrush="#E0E0E0"
+                    BorderThickness="1"
+                    Padding="48,44"
+                    Width="420"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+                <StackPanel>
 
-                <!-- pole pre gmail s placeholderom -->
-                <TextBox x:Name="RegisterGmail"
-                         Height="38" Margin="0,0,0,10"
-                         FontSize="14" Padding="10,9"
-                         BorderBrush="#D0D0D0" BorderThickness="1">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                <VisualBrush.Visual>
-                                                    <Label Content="Gmail" FontSize="14" Foreground="#AAAAAA"/>
-                                                </VisualBrush.Visual>
-                                            </VisualBrush>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
+                    <!-- taby prihlasenie / registracia -->
+                    <Grid Margin="0,0,0,28">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="Login"
+                                Grid.Column="0"
+                                Content="Prihlásenie"
+                                Height="42" FontSize="15"
+                                Background="Transparent"
+                                Foreground="#1A1A1A"
+                                FontWeight="SemiBold"
+                                BorderThickness="0,0,0,2"
+                                BorderBrush="#1A1A1A"
+                                Click="BtnLogin_Click"/>
+                        <Button x:Name="Register"
+                                Grid.Column="1"
+                                Content="Registrácia"
+                                Height="42" FontSize="15"
+                                Background="Transparent"
+                                Foreground="#AAAAAA"
+                                FontWeight="Normal"
+                                BorderThickness="0,0,0,1"
+                                BorderBrush="#E0E0E0"
+                                Click="BtnRegister_Click"/>
+                    </Grid>
 
-                <!-- pole pre meno s placeholderom -->
-                <TextBox x:Name="RegisterMeno"
-                         Height="38" Margin="0,0,0,10"
-                         FontSize="14" Padding="10,9"
-                         BorderBrush="#D0D0D0" BorderThickness="1">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                                <VisualBrush.Visual>
-                                                    <Label Content="Meno" FontSize="14" Foreground="#AAAAAA"/>
-                                                </VisualBrush.Visual>
-                                            </VisualBrush>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
+                    <!-- ===== LOGIN PANEL ===== -->
+                    <Border x:Name="PanelLoginBorder" Visibility="Visible">
+                        <StackPanel>
 
-                <!-- pole pre heslo s placeholderom -->
-                <Grid Margin="0,0,0,0">
-                    <PasswordBox x:Name="RegisterHeslo"
-                                 Height="38" FontSize="14"
-                                 Padding="10,9" BorderBrush="#D0D0D0"
-                                 PasswordChanged="RegisterHeslo_PasswordChanged">
-                        <PasswordBox.Style>
-                            <Style TargetType="PasswordBox">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="PasswordBox">
-                                            <Border Background="White" BorderBrush="#D0D0D0"
-                                                    BorderThickness="1" CornerRadius="3">
-                                                <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </PasswordBox.Style>
-                    </PasswordBox>
-                    <!-- placeholder text pre heslo -->
-                    <TextBlock x:Name="RegisterHesloHint" Text="Heslo"
-                               Foreground="#AAAAAA" FontSize="14"
-                               Padding="10,9,0,0" IsHitTestVisible="False"
-                               Visibility="Visible"/>
-                </Grid>
+                            <!-- email -->
+                            <TextBlock Text="Email" FontSize="13"
+                                       Foreground="#888888" Margin="0,0,0,6"/>
+                            <TextBox x:Name="LoginMeno"
+                                     Height="46" FontSize="15"
+                                     Padding="14,10" Margin="0,0,0,16"
+                                     BorderBrush="#E0E0E0" BorderThickness="1">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background">
+                                                    <Setter.Value>
+                                                        <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                                            <VisualBrush.Visual>
+                                                                <Label Content="vas@email.com" FontSize="14" Foreground="#BBBBBB"/>
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
 
-            </StackPanel>
-        </Border>
+                            <!-- heslo -->
+                            <TextBlock Text="Heslo" FontSize="13"
+                                       Foreground="#888888" Margin="0,0,0,6"/>
+                            <Grid Margin="0,0,0,20">
+                                <PasswordBox x:Name="LoginHeslo"
+                                             Height="46" FontSize="15"
+                                             Padding="14,10"
+                                             PasswordChanged="LoginHeslo_PasswordChanged">
+                                    <PasswordBox.Style>
+                                        <Style TargetType="PasswordBox">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="PasswordBox">
+                                                        <Border Background="White"
+                                                                BorderBrush="#E0E0E0"
+                                                                BorderThickness="1"
+                                                                CornerRadius="3">
+                                                            <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </PasswordBox.Style>
+                                </PasswordBox>
+                                <TextBlock x:Name="LoginHesloHint"
+                                           Text="••••••••"
+                                           Foreground="#BBBBBB" FontSize="15"
+                                           Padding="14,10,0,0"
+                                           IsHitTestVisible="False"
+                                           Visibility="Visible"/>
+                            </Grid>
 
-        <!-- hlavne tlacidlo login/register dole -->
-        <Button x:Name="MainButton"
-                Grid.Row="3"
-                Content="Login"
-                Click="Button_Click"
-                Margin="40,10,40,20"
-                Height="46"
-                Background="#1A1A1A"
-                Foreground="White"
-                FontSize="18"
-                FontWeight="SemiBold"
-                BorderThickness="0"
-                IsDefault="True"/>
+                            <!-- hlavne tlacidlo -->
+                            <Button x:Name="MainButton"
+                                    Content="Prihlásiť sa"
+                                    Height="48" FontSize="16"
+                                    FontWeight="SemiBold"
+                                    Background="#1A1A1A"
+                                    Foreground="White"
+                                    BorderThickness="0"
+                                    Margin="0,0,0,14"
+                                    Click="Button_Click"/>
 
-        <!-- tlacidlo zabudnute heslo -->
-        <Button x:Name="ForgotPasswordButton" Content="Forgot password?"
-                Grid.Row="2"
-                Background="{x:Null}"
-                Foreground="#555555"
-                FontWeight="SemiBold"
-                BorderBrush="White"
-                BorderThickness="0"
-                HorizontalAlignment="Center"
-                Width="132" Height="28"
-                VerticalAlignment="Top"
-                Click="Button_Click_1" Margin="1,185,10,0"/>
+                            <!-- zabudnute heslo -->
+                            <Button x:Name="ForgotPasswordButton"
+                                    Content="Zabudnuté heslo?"
+                                    Background="Transparent"
+                                    Foreground="#888888"
+                                    BorderThickness="0"
+                                    FontSize="13"
+                                    HorizontalAlignment="Center"
+                                    Click="Button_Click_1"/>
+
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ===== REGISTER PANEL ===== -->
+                    <Border x:Name="PanelRegisterBorder" Visibility="Collapsed">
+                        <StackPanel>
+
+                            <!-- meno -->
+                            <TextBlock Text="Meno" FontSize="13"
+                                       Foreground="#888888" Margin="0,0,0,6"/>
+                            <TextBox x:Name="RegisterMeno"
+                                     Height="46" FontSize="15"
+                                     Padding="14,10" Margin="0,0,0,16"
+                                     BorderBrush="#E0E0E0" BorderThickness="1">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background">
+                                                    <Setter.Value>
+                                                        <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                                            <VisualBrush.Visual>
+                                                                <Label Content="Vaše meno" FontSize="14" Foreground="#BBBBBB"/>
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+
+                            <!-- email -->
+                            <TextBlock Text="Email" FontSize="13"
+                                       Foreground="#888888" Margin="0,0,0,6"/>
+                            <TextBox x:Name="RegisterGmail"
+                                     Height="46" FontSize="15"
+                                     Padding="14,10" Margin="0,0,0,16"
+                                     BorderBrush="#E0E0E0" BorderThickness="1">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background">
+                                                    <Setter.Value>
+                                                        <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                                            <VisualBrush.Visual>
+                                                                <Label Content="vas@email.com" FontSize="14" Foreground="#BBBBBB"/>
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+
+                            <!-- heslo -->
+                            <TextBlock Text="Heslo" FontSize="13"
+                                       Foreground="#888888" Margin="0,0,0,6"/>
+                            <Grid Margin="0,0,0,20">
+                                <PasswordBox x:Name="RegisterHeslo"
+                                             Height="46" FontSize="15"
+                                             Padding="14,10"
+                                             PasswordChanged="RegisterHeslo_PasswordChanged">
+                                    <PasswordBox.Style>
+                                        <Style TargetType="PasswordBox">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="PasswordBox">
+                                                        <Border Background="White"
+                                                                BorderBrush="#E0E0E0"
+                                                                BorderThickness="1"
+                                                                CornerRadius="3">
+                                                            <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </PasswordBox.Style>
+                                </PasswordBox>
+                                <TextBlock x:Name="RegisterHesloHint"
+                                           Text="••••••••"
+                                           Foreground="#BBBBBB" FontSize="15"
+                                           Padding="14,10,0,0"
+                                           IsHitTestVisible="False"
+                                           Visibility="Visible"/>
+                            </Grid>
+
+                            <!-- hlavne tlacidlo register -->
+                            <Button Content="Registrovať sa"
+                                    Height="48" FontSize="16"
+                                    FontWeight="SemiBold"
+                                    Background="#1A1A1A"
+                                    Foreground="White"
+                                    BorderThickness="0"
+                                    Click="Button_Click"/>
+
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </Window>

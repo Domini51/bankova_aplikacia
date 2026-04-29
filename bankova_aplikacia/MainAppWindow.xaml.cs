@@ -53,29 +53,23 @@ namespace bankova_aplikacia
 
         private void BtnPrehlad_Click(object sender, RoutedEventArgs e)
         {
-            TopbarTitle.Text = "Prehľad";
             PrepniPanel(PanelPrehlad, BtnPrehlad);
         }
 
         private async void BtnHistoria_Click(object sender, RoutedEventArgs e)
         {
-            TopbarTitle.Text = "História";
             PrepniPanel(PanelHistoria, BtnHistoria);
-            // -- nacitaj historiu pri kazdom otvoreni panelu --
             await NacitajHistoriu();
         }
 
         private void BtnInvesticie_Click(object sender, RoutedEventArgs e)
         {
-            TopbarTitle.Text = "Investície";
             PrepniPanel(PanelInvesticie, BtnInvesticie);
-            // -- aktualizuj zostatok z aktualneho prijevu --
             AktualizujZostatok();
         }
 
         private async void BtnNastavenia_Click(object sender, RoutedEventArgs e)
         {
-            TopbarTitle.Text = "Nastavenia";
             PrepniPanel(PanelNastavenia, BtnNastavenia);
             await NacitajUdajeUzivatela();
         }
@@ -142,6 +136,9 @@ namespace bankova_aplikacia
             nazovBox.Foreground = Brushes.Gray;
             sumaBox.Text = "0";
             sumaBox.Foreground = Brushes.Gray;
+
+            // -- automaticky aktualizuj metriky hore --
+            AktualizujMetriky();
         }
 
         // -- spocita vsetky vydavky zo vsetkych zoznamov --
@@ -166,7 +163,8 @@ namespace bankova_aplikacia
             return suma;
         }
 
-        private void BtnVypocitat_Click(object sender, RoutedEventArgs e)
+        // -- aktualizuje tri metriky hore v prehlad paneli --
+        private void AktualizujMetriky()
         {
             double.TryParse(MPrijem.Text, System.Globalization.NumberStyles.Any,
                 System.Globalization.CultureInfo.CurrentCulture, out double prijem);
@@ -174,33 +172,12 @@ namespace bankova_aplikacia
             double celkom = SpocitajVsetkyVydavky();
             double zostatok = prijem - celkom;
 
-            // -- aktualizuj metriky hore --
             MetPrijem.Text = $"{prijem:F2} €";
             MetMinute.Text = $"{celkom:F2} €";
             MetZostatok.Text = $"{zostatok:F2} €";
 
-            double percento = prijem > 0 ? (celkom / prijem) : 0;
-
-            if (percento >= 0.85)
-                ProgressBar.Foreground = new SolidColorBrush(Color.FromRgb(220, 50, 50));
-            else if (percento >= 0.6)
-                ProgressBar.Foreground = new SolidColorBrush(Color.FromRgb(255, 165, 0));
-            else
-                ProgressBar.Foreground = new SolidColorBrush(Color.FromRgb(50, 180, 50));
-
-            ProgressBar.Value = Math.Min(percento * 100, 100);
-
-            // -- uloz zostatok pre panel investicii --
             _zostatok = zostatok;
             _prijem = prijem;
-        }
-
-        private void BtnInvestovat_Click(object sender, RoutedEventArgs e)
-        {
-            // -- prepne na panel investicii a aktualizuje zostatok --
-            AktualizujZostatok();
-            TopbarTitle.Text = "Investície";
-            PrepniPanel(PanelInvesticie, BtnInvesticie);
         }
 
         private void AktualizujZostatok()
@@ -256,7 +233,11 @@ namespace bankova_aplikacia
             }
         }
 
-        private void MPrijem_TextChanged(object sender, TextChangedEventArgs e) { }
+        private void MPrijem_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // -- pri zmene prijmu automaticky aktualizuj metriky --
+            if (IsLoaded) AktualizujMetriky();
+        }
 
         private void MPrijem_KeyDown(object sender, KeyEventArgs e)
         {
@@ -447,6 +428,7 @@ namespace bankova_aplikacia
             string meno = await Database.NacitajMeno(App.PrihlasenyEmail);
             TxtMeno.Text = meno;
             TxtEmail.Text = App.PrihlasenyEmail;
+            TopbarVitaj.Text = $"Vitaj späť, {meno}";
         }
 
         private async void BtnZmenitMeno_Click(object sender, RoutedEventArgs e)

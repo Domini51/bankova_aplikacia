@@ -7,6 +7,9 @@ namespace bankova_aplikacia
 {
     public partial class loginWindow : Window
     {
+        // -- sleduje ci je aktivny login alebo register panel --
+        private bool _jeLogin = true;
+
         public loginWindow()
         {
             InitializeComponent();
@@ -27,31 +30,39 @@ namespace bankova_aplikacia
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
-            MainButton.Content = "Login";
+            _jeLogin = true;
             PanelLoginBorder.Visibility = Visibility.Visible;
             ForgotPasswordButton.Visibility = Visibility.Visible;
             PanelRegisterBorder.Visibility = Visibility.Collapsed;
-            Login.Background = new SolidColorBrush(Color.FromRgb(85, 85, 85));
-            Login.Foreground = Brushes.White;
-            Register.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
-            Register.Foreground = Brushes.White;
+            Login.FontWeight = FontWeights.SemiBold;
+            Login.Foreground = new SolidColorBrush(Color.FromRgb(26, 26, 26));
+            Login.BorderBrush = new SolidColorBrush(Color.FromRgb(26, 26, 26));
+            Login.BorderThickness = new Thickness(0, 0, 0, 2);
+            Register.FontWeight = FontWeights.Normal;
+            Register.Foreground = new SolidColorBrush(Color.FromRgb(170, 170, 170));
+            Register.BorderBrush = new SolidColorBrush(Color.FromRgb(224, 224, 224));
+            Register.BorderThickness = new Thickness(0, 0, 0, 1);
         }
 
         private void BtnRegister_Click(object sender, RoutedEventArgs e)
         {
-            MainButton.Content = "Registrovať";
+            _jeLogin = false;
             PanelLoginBorder.Visibility = Visibility.Collapsed;
             ForgotPasswordButton.Visibility = Visibility.Collapsed;
             PanelRegisterBorder.Visibility = Visibility.Visible;
-            Register.Background = new SolidColorBrush(Color.FromRgb(85, 85, 85));
-            Register.Foreground = Brushes.White;
-            Login.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
-            Login.Foreground = Brushes.White;
+            Register.FontWeight = FontWeights.SemiBold;
+            Register.Foreground = new SolidColorBrush(Color.FromRgb(26, 26, 26));
+            Register.BorderBrush = new SolidColorBrush(Color.FromRgb(26, 26, 26));
+            Register.BorderThickness = new Thickness(0, 0, 0, 2);
+            Login.FontWeight = FontWeights.Normal;
+            Login.Foreground = new SolidColorBrush(Color.FromRgb(170, 170, 170));
+            Login.BorderBrush = new SolidColorBrush(Color.FromRgb(224, 224, 224));
+            Login.BorderThickness = new Thickness(0, 0, 0, 1);
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (MainButton.Content.ToString() == "Login")
+            if (_jeLogin)
             {
                 string gmail = LoginMeno.Text;
                 string heslo = LoginHeslo.Password;

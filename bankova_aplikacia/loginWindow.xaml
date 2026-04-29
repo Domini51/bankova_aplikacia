@@ -230,7 +230,7 @@
                 IsDefault="True"/>
 
         <!-- tlacidlo zabudnute heslo -->
-        <Button x:Name="forget_password" Content="Forgot password?"
+        <Button x:Name="ForgotPasswordButton" Content="Forgot password?"
                 Grid.Row="2"
                 Background="{x:Null}"
                 Foreground="#555555"

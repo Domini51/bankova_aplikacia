@@ -54,6 +54,7 @@ namespace bankova_aplikacia
         private void BtnPrehlad_Click(object sender, RoutedEventArgs e)
         {
             PrepniPanel(PanelPrehlad, BtnPrehlad);
+            UpdateSlidersLock();
         }
 
         private async void BtnHistoria_Click(object sender, RoutedEventArgs e)
@@ -66,6 +67,7 @@ namespace bankova_aplikacia
         {
             PrepniPanel(PanelInvesticie, BtnInvesticie);
             AktualizujZostatok();
+            UpdateSlidersLock();
         }
 
         private async void BtnNastavenia_Click(object sender, RoutedEventArgs e)
@@ -378,6 +380,53 @@ namespace bankova_aplikacia
 
             MessageBox.Show($"Investície potvrdené!\nCelkom investované: {_zostatok * total / 100:F2} €",
                 "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
+            ResetSliders();
+            resetZostatokPrijem();
+            UpdateSlidersLock();
+        }
+
+        private void ResetSliders()
+        {
+            SliderSPY.Value = 0;
+            SliderURTH.Value = 0;
+            SliderAAPL.Value = 0;
+            SliderTSLA.Value = 0;
+            SliderNVDA.Value = 0;
+            SliderBTC.Value = 0;
+            SliderETH.Value = 0;
+        }
+        private void resetZostatokPrijem()
+        {
+            _zostatok = 0;
+            _prijem = 0;
+            MPrijem.Text = "0";
+            MPrijem.Foreground = Brushes.Gray;
+            TxtZostatok.Text = $"Dostupný zostatok: {_zostatok:F2} €";
+            TxtSporiaci.Text = $"Odporúčaná suma: {_prijem * 0.30:F2} € (30% z príjmu {_prijem:F2} €)";
+        }
+
+        private void UpdateSlidersLock()
+        {
+            if (_zostatok > 0)
+            {
+                SliderSPY.IsEnabled = true;
+                SliderURTH.IsEnabled = true;
+                SliderAAPL.IsEnabled = true;
+                SliderTSLA.IsEnabled = true;
+                SliderNVDA.IsEnabled = true;
+                SliderBTC.IsEnabled = true;
+                SliderETH.IsEnabled = true;
+            }
+            else
+            {
+                SliderSPY.IsEnabled = false;
+                SliderURTH.IsEnabled = false;
+                SliderAAPL.IsEnabled = false;
+                SliderTSLA.IsEnabled = false;
+                SliderNVDA.IsEnabled = false;
+                SliderBTC.IsEnabled = false;
+                SliderETH.IsEnabled = false;
+            }
         }
 
         // ===== PANEL HISTORIA =====

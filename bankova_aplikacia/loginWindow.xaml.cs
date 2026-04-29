@@ -71,7 +71,7 @@ namespace bankova_aplikacia
                 if (uspech)
                 {
                     App.PrihlasenyEmail = gmail;
-                    MainWindow main = new MainWindow();
+                    MainAppWindow main = new MainAppWindow();
                     main.Show();
                     this.Close();
                 }
@@ -125,8 +125,6 @@ namespace bankova_aplikacia
                     ? Visibility.Visible
                     : Visibility.Collapsed;
         }
-
-       
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {

@@ -1,0 +1,611 @@
+﻿<Window x:Class="bankova_aplikacia.MainAppWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowState="Maximized"
+        Title="Investičná Banka" Height="900" Width="1200"
+        Background="#F5F5F5">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- sidebar -->
+            <ColumnDefinition Width="200"/>
+            <!-- obsah -->
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ===== SIDEBAR ===== -->
+        <Grid Grid.Column="0" Background="#1A1A1A">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- logo -->
+            <StackPanel Grid.Row="0" Margin="20,20,20,16">
+                <Image Source="/Assets/investicna_banka_logo-1-removebg-preview.png.png"
+                       Height="60" HorizontalAlignment="Left"
+                       RenderOptions.BitmapScalingMode="HighQuality"/>
+                <Border Height="1" Background="#333333" Margin="0,16,0,0"/>
+            </StackPanel>
+
+            <!-- navigacia -->
+            <StackPanel Grid.Row="1" Margin="0,8,0,0">
+                <Button x:Name="BtnPrehlad"
+                        Content="  Prehľad"
+                        Height="44" HorizontalContentAlignment="Left"
+                        Background="#2A2A2A" Foreground="White"
+                        BorderThickness="3,0,0,0" BorderBrush="White"
+                        FontSize="14" Padding="17,0,0,0"
+                        Click="BtnPrehlad_Click"/>
+                <Button x:Name="BtnHistoria"
+                        Content="  História"
+                        Height="44" HorizontalContentAlignment="Left"
+                        Background="Transparent" Foreground="#AAAAAA"
+                        BorderThickness="0" FontSize="14" Padding="20,0,0,0"
+                        Click="BtnHistoria_Click"/>
+                <Button x:Name="BtnInvesticie"
+                        Content="  Investície"
+                        Height="44" HorizontalContentAlignment="Left"
+                        Background="Transparent" Foreground="#AAAAAA"
+                        BorderThickness="0" FontSize="14" Padding="20,0,0,0"
+                        Click="BtnInvesticie_Click"/>
+            </StackPanel>
+
+            <!-- nastavenia a odhlasit -->
+            <StackPanel Grid.Row="2" Margin="0,0,0,10">
+                <Border Height="1" Background="#333333" Margin="20,0,20,8"/>
+                <Button x:Name="BtnNastavenia"
+                        Content="  Nastavenia"
+                        Height="44" HorizontalContentAlignment="Left"
+                        Background="Transparent" Foreground="#AAAAAA"
+                        BorderThickness="0" FontSize="14" Padding="20,0,0,0"
+                        Click="BtnNastavenia_Click"/>
+                <Button x:Name="BtnOdhlasit"
+                        Content="  Odhlásiť sa"
+                        Height="44" HorizontalContentAlignment="Left"
+                        Background="Transparent" Foreground="#E24B4A"
+                        BorderThickness="0" FontSize="14" Padding="20,0,0,0"
+                        Click="BtnOdhlasit_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- ===== OBSAH ===== -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <!-- topbar -->
+                <RowDefinition Height="60"/>
+                <!-- panel -->
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- topbar -->
+            <Border Grid.Row="0" Background="White"
+                    BorderBrush="#D0D0D0" BorderThickness="0,0,0,1">
+                <TextBlock x:Name="TopbarTitle"
+                           Text="Prehľad"
+                           FontSize="20" FontWeight="SemiBold"
+                           Foreground="#1A1A1A"
+                           VerticalAlignment="Center"
+                           Margin="30,0,0,0"/>
+            </Border>
+
+            <!-- ===== PANEL PREHLAD ===== -->
+            <ScrollViewer x:Name="PanelPrehlad" Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          Visibility="Visible">
+                <StackPanel Margin="30,20">
+
+                    <!-- 3 metriky hore -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="White" CornerRadius="10"
+                                BorderBrush="#D0D0D0" BorderThickness="1" Padding="20,16">
+                            <StackPanel>
+                                <TextBlock Text="Mesačný príjem" FontSize="13" Foreground="#888888" Margin="0,0,0,6"/>
+                                <TextBlock x:Name="MetPrijem" Text="0 €" FontSize="26" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="2" Background="White" CornerRadius="10"
+                                BorderBrush="#D0D0D0" BorderThickness="1" Padding="20,16">
+                            <StackPanel>
+                                <TextBlock Text="Celkom minuté" FontSize="13" Foreground="#888888" Margin="0,0,0,6"/>
+                                <TextBlock x:Name="MetMinute" Text="0 €" FontSize="26" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="4" Background="White" CornerRadius="10"
+                                BorderBrush="#D0D0D0" BorderThickness="1" Padding="20,16">
+                            <StackPanel>
+                                <TextBlock Text="Zostatok" FontSize="13" Foreground="#888888" Margin="0,0,0,6"/>
+                                <TextBlock x:Name="MetZostatok" Text="0 €" FontSize="26" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- mesacny prijem input -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Mesačný príjem" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" x:Name="MPrijem" Text="0" FontSize="24"
+                                         BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="46"
+                                         Foreground="Gray" GotFocus="SumaBox_GotFocus" LostFocus="SumaBox_LostFocus"
+                                         TextChanged="MPrijem_TextChanged" KeyDown="MPrijem_KeyDown"/>
+                                <Label Grid.Column="1" Content="€" FontSize="24" Padding="10,8"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- nutne vydavky -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Nutné výdavky" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="50"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" x:Name="NazovV1" Text="Názov výdavku" FontSize="16"
+                                         BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="42"
+                                         Foreground="Gray" GotFocus="NazovBox_GotFocus" LostFocus="NazovBox_LostFocus"
+                                         KeyDown="NazovVydavok_KeyDown"/>
+                                <TextBox Grid.Column="1" x:Name="Suma1" Text="0" FontSize="16" Margin="10,0,0,0"
+                                         BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="42"
+                                         Foreground="Gray" GotFocus="SumaBox_GotFocus" LostFocus="SumaBox_LostFocus"
+                                         KeyDown="SumaVydavok_KeyDown"/>
+                                <Label Grid.Column="2" Content="€" FontSize="20" Padding="6,8"/>
+                                <Button Grid.Column="3" Content="+" FontSize="22" Height="42" Width="42"
+                                        Background="#1A1A1A" Foreground="White" BorderThickness="0"
+                                        Click="BtnPridajVydavok_Click"/>
+                            </Grid>
+                            <ListBox x:Name="ZoznamVydavkov" FontSize="16" MinHeight="50"
+                                     BorderBrush="#D0D0D0" BorderThickness="1" Padding="5"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- hlavne vydavky -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Hlavné výdavky" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="50"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" x:Name="NazovV2" Text="Názov výdavku" FontSize="16"
+                                         BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="42"
+                                         Foreground="Gray" GotFocus="NazovBox_GotFocus" LostFocus="NazovBox_LostFocus"
+                                         KeyDown="NazovVydavok_KeyDown"/>
+                                <TextBox Grid.Column="1" x:Name="Suma2" Text="0" FontSize="16" Margin="10,0,0,0"
+                                         BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="42"
+                                         Foreground="Gray" GotFocus="SumaBox_GotFocus" LostFocus="SumaBox_LostFocus"
+                                         KeyDown="SumaVydavok_KeyDown"/>
+                                <Label Grid.Column="2" Content="€" FontSize="20" Padding="6,8"/>
+                                <Button Grid.Column="3" Content="+" FontSize="22" Height="42" Width="42"
+                                        Background="#1A1A1A" Foreground="White" BorderThickness="0"
+                                        Click="BtnPridajVydavok_Click"/>
+                            </Grid>
+                            <ListBox x:Name="ZoznamVydavkov2" FontSize="16" MinHeight="50"
+                                     BorderBrush="#D0D0D0" BorderThickness="1" Padding="5"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- osobne vydavky -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Osobné výdavky" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="50"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" x:Name="NazovV3" Text="Názov výdavku" FontSize="16"
+                                         BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="42"
+                                         Foreground="Gray" GotFocus="NazovBox_GotFocus" LostFocus="NazovBox_LostFocus"
+                                         KeyDown="NazovVydavok_KeyDown"/>
+                                <TextBox Grid.Column="1" x:Name="Suma3" Text="0" FontSize="16" Margin="10,0,0,0"
+                                         BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="42"
+                                         Foreground="Gray" GotFocus="SumaBox_GotFocus" LostFocus="SumaBox_LostFocus"
+                                         KeyDown="SumaVydavok_KeyDown"/>
+                                <Label Grid.Column="2" Content="€" FontSize="20" Padding="6,8"/>
+                                <Button Grid.Column="3" Content="+" FontSize="22" Height="42" Width="42"
+                                        Background="#1A1A1A" Foreground="White" BorderThickness="0"
+                                        Click="BtnPridajVydavok_Click"/>
+                            </Grid>
+                            <ListBox x:Name="ZoznamVydavkov3" FontSize="16" MinHeight="50"
+                                     BorderBrush="#D0D0D0" BorderThickness="1" Padding="5"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- volne vydavky -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Voľné výdavky" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="50"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" x:Name="NazovV4" Text="Názov výdavku" FontSize="16"
+                                         BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="42"
+                                         Foreground="Gray" GotFocus="NazovBox_GotFocus" LostFocus="NazovBox_LostFocus"
+                                         KeyDown="NazovVydavok_KeyDown"/>
+                                <TextBox Grid.Column="1" x:Name="Suma4" Text="0" FontSize="16" Margin="10,0,0,0"
+                                         BorderBrush="#D0D0D0" BorderThickness="1" Padding="10,8" Height="42"
+                                         Foreground="Gray" GotFocus="SumaBox_GotFocus" LostFocus="SumaBox_LostFocus"
+                                         KeyDown="SumaVydavok_KeyDown"/>
+                                <Label Grid.Column="2" Content="€" FontSize="20" Padding="6,8"/>
+                                <Button Grid.Column="3" Content="+" FontSize="22" Height="42" Width="42"
+                                        Background="#1A1A1A" Foreground="White" BorderThickness="0"
+                                        Click="BtnPridajVydavok_Click"/>
+                            </Grid>
+                            <ListBox x:Name="ZoznamVydavkov4" FontSize="16" MinHeight="50"
+                                     BorderBrush="#D0D0D0" BorderThickness="1" Padding="5"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- suhrn -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,20"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Súhrn" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,15"/>
+                            <TextBlock Text="Miera výdavkov" FontSize="13" Foreground="#888888" Margin="0,0,0,5"/>
+                            <ProgressBar x:Name="ProgressBar" Height="18" Minimum="0" Maximum="100" Value="0"
+                                         Background="#E0E0E0" BorderThickness="0" Margin="0,0,0,15"/>
+                            <Button Content="Vypočítať"
+                                    Height="44" Margin="0,0,0,10"
+                                    Background="#1A1A1A" Foreground="White"
+                                    FontSize="15" FontWeight="SemiBold" BorderThickness="0"
+                                    Click="BtnVypocitat_Click"/>
+                            <Button Content="Ako investovať zostatok"
+                                    Height="44"
+                                    Background="#555555" Foreground="White"
+                                    FontSize="15" FontWeight="SemiBold" BorderThickness="0"
+                                    Click="BtnInvestovat_Click"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- ===== PANEL HISTORIA ===== -->
+            <ScrollViewer x:Name="PanelHistoria" Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          Visibility="Collapsed">
+                <ItemsControl x:Name="ZoznamHistorie" Margin="30,20">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="White" CornerRadius="10" Padding="20"
+                                    Margin="0,0,0,16" BorderBrush="#D0D0D0" BorderThickness="1">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding Datum}"
+                                                   FontSize="16" FontWeight="SemiBold"
+                                                   Foreground="#1A1A1A" VerticalAlignment="Center"/>
+                                        <Border Grid.Column="1" Background="#1A1A1A" CornerRadius="6" Padding="12,6">
+                                            <TextBlock Text="{Binding Celkom}" FontSize="14"
+                                                       FontWeight="SemiBold" Foreground="White"/>
+                                        </Border>
+                                    </Grid>
+                                    <Border Height="1" Background="#E0E0E0" Margin="0,0,0,12"/>
+                                    <WrapPanel>
+                                        <Border Background="#F5F5F5" CornerRadius="6" Padding="10,6" Margin="0,0,8,8">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="SPY  " FontSize="13" Foreground="#888888"/>
+                                                <TextBlock Text="{Binding SPY}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Background="#F5F5F5" CornerRadius="6" Padding="10,6" Margin="0,0,8,8">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="URTH  " FontSize="13" Foreground="#888888"/>
+                                                <TextBlock Text="{Binding URTH}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Background="#F5F5F5" CornerRadius="6" Padding="10,6" Margin="0,0,8,8">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="AAPL  " FontSize="13" Foreground="#888888"/>
+                                                <TextBlock Text="{Binding AAPL}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Background="#F5F5F5" CornerRadius="6" Padding="10,6" Margin="0,0,8,8">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="TSLA  " FontSize="13" Foreground="#888888"/>
+                                                <TextBlock Text="{Binding TSLA}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Background="#F5F5F5" CornerRadius="6" Padding="10,6" Margin="0,0,8,8">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="NVDA  " FontSize="13" Foreground="#888888"/>
+                                                <TextBlock Text="{Binding NVDA}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Background="#F5F5F5" CornerRadius="6" Padding="10,6" Margin="0,0,8,8">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="BTC  " FontSize="13" Foreground="#888888"/>
+                                                <TextBlock Text="{Binding BTC}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Background="#F5F5F5" CornerRadius="6" Padding="10,6" Margin="0,0,8,8">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="ETH  " FontSize="13" Foreground="#888888"/>
+                                                <TextBlock Text="{Binding ETH}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <!-- ===== PANEL INVESTICIE ===== -->
+            <ScrollViewer x:Name="PanelInvesticie" Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          Visibility="Collapsed">
+                <StackPanel Margin="30,20">
+
+                    <TextBlock x:Name="TxtZostatok" Text="Dostupný zostatok: 0 €"
+                               FontSize="15" Foreground="#888888" Margin="0,0,0,20"/>
+
+                    <!-- sporiaci ucet -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Sporiaci účet (30% z príjmu)" FontSize="18"
+                                       FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,8"/>
+                            <TextBlock x:Name="TxtSporiaci" Text="Odporúčaná suma: 0 €"
+                                       FontSize="16" Foreground="#555555"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ETF -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="ETF" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                            <Border Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="160"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="S&amp;P 500 (SPY)" FontSize="15" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                        <TextBlock x:Name="TxtSPY" Text="Načítavam..." FontSize="13" Foreground="#888888"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="% zostatku" FontSize="11" Foreground="#888888" HorizontalAlignment="Center"/>
+                                        <Slider x:Name="SliderSPY" Minimum="0" Maximum="100" Value="0" Width="150" ValueChanged="Slider_Changed"/>
+                                        <TextBlock x:Name="TxtSPYPercent" Text="0%" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#1A1A1A"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                            <Border Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="160"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="MSCI World (URTH)" FontSize="15" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                        <TextBlock x:Name="TxtURTH" Text="Načítavam..." FontSize="13" Foreground="#888888"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="% zostatku" FontSize="11" Foreground="#888888" HorizontalAlignment="Center"/>
+                                        <Slider x:Name="SliderURTH" Minimum="0" Maximum="100" Value="0" Width="150" ValueChanged="Slider_Changed"/>
+                                        <TextBlock x:Name="TxtURTHPercent" Text="0%" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#1A1A1A"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- akcie -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Akcie" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                            <Border Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="160"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Apple (AAPL)" FontSize="15" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                        <TextBlock x:Name="TxtAAPL" Text="Načítavam..." FontSize="13" Foreground="#888888"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="% zostatku" FontSize="11" Foreground="#888888" HorizontalAlignment="Center"/>
+                                        <Slider x:Name="SliderAAPL" Minimum="0" Maximum="100" Value="0" Width="150" ValueChanged="Slider_Changed"/>
+                                        <TextBlock x:Name="TxtAAPLPercent" Text="0%" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#1A1A1A"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                            <Border Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="160"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Tesla (TSLA)" FontSize="15" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                        <TextBlock x:Name="TxtTSLA" Text="Načítavam..." FontSize="13" Foreground="#888888"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="% zostatku" FontSize="11" Foreground="#888888" HorizontalAlignment="Center"/>
+                                        <Slider x:Name="SliderTSLA" Minimum="0" Maximum="100" Value="0" Width="150" ValueChanged="Slider_Changed"/>
+                                        <TextBlock x:Name="TxtTSLAPercent" Text="0%" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#1A1A1A"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                            <Border Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="160"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="NVIDIA (NVDA)" FontSize="15" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                        <TextBlock x:Name="TxtNVDA" Text="Načítavam..." FontSize="13" Foreground="#888888"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="% zostatku" FontSize="11" Foreground="#888888" HorizontalAlignment="Center"/>
+                                        <Slider x:Name="SliderNVDA" Minimum="0" Maximum="100" Value="0" Width="150" ValueChanged="Slider_Changed"/>
+                                        <TextBlock x:Name="TxtNVDAPercent" Text="0%" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#1A1A1A"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- krypto -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Kryptomeny" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                            <Border Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="160"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Bitcoin (BTC)" FontSize="15" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                        <TextBlock x:Name="TxtBTC" Text="Načítavam..." FontSize="13" Foreground="#888888"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="% zostatku" FontSize="11" Foreground="#888888" HorizontalAlignment="Center"/>
+                                        <Slider x:Name="SliderBTC" Minimum="0" Maximum="100" Value="0" Width="150" ValueChanged="Slider_Changed"/>
+                                        <TextBlock x:Name="TxtBTCPercent" Text="0%" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#1A1A1A"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                            <Border Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="160"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Ethereum (ETH)" FontSize="15" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                        <TextBlock x:Name="TxtETH" Text="Načítavam..." FontSize="13" Foreground="#888888"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="% zostatku" FontSize="11" Foreground="#888888" HorizontalAlignment="Center"/>
+                                        <Slider x:Name="SliderETH" Minimum="0" Maximum="100" Value="0" Width="150" ValueChanged="Slider_Changed"/>
+                                        <TextBlock x:Name="TxtETHPercent" Text="0%" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#1A1A1A"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- suhrn investicii -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,20"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Súhrn investícií" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,15"/>
+                            <TextBlock x:Name="TxtCelkovePercento" Text="Celkovo alokované: 0%" FontSize="15" Foreground="#555555" Margin="0,0,0,5"/>
+                            <TextBlock x:Name="TxtCelkovaSuma" Text="Celková suma: 0 €" FontSize="15" Foreground="#555555" Margin="0,0,0,15"/>
+                            <ProgressBar x:Name="ProgressInvest" Height="18" Minimum="0" Maximum="100"
+                                         Value="0" Background="#E0E0E0" BorderThickness="0" Margin="0,0,0,15"/>
+                            <Button Content="Potvrdiť investície" Height="44"
+                                    Background="#1A1A1A" Foreground="White"
+                                    FontSize="15" FontWeight="SemiBold" BorderThickness="0"
+                                    Click="BtnPotvrdit_Click"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- ===== PANEL NASTAVENIA ===== -->
+            <ScrollViewer x:Name="PanelNastavenia" Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          Visibility="Collapsed">
+                <StackPanel Margin="30,20" MaxWidth="500" HorizontalAlignment="Left">
+
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Účet" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,15"/>
+
+                            <!-- meno -->
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Meno" FontSize="13" Foreground="#888888" Margin="0,0,0,4"/>
+                                    <TextBlock x:Name="TxtMeno" Text="" FontSize="15" Foreground="#1A1A1A"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="Zmeniť" Height="36" Width="90"
+                                        Background="Transparent" Foreground="#1A1A1A"
+                                        BorderBrush="#D0D0D0" BorderThickness="1" FontSize="13"
+                                        VerticalAlignment="Center" Click="BtnZmenitMeno_Click"/>
+                            </Grid>
+
+                            <Border Height="1" Background="#E0E0E0" Margin="0,0,0,12"/>
+
+                            <!-- email -->
+                            <StackPanel Margin="0,0,0,12">
+                                <TextBlock Text="Email" FontSize="13" Foreground="#888888" Margin="0,0,0,4"/>
+                                <TextBlock x:Name="TxtEmail" Text="" FontSize="15" Foreground="#1A1A1A"/>
+                            </StackPanel>
+
+                            <Border Height="1" Background="#E0E0E0" Margin="0,0,0,12"/>
+
+                            <!-- heslo -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Heslo" FontSize="13" Foreground="#888888" Margin="0,0,0,4"/>
+                                    <TextBlock Text="••••••••" FontSize="15" Foreground="#1A1A1A"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="Zmeniť" Height="36" Width="90"
+                                        Background="Transparent" Foreground="#1A1A1A"
+                                        BorderBrush="#D0D0D0" BorderThickness="1" FontSize="13"
+                                        VerticalAlignment="Center" Click="BtnZmenitHeslo_Click"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+        </Grid>
+    </Grid>
+</Window>

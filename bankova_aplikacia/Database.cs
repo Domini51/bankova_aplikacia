@@ -139,5 +139,44 @@ namespace bankova_aplikacia
                 return new List<Dictionary<string, object>>();
             }
         }
+
+        public static async Task<string> NacitajMeno(string gmail)
+        {
+            try
+            {
+                CollectionReference col = db!.Collection("Pouzivatelia");
+                Query query = col.WhereEqualTo("Gmail", gmail);
+                QuerySnapshot snapshot = await query.GetSnapshotAsync();
+                if (snapshot.Count == 0) return "";
+
+                var doc = snapshot.Documents[0].ToDictionary();
+                return doc.ContainsKey("Meno") ? doc["Meno"].ToString()! : "";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                return "";
+            }
+        }
+
+        public static async Task<bool> ZmenMeno(string gmail, string noveMeno)
+        {
+            try
+            {
+                CollectionReference col = db!.Collection("Pouzivatelia");
+                Query query = col.WhereEqualTo("Gmail", gmail);
+                QuerySnapshot snapshot = await query.GetSnapshotAsync();
+                if (snapshot.Count == 0) return false;
+
+                DocumentReference doc = snapshot.Documents[0].Reference;
+                await doc.UpdateAsync("Meno", noveMeno);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                return false;
+            }
+        }
     }
 }

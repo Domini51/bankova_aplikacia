@@ -27,15 +27,15 @@
             </Grid.Background>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Image Source="/Assets/investicna_banka_logo-1-removebg-preview.png.png"
-                       Width="200" HorizontalAlignment="Center"
+                       Width="325" HorizontalAlignment="Center"
                        RenderOptions.BitmapScalingMode="HighQuality"
                        Margin="0,0,0,24"/>
                 <Border Height="2" Width="40" Background="White" Margin="0,0,0,24"/>
                 <TextBlock Text="Spravujte svoje financie"
-                           FontSize="14" Foreground="#666666"
+                           FontSize="25" Foreground="#666666"
                            HorizontalAlignment="Center"/>
                 <TextBlock Text="a investície na jednom mieste."
-                           FontSize="14" Foreground="#666666"
+                           FontSize="25" Foreground="#666666"
                            HorizontalAlignment="Center" Margin="0,4,0,0"/>
             </StackPanel>
         </Grid>

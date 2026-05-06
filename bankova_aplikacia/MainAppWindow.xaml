@@ -102,50 +102,7 @@
                           VerticalScrollBarVisibility="Auto" Visibility="Visible">
                 <StackPanel Margin="30,20">
 
-                    <Grid Margin="0,0,0,20">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="16"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="16"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Border Grid.Column="0" Background="White" CornerRadius="10"
-                                BorderBrush="#D0D0D0" BorderThickness="1" Padding="20,16">
-                            <StackPanel>
-                                <TextBlock Text="Mesačný príjem" FontSize="13" Foreground="#888888" Margin="0,0,0,6"/>
-                                <TextBlock x:Name="MetPrijem" Text="0 €" FontSize="26" FontWeight="SemiBold" Foreground="#1A1A1A"/>
-                            </StackPanel>
-                        </Border>
-                        <Border Grid.Column="2" Background="White" CornerRadius="10"
-                                BorderBrush="#D0D0D0" BorderThickness="1" Padding="20,16">
-                            <StackPanel>
-                                <TextBlock Text="Celkom minuté" FontSize="13" Foreground="#888888" Margin="0,0,0,6"/>
-                                <TextBlock x:Name="MetMinute" Text="0 €" FontSize="26" FontWeight="SemiBold" Foreground="#1A1A1A"/>
-                            </StackPanel>
-                        </Border>
-                        <Border Grid.Column="4" Background="White" CornerRadius="10"
-                                BorderBrush="#D0D0D0" BorderThickness="1" Padding="20,16">
-                            <StackPanel>
-                                <TextBlock Text="Zostatok" FontSize="13" Foreground="#888888" Margin="0,0,0,6"/>
-                                <TextBlock x:Name="MetZostatok" Text="0 €" FontSize="26" FontWeight="SemiBold" Foreground="#1A1A1A"/>
-                            </StackPanel>
-                        </Border>
-                    </Grid>
-
-                    <!-- kruhovy graf vydavkov -->
-                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
-                            BorderBrush="#D0D0D0" BorderThickness="1">
-                        <StackPanel>
-                            <TextBlock Text="Rozloženie výdavkov" FontSize="18" FontWeight="SemiBold"
-                                       Foreground="#1A1A1A" Margin="0,0,0,10"/>
-                            <lvc:PieChart x:Name="GrafVydavkov"
-                                          Height="250"
-                                          LegendPosition="Right" Loaded="GrafVydavkov_Loaded"/>
-                        </StackPanel>
-                    </Border>
-
-                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                    <Border Background="White" CornerRadius="10" Padding="20"
                             BorderBrush="#D0D0D0" BorderThickness="1">
                         <StackPanel>
                             <TextBlock Text="Mesačný príjem" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
@@ -163,8 +120,8 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
-                            BorderBrush="#D0D0D0" BorderThickness="1">
+                    <Border Background="White" CornerRadius="10" Padding="20"
+                            BorderBrush="#D0D0D0" BorderThickness="1" Margin="0,14,0,7">
                         <StackPanel>
                             <TextBlock Text="Nutné výdavky" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
                             <Grid Margin="0,0,0,10">
@@ -192,8 +149,8 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
-                            BorderBrush="#D0D0D0" BorderThickness="1">
+                    <Border Background="White" CornerRadius="10" Padding="20"
+                            BorderBrush="#D0D0D0" BorderThickness="1" Margin="0,7,0,7">
                         <StackPanel>
                             <TextBlock Text="Hlavné výdavky" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
                             <Grid Margin="0,0,0,10">
@@ -221,8 +178,8 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
-                            BorderBrush="#D0D0D0" BorderThickness="1">
+                    <Border Background="White" CornerRadius="10" Padding="20"
+                            BorderBrush="#D0D0D0" BorderThickness="1" Margin="0,7,0,7">
                         <StackPanel>
                             <TextBlock Text="Osobné výdavky" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
                             <Grid Margin="0,0,0,10">
@@ -250,8 +207,8 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
-                            BorderBrush="#D0D0D0" BorderThickness="1">
+                    <Border Background="White" CornerRadius="10" Padding="20"
+                            BorderBrush="#D0D0D0" BorderThickness="1" Margin="0,7,0,15">
                         <StackPanel>
                             <TextBlock Text="Voľné výdavky" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
                             <Grid Margin="0,0,0,10">
@@ -279,9 +236,54 @@
                         </StackPanel>
                     </Border>
 
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="436*"/>
+                            <ColumnDefinition Width="7.668"/>
+                            <ColumnDefinition Width="0*"/>
+                            <ColumnDefinition Width="14"/>
+                            <ColumnDefinition Width="465*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="White" CornerRadius="10"
+                                BorderBrush="#D0D0D0" BorderThickness="1" Padding="20,16" Margin="0,0,8,0">
+                            <StackPanel>
+                                <TextBlock Text="Mesačný príjem" FontSize="13" Foreground="#888888" Margin="0,0,0,6"/>
+                                <TextBlock x:Name="MetPrijem" Text="0 €" FontSize="26" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="3" Background="White" CornerRadius="10"
+                                BorderBrush="#D0D0D0" BorderThickness="1" Padding="20,16" RenderTransformOrigin="0.5,0.5" Margin="6,0,-1,0" Grid.ColumnSpan="2">
+                            <Border.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform AngleY="-0.192"/>
+                                    <RotateTransform/>
+                                    <TranslateTransform Y="-0.497"/>
+                                </TransformGroup>
+                            </Border.RenderTransform>
+                            <StackPanel>
+                                <TextBlock Text="Celkom minuté" FontSize="13" Foreground="#888888" Margin="0,0,0,6"/>
+                                <TextBlock x:Name="MetMinute" Text="0 €" FontSize="26" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- kruhovy graf vydavkov -->
+                    <Border Background="White" CornerRadius="10" Padding="20"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel Height="351">
+                            <TextBlock Text="Rozloženie výdavkov" FontSize="18" FontWeight="SemiBold"
+                                       Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                            <lvc:PieChart x:Name="GrafVydavkov"
+                                          Height="318"
+                                          LegendPosition="Right" Loaded="GrafVydavkov_Loaded"/>
+
+                        </StackPanel>
+                    </Border>
+
                     <!-- tlacidlo uloz zostatok na ucet -->
                     <Button Content="Uložiť zostatok na účet"
-                            Height="48" Margin="0,10,0,20"
+                            Height="48" Margin="0,14,0,20"
                             Background="Black" Foreground="White"
                             FontSize="15" FontWeight="SemiBold" BorderThickness="0"
                             Click="BtnUlozZostatokNaUcet_Click"/>
@@ -291,7 +293,7 @@
 
             <!-- ===== PANEL HISTORIA ===== -->
             <ScrollViewer x:Name="PanelHistoria" Grid.Row="1"
-                          VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                          VerticalScrollBarVisibility="Auto" Visibility="Hidden">
                 <ItemsControl x:Name="ZoznamHistorie" Margin="30,20">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -363,7 +365,7 @@
 
             <!-- ===== PANEL INVESTICIE ===== -->
             <ScrollViewer x:Name="PanelInvesticie" Grid.Row="1"
-                          VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                          VerticalScrollBarVisibility="Auto" Visibility="Hidden">
                 <StackPanel Margin="30,20">
 
                     <TextBlock x:Name="TxtZostatok" Text="Dostupný zostatok: 0 €"
@@ -539,7 +541,7 @@
 
             <!-- ===== PANEL UCET ===== -->
             <ScrollViewer x:Name="PanelUcet" Grid.Row="1"
-                          VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                          VerticalScrollBarVisibility="Auto" Visibility="Hidden">
                 <StackPanel Margin="30,20">
 
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
@@ -558,8 +560,10 @@
                             <TextBlock Text="Rozloženie portfólia" FontSize="18" FontWeight="SemiBold"
                                        Foreground="#1A1A1A" Margin="0,0,0,10"/>
                             <lvc:PieChart x:Name="GrafPortfolia"
-                                          Height="250"
-                                          LegendPosition="Right"/>
+                                          
+                                          Height="347"
+                                          LegendPosition="Right" 
+                                          RenderTransformOrigin="0.507,0.496"/>
                         </StackPanel>
                     </Border>
 
@@ -615,7 +619,7 @@
 
             <!-- ===== PANEL NASTAVENIA ===== -->
             <ScrollViewer x:Name="PanelNastavenia" Grid.Row="1"
-                          VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                          VerticalScrollBarVisibility="Auto" Visibility="Hidden">
                 <StackPanel Margin="30,20" MaxWidth="500" HorizontalAlignment="Left">
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
                             BorderBrush="#D0D0D0" BorderThickness="1">

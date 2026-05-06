@@ -17,7 +17,7 @@ namespace bankova_aplikacia
     {
         private double _zostatok = 0;
         private double _prijem = 0;
-
+        
         public MainAppWindow()
         {
             InitializeComponent();
@@ -26,7 +26,7 @@ namespace bankova_aplikacia
         }
 
         // ===== NAVIGACIA =====
-
+        
         private void PrepniPanel(UIElement panel, Button aktivne)
         {
             PanelPrehlad.Visibility = Visibility.Collapsed;
@@ -171,7 +171,6 @@ namespace bankova_aplikacia
 
             MetPrijem.Text = $"{prijem:F2} €";
             MetMinute.Text = $"{celkom:F2} €";
-            MetZostatok.Text = $"{zostatok:F2} €";
 
             _zostatok = zostatok;
             _prijem = prijem;
@@ -760,6 +759,11 @@ namespace bankova_aplikacia
         }
 
         private void GrafVydavkov_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void GrafPortfolia_Loaded(object sender, RoutedEventArgs e)
         {
 
         }

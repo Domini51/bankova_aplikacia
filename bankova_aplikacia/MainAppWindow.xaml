@@ -1,27 +1,24 @@
 ﻿<Window x:Class="bankova_aplikacia.MainAppWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         WindowState="Maximized"
         Title="Investičná Banka" Height="900" Width="1200"
         Background="#F5F5F5">
-
     <Grid>
         <Grid.ColumnDefinitions>
-            <!-- sidebar -->
             <ColumnDefinition Width="200"/>
-            <!-- obsah -->
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- ===== SIDEBAR ===== -->
-        <Grid Grid.Column="0" Background="#FF1A1A1A">
+        <Grid Grid.Column="0" Background="#1A1A1A">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- logo -->
             <StackPanel Grid.Row="0" Margin="20,20,20,16">
                 <Image Source="/Assets/investicna_banka_logo-1-removebg-preview.png.png"
                        Height="60" HorizontalAlignment="Left"
@@ -29,10 +26,9 @@
                 <Border Height="1" Background="#333333" Margin="0,16,0,0"/>
             </StackPanel>
 
-            <!-- navigacia -->
             <StackPanel Grid.Row="1" Margin="0,8,0,0">
                 <Button x:Name="BtnPrehlad"
-                        Content="  Výpočet výdavkou"
+                        Content="  Výpočet výdavkov"
                         Height="44" HorizontalContentAlignment="Left"
                         Background="#2A2A2A" Foreground="White"
                         BorderThickness="3,0,0,0" BorderBrush="White"
@@ -50,9 +46,14 @@
                         Background="Transparent" Foreground="#AAAAAA"
                         BorderThickness="0" FontSize="14" Padding="20,0,0,0"
                         Click="BtnInvesticie_Click"/>
+                <Button x:Name="BtnUcet"
+                        Content="  Účet"
+                        Height="44" HorizontalContentAlignment="Left"
+                        Background="Transparent" Foreground="#AAAAAA"
+                        BorderThickness="0" FontSize="14" Padding="20,0,0,0"
+                        Click="BtnUcet_Click"/>
             </StackPanel>
 
-            <!-- nastavenia a odhlasit -->
             <StackPanel Grid.Row="2" Margin="0,0,0,10">
                 <Border Height="1" Background="#333333" Margin="20,0,20,8"/>
                 <Button x:Name="BtnNastavenia"
@@ -86,26 +87,21 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock x:Name="TopbarTitle"
-                               Grid.Column="0"
-                               Text=""
+                               Grid.Column="0" Text=""
                                FontSize="20" FontWeight="SemiBold"
-                               Foreground="#1A1A1A"
-                               VerticalAlignment="Center"/>
+                               Foreground="#1A1A1A" VerticalAlignment="Center"/>
                     <TextBlock x:Name="TopbarVitaj"
-                               Grid.Column="1"
-                               Text=""
-                               FontSize="15" Foreground="black"
-                               VerticalAlignment="Center"
-                               Margin="1000,0,10,0"/>
+                               Grid.Column="1" Text=""
+                               FontSize="15" Foreground="Black"
+                               VerticalAlignment="Center" Margin="0,0,10,0"/>
                 </Grid>
             </Border>
+
             <!-- ===== PANEL PREHLAD ===== -->
             <ScrollViewer x:Name="PanelPrehlad" Grid.Row="1"
-                          VerticalScrollBarVisibility="Auto"
-                          Visibility="Visible">
+                          VerticalScrollBarVisibility="Auto" Visibility="Visible">
                 <StackPanel Margin="30,20">
 
-                    <!-- 3 metriky hore -->
                     <Grid Margin="0,0,0,20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -137,7 +133,18 @@
                         </Border>
                     </Grid>
 
-                    <!-- mesacny prijem input -->
+                    <!-- kruhovy graf vydavkov -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Rozloženie výdavkov" FontSize="18" FontWeight="SemiBold"
+                                       Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                            <lvc:PieChart x:Name="GrafVydavkov"
+                                          Height="250"
+                                          LegendPosition="Right" Loaded="GrafVydavkov_Loaded"/>
+                        </StackPanel>
+                    </Border>
+
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
                             BorderBrush="#D0D0D0" BorderThickness="1">
                         <StackPanel>
@@ -156,7 +163,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- nutne vydavky -->
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
                             BorderBrush="#D0D0D0" BorderThickness="1">
                         <StackPanel>
@@ -186,7 +192,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- hlavne vydavky -->
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
                             BorderBrush="#D0D0D0" BorderThickness="1">
                         <StackPanel>
@@ -216,7 +221,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- osobne vydavky -->
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
                             BorderBrush="#D0D0D0" BorderThickness="1">
                         <StackPanel>
@@ -246,7 +250,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- volne vydavky -->
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
                             BorderBrush="#D0D0D0" BorderThickness="1">
                         <StackPanel>
@@ -276,13 +279,19 @@
                         </StackPanel>
                     </Border>
 
+                    <!-- tlacidlo uloz zostatok na ucet -->
+                    <Button Content="Uložiť zostatok na účet"
+                            Height="48" Margin="0,10,0,20"
+                            Background="Black" Foreground="White"
+                            FontSize="15" FontWeight="SemiBold" BorderThickness="0"
+                            Click="BtnUlozZostatokNaUcet_Click"/>
+
                 </StackPanel>
             </ScrollViewer>
 
             <!-- ===== PANEL HISTORIA ===== -->
             <ScrollViewer x:Name="PanelHistoria" Grid.Row="1"
-                          VerticalScrollBarVisibility="Auto"
-                          Visibility="Collapsed">
+                          VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
                 <ItemsControl x:Name="ZoznamHistorie" Margin="30,20">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -294,12 +303,10 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="{Binding Datum}"
-                                                   FontSize="16" FontWeight="SemiBold"
-                                                   Foreground="#1A1A1A" VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Column="0" Text="{Binding Datum}" FontSize="16"
+                                                   FontWeight="SemiBold" Foreground="#1A1A1A" VerticalAlignment="Center"/>
                                         <Border Grid.Column="1" Background="#1A1A1A" CornerRadius="6" Padding="12,6">
-                                            <TextBlock Text="{Binding Celkom}" FontSize="14"
-                                                       FontWeight="SemiBold" Foreground="White"/>
+                                            <TextBlock Text="{Binding Celkom}" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
                                         </Border>
                                     </Grid>
                                     <Border Height="1" Background="#E0E0E0" Margin="0,0,0,12"/>
@@ -356,14 +363,12 @@
 
             <!-- ===== PANEL INVESTICIE ===== -->
             <ScrollViewer x:Name="PanelInvesticie" Grid.Row="1"
-                          VerticalScrollBarVisibility="Auto"
-                          Visibility="Collapsed">
+                          VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
                 <StackPanel Margin="30,20">
 
                     <TextBlock x:Name="TxtZostatok" Text="Dostupný zostatok: 0 €"
                                FontSize="15" Foreground="#888888" Margin="0,0,0,20"/>
 
-                    <!-- sporiaci ucet -->
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
                             BorderBrush="#D0D0D0" BorderThickness="1">
                         <StackPanel>
@@ -374,7 +379,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- ETF -->
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
                             BorderBrush="#D0D0D0" BorderThickness="1">
                         <StackPanel>
@@ -416,7 +420,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- akcie -->
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
                             BorderBrush="#D0D0D0" BorderThickness="1">
                         <StackPanel>
@@ -475,7 +478,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- krypto -->
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
                             BorderBrush="#D0D0D0" BorderThickness="1">
                         <StackPanel>
@@ -517,7 +519,6 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- suhrn investicii -->
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,20"
                             BorderBrush="#D0D0D0" BorderThickness="1">
                         <StackPanel>
@@ -536,18 +537,90 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <!-- ===== PANEL NASTAVENIA ===== -->
-            <ScrollViewer x:Name="PanelNastavenia" Grid.Row="1"
-                          VerticalScrollBarVisibility="Auto"
-                          Visibility="Collapsed">
-                <StackPanel Margin="30,20" MaxWidth="500" HorizontalAlignment="Left">
+            <!-- ===== PANEL UCET ===== -->
+            <ScrollViewer x:Name="PanelUcet" Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                <StackPanel Margin="30,20">
 
                     <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
                             BorderBrush="#D0D0D0" BorderThickness="1">
                         <StackPanel>
-                            <TextBlock Text="Účet" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,15"/>
+                            <TextBlock Text="Zostatok na účte" FontSize="13" Foreground="#888888" Margin="0,0,0,6"/>
+                            <TextBlock x:Name="TxtUcetZostatok" Text="0 €" FontSize="32"
+                                       FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                        </StackPanel>
+                    </Border>
 
-                            <!-- meno -->
+                    <!-- kruhovy graf portfolia -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Rozloženie portfólia" FontSize="18" FontWeight="SemiBold"
+                                       Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                            <lvc:PieChart x:Name="GrafPortfolia"
+                                          Height="250"
+                                          LegendPosition="Right"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Moje portfólio" FontSize="18" FontWeight="SemiBold"
+                                       Foreground="#1A1A1A" Margin="0,0,0,15"/>
+                            <ItemsControl x:Name="ZoznamPortfolia">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#F5F5F5" CornerRadius="8" Padding="16" Margin="0,0,0,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="{Binding Symbol}" FontSize="16"
+                                                               FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                                    <TextBlock Text="{Binding Info}" FontSize="13"
+                                                               Foreground="#888888" Margin="0,4,0,0"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <TextBlock Text="{Binding AktualnaHodnota}" FontSize="15"
+                                                               FontWeight="SemiBold" Foreground="#1A1A1A"
+                                                               HorizontalAlignment="Right"/>
+                                                    <TextBlock Text="{Binding ZiskStrata}" FontSize="13"
+                                                               Foreground="{Binding ZiskStrataFarba}"
+                                                               HorizontalAlignment="Right" Margin="0,4,0,0"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="2"
+                                                        Content="Predať" Height="36" Width="80"
+                                                        Background="#E24B4A" Foreground="White"
+                                                        BorderThickness="0" FontSize="13"
+                                                        Tag="{Binding DocId}"
+                                                        Click="BtnPredaj_Click"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock x:Name="TxtPrazdnePortfolio"
+                                       Text="Zatiaľ žiadne investície."
+                                       FontSize="14" Foreground="#888888"
+                                       Margin="0,10,0,0" Visibility="Collapsed"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- ===== PANEL NASTAVENIA ===== -->
+            <ScrollViewer x:Name="PanelNastavenia" Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                <StackPanel Margin="30,20" MaxWidth="500" HorizontalAlignment="Left">
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                            BorderBrush="#D0D0D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Účet" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,15"/>
                             <Grid Margin="0,0,0,12">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -562,18 +635,12 @@
                                         BorderBrush="#D0D0D0" BorderThickness="1" FontSize="13"
                                         VerticalAlignment="Center" Click="BtnZmenitMeno_Click"/>
                             </Grid>
-
                             <Border Height="1" Background="#E0E0E0" Margin="0,0,0,12"/>
-
-                            <!-- email -->
                             <StackPanel Margin="0,0,0,12">
                                 <TextBlock Text="Email" FontSize="13" Foreground="#888888" Margin="0,0,0,4"/>
                                 <TextBlock x:Name="TxtEmail" Text="" FontSize="15" Foreground="#1A1A1A"/>
                             </StackPanel>
-
                             <Border Height="1" Background="#E0E0E0" Margin="0,0,0,12"/>
-
-                            <!-- heslo -->
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -590,7 +657,6 @@
                             </Grid>
                         </StackPanel>
                     </Border>
-
                 </StackPanel>
             </ScrollViewer>
 

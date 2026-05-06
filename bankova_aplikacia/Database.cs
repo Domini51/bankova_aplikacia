@@ -178,5 +178,108 @@ namespace bankova_aplikacia
                 return false;
             }
         }
+
+        // -- ulozi kupenu poziciu do portfolia --
+        public static async Task UlozPozíciu(string gmail, string symbol, double kusy, double nakupnaCena, double sumaEur)
+        {
+            try
+            {
+                CollectionReference col = db!.Collection("Portfolio");
+                Dictionary<string, object> pozicia = new Dictionary<string, object>
+                {
+                    { "Gmail", gmail },
+                    { "Symbol", symbol },
+                    { "Kusy", kusy },
+                    { "NakupnaCena", nakupnaCena },
+                    { "SumaEur", sumaEur },
+                    { "Datum", DateTime.Now.ToString("dd.MM.yyyy HH:mm") }
+                };
+                await col.AddAsync(pozicia);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+            }
+        }
+
+        // -- nacita vsetky pozicie portfolia pre daneho uzivatela --
+        public static async Task<List<Dictionary<string, object>>> NacitajPortfolio(string gmail)
+        {
+            try
+            {
+                CollectionReference col = db!.Collection("Portfolio");
+                Query query = col.WhereEqualTo("Gmail", gmail);
+                QuerySnapshot snapshot = await query.GetSnapshotAsync();
+                var portfolio = new List<Dictionary<string, object>>();
+                foreach (var doc in snapshot.Documents)
+                {
+                    // -- pridaj aj id dokumentu aby sme vedeli co mazat pri predaji --
+                    var data = doc.ToDictionary();
+                    data["DocId"] = doc.Id;
+                    portfolio.Add(data);
+                }
+                return portfolio;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                return new List<Dictionary<string, object>>();
+            }
+        }
+
+        // -- vymaze poziciu z portfolia pri predaji --
+        public static async Task<bool> PredajPozíciu(string docId)
+        {
+            try
+            {
+                DocumentReference doc = db!.Collection("Portfolio").Document(docId);
+                await doc.DeleteAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                return false;
+            }
+        }
+
+        // -- ulozi zostatok na ucte uzivatela --
+        public static async Task UlozZostatok(string gmail, double zostatok)
+        {
+            try
+            {
+                CollectionReference col = db!.Collection("Pouzivatelia");
+                Query query = col.WhereEqualTo("Gmail", gmail);
+                QuerySnapshot snapshot = await query.GetSnapshotAsync();
+                if (snapshot.Count == 0) return;
+
+                DocumentReference doc = snapshot.Documents[0].Reference;
+                await doc.UpdateAsync("Zostatok", zostatok);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+            }
+        }
+
+        // -- nacita zostatok z uctu uzivatela --
+        public static async Task<double> NacitajZostatok(string gmail)
+        {
+            try
+            {
+                CollectionReference col = db!.Collection("Pouzivatelia");
+                Query query = col.WhereEqualTo("Gmail", gmail);
+                QuerySnapshot snapshot = await query.GetSnapshotAsync();
+                if (snapshot.Count == 0) return 0;
+
+                var doc = snapshot.Documents[0].ToDictionary();
+                return doc.ContainsKey("Zostatok") ? Convert.ToDouble(doc["Zostatok"]) : 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                return 0;
+            }
+        }
     }
 }

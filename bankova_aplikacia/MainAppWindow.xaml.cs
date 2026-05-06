@@ -6,45 +6,44 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using YahooFinanceApi;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace bankova_aplikacia
 {
     public partial class MainAppWindow : Window
     {
-        // -- uchovava zostatok a prijem pre panel investicii --
         private double _zostatok = 0;
         private double _prijem = 0;
 
         public MainAppWindow()
         {
             InitializeComponent();
-            // -- nacitaj meno a email prihlasenho uzivatela do nastaveni --
             _ = NacitajUdajeUzivatela();
-            // -- nacitaj ceny akcii hned pri starte --
             _ = NacitajCeny();
         }
 
         // ===== NAVIGACIA =====
 
-        // -- prepne aktivny panel a zvyrazni tlacidlo v sidebari --
         private void PrepniPanel(UIElement panel, Button aktivne)
         {
             PanelPrehlad.Visibility = Visibility.Collapsed;
             PanelHistoria.Visibility = Visibility.Collapsed;
             PanelInvesticie.Visibility = Visibility.Collapsed;
             PanelNastavenia.Visibility = Visibility.Collapsed;
+            PanelUcet.Visibility = Visibility.Collapsed;
 
             panel.Visibility = Visibility.Visible;
 
-            // -- reset vsetkych tlacidiel --
-            foreach (var btn in new[] { BtnPrehlad, BtnHistoria, BtnInvesticie, BtnNastavenia })
+            foreach (var btn in new[] { BtnPrehlad, BtnHistoria, BtnInvesticie, BtnNastavenia, BtnUcet })
             {
                 btn.Background = Brushes.Transparent;
                 btn.Foreground = new SolidColorBrush(Color.FromRgb(170, 170, 170));
                 btn.BorderThickness = new Thickness(0);
             }
 
-            // -- zvyrazni aktivne tlacidlo --
             aktivne.Background = new SolidColorBrush(Color.FromRgb(42, 42, 42));
             aktivne.Foreground = Brushes.White;
             aktivne.BorderThickness = new Thickness(3, 0, 0, 0);
@@ -63,10 +62,10 @@ namespace bankova_aplikacia
             await NacitajHistoriu();
         }
 
-        private void BtnInvesticie_Click(object sender, RoutedEventArgs e)
+        private async void BtnInvesticie_Click(object sender, RoutedEventArgs e)
         {
             PrepniPanel(PanelInvesticie, BtnInvesticie);
-            AktualizujZostatok();
+            await AktualizujZostatok();
             UpdateSlidersLock();
         }
 
@@ -78,7 +77,6 @@ namespace bankova_aplikacia
 
         private void BtnOdhlasit_Click(object sender, RoutedEventArgs e)
         {
-            // -- odhlasi uzivatela a vrati ho na login okno --
             loginWindow login = new loginWindow();
             login.Show();
             this.Close();
@@ -119,7 +117,6 @@ namespace bankova_aplikacia
                 return;
             }
 
-            // -- skontroluj ci vydavok neprekroci prijem --
             double celkom = SpocitajVsetkyVydavky();
             double prijem = 0;
             double.TryParse(MPrijem.Text, System.Globalization.NumberStyles.Any,
@@ -139,11 +136,10 @@ namespace bankova_aplikacia
             sumaBox.Text = "0";
             sumaBox.Foreground = Brushes.Gray;
 
-            // -- automaticky aktualizuj metriky hore --
             AktualizujMetriky();
+            AktualizujGrafVydavkov();
         }
 
-        // -- spocita vsetky vydavky zo vsetkych zoznamov --
         private double SpocitajVsetkyVydavky()
         {
             double celkom = 0;
@@ -165,7 +161,6 @@ namespace bankova_aplikacia
             return suma;
         }
 
-        // -- aktualizuje tri metriky hore v prehlad paneli --
         private void AktualizujMetriky()
         {
             double.TryParse(MPrijem.Text, System.Globalization.NumberStyles.Any,
@@ -182,15 +177,114 @@ namespace bankova_aplikacia
             _prijem = prijem;
         }
 
-        private void AktualizujZostatok()
+        private async Task AktualizujZostatok()
+        {
+            double zostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
+            _zostatok = zostatok;
+            TxtZostatok.Text = $"Dostupný zostatok: {zostatok:F2} €";
+            double.TryParse(MPrijem.Text, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.CurrentCulture, out double prijem);
+            TxtSporiaci.Text = $"Odporúčaná suma: {prijem * 0.30:F2} € (30% z príjmu {prijem:F2} €)";
+        }
+
+        private async void BtnUlozZostatokNaUcet_Click(object sender, RoutedEventArgs e)
         {
             double.TryParse(MPrijem.Text, System.Globalization.NumberStyles.Any,
                 System.Globalization.CultureInfo.CurrentCulture, out double prijem);
             double celkom = SpocitajVsetkyVydavky();
-            _zostatok = prijem - celkom;
-            _prijem = prijem;
-            TxtZostatok.Text = $"Dostupný zostatok: {_zostatok:F2} €";
-            TxtSporiaci.Text = $"Odporúčaná suma: {prijem * 0.30:F2} € (30% z príjmu {prijem:F2} €)";
+            double zostatok = prijem - celkom;
+
+            if (zostatok <= 0)
+            {
+                MessageBox.Show("Nemáš žiadny zostatok na uloženie!", "Chyba",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            double aktualnyZostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
+            double novyZostatok = aktualnyZostatok + zostatok;
+            await Database.UlozZostatok(App.PrihlasenyEmail, novyZostatok);
+
+            MessageBox.Show($"Na účet bolo pripísaných {zostatok:F2} €\nCelkový zostatok na účte: {novyZostatok:F2} €",
+                "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        // -- aktualizuje kruhovy graf vydavkov --
+        private void AktualizujGrafVydavkov()
+        {
+            double nutne = 0, hlavne = 0, osobne = 0, volne = 0;
+            foreach (var item in ZoznamVydavkov.Items) nutne += ParseSuma(item.ToString());
+            foreach (var item in ZoznamVydavkov2.Items) hlavne += ParseSuma(item.ToString());
+            foreach (var item in ZoznamVydavkov3.Items) osobne += ParseSuma(item.ToString());
+            foreach (var item in ZoznamVydavkov4.Items) volne += ParseSuma(item.ToString());
+
+            if (nutne + hlavne + osobne + volne == 0) return;
+
+            GrafVydavkov.Series = new ISeries[]
+            {
+                new PieSeries<double>
+                {
+                    Values = new double[] { nutne },
+                    Name = "Nutné",
+                    Fill = new SolidColorPaint(SKColor.Parse("#E24B4A"))
+                },
+                new PieSeries<double>
+                {
+                    Values = new double[] { hlavne },
+                    Name = "Hlavné",
+                    Fill = new SolidColorPaint(SKColor.Parse("#2E6DA4"))
+                },
+                new PieSeries<double>
+                {
+                    Values = new double[] { osobne },
+                    Name = "Osobné",
+                    Fill = new SolidColorPaint(SKColor.Parse("#32B432"))
+                },
+                new PieSeries<double>
+                {
+                    Values = new double[] { volne },
+                    Name = "Voľné",
+                    Fill = new SolidColorPaint(SKColor.Parse("#FFA500"))
+                }
+            };
+        }
+
+        // -- aktualizuje kruhovy graf portfolia --
+        private void AktualizujGrafPortfolia(List<Dictionary<string, object>> portfolio)
+        {
+            if (portfolio.Count == 0) return;
+
+            var serie = new List<ISeries>();
+            var farby = new[]
+            {
+                "#E24B4A", "#2E6DA4", "#32B432", "#FFA500",
+                "#9B59B6", "#1ABC9C", "#F39C12"
+            };
+
+            var skupiny = new Dictionary<string, double>();
+            foreach (var poz in portfolio)
+            {
+                string symbol = poz.ContainsKey("Symbol") ? poz["Symbol"].ToString()! : "-";
+                double suma = poz.ContainsKey("SumaEur") ? Convert.ToDouble(poz["SumaEur"]) : 0;
+                if (skupiny.ContainsKey(symbol))
+                    skupiny[symbol] += suma;
+                else
+                    skupiny[symbol] = suma;
+            }
+
+            int i = 0;
+            foreach (var kvp in skupiny)
+            {
+                serie.Add(new PieSeries<double>
+                {
+                    Values = new double[] { kvp.Value },
+                    Name = kvp.Key,
+                    Fill = new SolidColorPaint(SKColor.Parse(farby[i % farby.Length]))
+                });
+                i++;
+            }
+
+            GrafPortfolia.Series = serie;
         }
 
         // ===== FOCUS HANDLERY PRE TEXTBOXY =====
@@ -237,7 +331,6 @@ namespace bankova_aplikacia
 
         private void MPrijem_TextChanged(object sender, TextChangedEventArgs e)
         {
-            // -- pri zmene prijmu automaticky aktualizuj metriky --
             if (IsLoaded) AktualizujMetriky();
         }
 
@@ -362,6 +455,60 @@ namespace bankova_aplikacia
                 return;
             }
 
+            if (total == 0)
+            {
+                MessageBox.Show("Nenastavil si žiadne investície!", "Chyba",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            Dictionary<string, double> ceny = new Dictionary<string, double>();
+            try
+            {
+                var securities = await Yahoo.Symbols("SPY", "URTH", "AAPL", "TSLA", "NVDA", "BTC-USD", "ETH-USD")
+                    .Fields(Field.RegularMarketPrice)
+                    .QueryAsync();
+                ceny["SPY"] = securities["SPY"][Field.RegularMarketPrice];
+                ceny["URTH"] = securities["URTH"][Field.RegularMarketPrice];
+                ceny["AAPL"] = securities["AAPL"][Field.RegularMarketPrice];
+                ceny["TSLA"] = securities["TSLA"][Field.RegularMarketPrice];
+                ceny["NVDA"] = securities["NVDA"][Field.RegularMarketPrice];
+                ceny["BTC"] = securities["BTC-USD"][Field.RegularMarketPrice];
+                ceny["ETH"] = securities["ETH-USD"][Field.RegularMarketPrice];
+            }
+            catch
+            {
+                MessageBox.Show("Nepodarilo sa načítať aktuálne kurzy!", "Chyba",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var slidery = new Dictionary<string, double>
+            {
+                { "SPY", SliderSPY.Value },
+                { "URTH", SliderURTH.Value },
+                { "AAPL", SliderAAPL.Value },
+                { "TSLA", SliderTSLA.Value },
+                { "NVDA", SliderNVDA.Value },
+                { "BTC", SliderBTC.Value },
+                { "ETH", SliderETH.Value }
+            };
+
+            foreach (var slider in slidery)
+            {
+                if (slider.Value > 0)
+                {
+                    double sumaEur = _zostatok * slider.Value / 100;
+                    double nakupnaCena = ceny[slider.Key];
+                    double kusy = sumaEur / nakupnaCena;
+                    await Database.UlozPozíciu(App.PrihlasenyEmail, slider.Key, kusy, nakupnaCena, sumaEur);
+                }
+            }
+
+            double investovana = _zostatok * total / 100;
+            double aktualnyZostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
+            await Database.UlozZostatok(App.PrihlasenyEmail, aktualnyZostatok - investovana);
+
             var investicia = new Dictionary<string, object>
             {
                 { "Gmail", App.PrihlasenyEmail },
@@ -373,15 +520,15 @@ namespace bankova_aplikacia
                 { "NVDA", $"{SliderNVDA.Value:F0}% ({_zostatok * SliderNVDA.Value / 100:F2} €)" },
                 { "BTC", $"{SliderBTC.Value:F0}% ({_zostatok * SliderBTC.Value / 100:F2} €)" },
                 { "ETH", $"{SliderETH.Value:F0}% ({_zostatok * SliderETH.Value / 100:F2} €)" },
-                { "Celkom", $"{_zostatok * total / 100:F2} €" }
+                { "Celkom", $"{investovana:F2} €" }
             };
 
             await Database.UlozHistoriu(App.PrihlasenyEmail, investicia);
 
-            MessageBox.Show($"Investície potvrdené!\nCelkom investované: {_zostatok * total / 100:F2} €",
+            MessageBox.Show($"Investície potvrdené!\nCelkom investované: {investovana:F2} €",
                 "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
+
             ResetSliders();
-            resetZostatokPrijem();
             UpdateSlidersLock();
         }
 
@@ -395,38 +542,17 @@ namespace bankova_aplikacia
             SliderBTC.Value = 0;
             SliderETH.Value = 0;
         }
-        private void resetZostatokPrijem()
-        {
-            _zostatok = 0;
-            _prijem = 0;
-            MPrijem.Text = "0";
-            MPrijem.Foreground = Brushes.Gray;
-            TxtZostatok.Text = $"Dostupný zostatok: {_zostatok:F2} €";
-            TxtSporiaci.Text = $"Odporúčaná suma: {_prijem * 0.30:F2} € (30% z príjmu {_prijem:F2} €)";
-        }
 
         private void UpdateSlidersLock()
         {
-            if (_zostatok > 0)
-            {
-                SliderSPY.IsEnabled = true;
-                SliderURTH.IsEnabled = true;
-                SliderAAPL.IsEnabled = true;
-                SliderTSLA.IsEnabled = true;
-                SliderNVDA.IsEnabled = true;
-                SliderBTC.IsEnabled = true;
-                SliderETH.IsEnabled = true;
-            }
-            else
-            {
-                SliderSPY.IsEnabled = false;
-                SliderURTH.IsEnabled = false;
-                SliderAAPL.IsEnabled = false;
-                SliderTSLA.IsEnabled = false;
-                SliderNVDA.IsEnabled = false;
-                SliderBTC.IsEnabled = false;
-                SliderETH.IsEnabled = false;
-            }
+            bool enabled = _zostatok > 0;
+            SliderSPY.IsEnabled = enabled;
+            SliderURTH.IsEnabled = enabled;
+            SliderAAPL.IsEnabled = enabled;
+            SliderTSLA.IsEnabled = enabled;
+            SliderNVDA.IsEnabled = enabled;
+            SliderBTC.IsEnabled = enabled;
+            SliderETH.IsEnabled = enabled;
         }
 
         // ===== PANEL HISTORIA =====
@@ -473,7 +599,6 @@ namespace bankova_aplikacia
 
         private async Task NacitajUdajeUzivatela()
         {
-            // -- nacitaj meno uzivatela z databazy --
             string meno = await Database.NacitajMeno(App.PrihlasenyEmail);
             TxtMeno.Text = meno;
             TxtEmail.Text = App.PrihlasenyEmail;
@@ -507,6 +632,136 @@ namespace bankova_aplikacia
             if (uspech)
                 MessageBox.Show("Heslo bolo úspešne zmenené!", "Úspech",
                     MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        // ===== PANEL UCET =====
+
+        private async void BtnUcet_Click(object sender, RoutedEventArgs e)
+        {
+            PrepniPanel(PanelUcet, BtnUcet);
+            await NacitajPortfolio();
+        }
+
+        private async Task NacitajPortfolio()
+        {
+            var portfolio = await Database.NacitajPortfolio(App.PrihlasenyEmail);
+            double zostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
+            TxtUcetZostatok.Text = $"{zostatok:F2} €";
+
+            if (portfolio.Count == 0)
+            {
+                ZoznamPortfolia.ItemsSource = null;
+                TxtPrazdnePortfolio.Visibility = Visibility.Visible;
+                return;
+            }
+
+            TxtPrazdnePortfolio.Visibility = Visibility.Collapsed;
+
+            var zoznam = new List<object>();
+            foreach (var poz in portfolio)
+            {
+                string symbol = poz.ContainsKey("Symbol") ? poz["Symbol"].ToString()! : "-";
+                double kusy = poz.ContainsKey("Kusy") ? Convert.ToDouble(poz["Kusy"]) : 0;
+                double sumaEur = poz.ContainsKey("SumaEur") ? Convert.ToDouble(poz["SumaEur"]) : 0;
+                string docId = poz.ContainsKey("DocId") ? poz["DocId"].ToString()! : "";
+                string datum = poz.ContainsKey("Datum") ? poz["Datum"].ToString()! : "-";
+
+                zoznam.Add(new
+                {
+                    Symbol = symbol,
+                    Info = $"{kusy:F4} ks • Kúpené: {datum} • Zaplatené: {sumaEur:F2} €",
+                    AktualnaHodnota = $"{sumaEur:F2} €",
+                    ZiskStrata = "Načítavam kurz...",
+                    ZiskStrataFarba = "#888888",
+                    DocId = docId,
+                    SumaEur = sumaEur
+                });
+            }
+
+            ZoznamPortfolia.ItemsSource = zoznam;
+            AktualizujGrafPortfolia(portfolio);
+            _ = AktualizujHodnotyPortfolia(portfolio);
+        }
+
+        private async Task AktualizujHodnotyPortfolia(List<Dictionary<string, object>> portfolio)
+        {
+            try
+            {
+                var securities = await Yahoo.Symbols("SPY", "URTH", "AAPL", "TSLA", "NVDA", "BTC-USD", "ETH-USD")
+                    .Fields(Field.RegularMarketPrice)
+                    .QueryAsync();
+
+                var zoznam = new List<object>();
+                foreach (var poz in portfolio)
+                {
+                    string symbol = poz.ContainsKey("Symbol") ? poz["Symbol"].ToString()! : "-";
+                    double kusy = poz.ContainsKey("Kusy") ? Convert.ToDouble(poz["Kusy"]) : 0;
+                    double sumaEur = poz.ContainsKey("SumaEur") ? Convert.ToDouble(poz["SumaEur"]) : 0;
+                    string docId = poz.ContainsKey("DocId") ? poz["DocId"].ToString()! : "";
+                    string datum = poz.ContainsKey("Datum") ? poz["Datum"].ToString()! : "-";
+
+                    string yahooSymbol = symbol == "BTC" ? "BTC-USD" : symbol == "ETH" ? "ETH-USD" : symbol;
+                    double aktualnaHodnota = sumaEur;
+                    string ziskStrataText = "Kurz nedostupný";
+                    string farba = "#888888";
+
+                    if (securities.ContainsKey(yahooSymbol))
+                    {
+                        double aktCena = securities[yahooSymbol][Field.RegularMarketPrice];
+                        aktualnaHodnota = kusy * aktCena;
+                        double zisk = aktualnaHodnota - sumaEur;
+                        string smer = zisk >= 0 ? "▲" : "▼";
+                        ziskStrataText = $"{smer} {Math.Abs(zisk):F2} € ({(zisk / sumaEur * 100):F1}%)";
+                        farba = zisk >= 0 ? "#32B432" : "#DC3232";
+                    }
+
+                    zoznam.Add(new
+                    {
+                        Symbol = symbol,
+                        Info = $"{kusy:F4} ks • Kúpené: {datum} • Zaplatené: {sumaEur:F2} €",
+                        AktualnaHodnota = $"{aktualnaHodnota:F2} €",
+                        ZiskStrata = ziskStrataText,
+                        ZiskStrataFarba = farba,
+                        DocId = docId,
+                        SumaEur = sumaEur
+                    });
+                }
+
+                Dispatcher.Invoke(() => ZoznamPortfolia.ItemsSource = zoznam);
+            }
+            catch { }
+        }
+
+        private async void BtnPredaj_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = (Button)sender;
+            string docId = btn.Tag?.ToString() ?? "";
+
+            var potvrdit = MessageBox.Show("Naozaj chceš predať túto investíciu?", "Predaj",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (potvrdit != MessageBoxResult.Yes) return;
+
+            var item = btn.DataContext as dynamic;
+            if (item == null) return;
+
+            double sumaEur = (double)item.SumaEur;
+
+            double zostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
+            zostatok += sumaEur;
+            await Database.UlozZostatok(App.PrihlasenyEmail, zostatok);
+
+            await Database.PredajPozíciu(docId);
+
+            MessageBox.Show($"Investícia predaná! Na účet ti bolo pripísaných {sumaEur:F2} €",
+                "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            await NacitajPortfolio();
+        }
+
+        private void GrafVydavkov_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

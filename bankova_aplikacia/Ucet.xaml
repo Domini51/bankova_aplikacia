@@ -1,0 +1,115 @@
+﻿<UserControl x:Class="bankova_aplikacia.Ucet"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF">
+    <Grid>
+
+        <!-- ===== OBSAH ===== -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="30,20">
+
+                <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                        BorderBrush="#D0D0D0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Zostatok na účte" FontSize="13" Foreground="#888888" Margin="0,0,0,6"/>
+                        <TextBlock x:Name="TxtUcetZostatok" Text="0 €" FontSize="32"
+                                   FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                        BorderBrush="#D0D0D0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Rozloženie portfólia" FontSize="18" FontWeight="SemiBold"
+                                   Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                        <lvc:PieChart x:Name="GrafPortfolia"
+                                      Height="347"
+                                      LegendPosition="Right"
+                                      RenderTransformOrigin="0.507,0.496"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
+                        BorderBrush="#D0D0D0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="Moje portfólio" FontSize="18" FontWeight="SemiBold"
+                                   Foreground="#1A1A1A" Margin="0,0,0,15"/>
+                        <ItemsControl x:Name="ZoznamPortfolia">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#F5F5F5" CornerRadius="8" Padding="16" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding Symbol}" FontSize="16"
+                                                           FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                                <TextBlock Text="{Binding Info}" FontSize="13"
+                                                           Foreground="#888888" Margin="0,4,0,0"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                <TextBlock Text="{Binding AktualnaHodnota}" FontSize="15"
+                                                           FontWeight="SemiBold" Foreground="#1A1A1A"
+                                                           HorizontalAlignment="Right"/>
+                                                <TextBlock Text="{Binding ZiskStrata}" FontSize="13"
+                                                           Foreground="{Binding ZiskStrataFarba}"
+                                                           HorizontalAlignment="Right" Margin="0,4,0,0"/>
+                                            </StackPanel>
+                                            <Button Grid.Column="2"
+                                                    Content="Predať" Height="36" Width="80"
+                                                    Background="#E24B4A" Foreground="White"
+                                                    BorderThickness="0" FontSize="13"
+                                                    Tag="{Binding DocId}"
+                                                    Click="BtnPredaj_Click"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock x:Name="TxtPrazdnePortfolio"
+                                   Text="Zatiaľ žiadne investície."
+                                   FontSize="14" Foreground="#888888"
+                                   Margin="0,10,0,0" Visibility="Collapsed"/>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- ===== SPINNER ===== -->
+        <Grid x:Name="SpinnerOverlay"
+              Background="#88F5F5F5"
+              Visibility="Collapsed">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Border Width="60" Height="60">
+                    <Border.RenderTransform>
+                        <RotateTransform x:Name="SpinnerRotate" CenterX="30" CenterY="30"/>
+                    </Border.RenderTransform>
+                    <Border.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="SpinnerRotate"
+                                        Storyboard.TargetProperty="Angle"
+                                        From="0" To="360"
+                                        Duration="0:0:0.8"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Border.Triggers>
+                    <Ellipse Width="60" Height="60"
+                             Stroke="#2E6DA4" StrokeThickness="5"
+                             StrokeDashArray="10 5"/>
+                </Border>
+                <TextBlock Text="Načítavam portfólio..."
+                           FontSize="14" Foreground="#555555"
+                           HorizontalAlignment="Center" Margin="0,12,0,0"/>
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</UserControl>

@@ -179,22 +179,47 @@ namespace bankova_aplikacia
             }
         }
 
-        // -- ulozi kupenu poziciu do portfolia --
+        // -- ulozi kupenu poziciu, ak uz existuje pripocita ku existujucej --
         public static async Task UlozPozíciu(string gmail, string symbol, double kusy, double nakupnaCena, double sumaEur)
         {
             try
             {
                 CollectionReference col = db!.Collection("Portfolio");
-                Dictionary<string, object> pozicia = new Dictionary<string, object>
+
+                // -- skontroluj ci uz existuje pozicia s rovnakym symbolom --
+                Query query = col.WhereEqualTo("Gmail", gmail).WhereEqualTo("Symbol", symbol);
+                QuerySnapshot snapshot = await query.GetSnapshotAsync();
+
+                if (snapshot.Count > 0)
                 {
-                    { "Gmail", gmail },
-                    { "Symbol", symbol },
-                    { "Kusy", kusy },
-                    { "NakupnaCena", nakupnaCena },
-                    { "SumaEur", sumaEur },
-                    { "Datum", DateTime.Now.ToString("dd.MM.yyyy HH:mm") }
-                };
-                await col.AddAsync(pozicia);
+                    // -- uz existuje, pripocitaj kusy a sumu k existujucej pozicii --
+                    DocumentReference existujuciDoc = snapshot.Documents[0].Reference;
+                    var existujucaData = snapshot.Documents[0].ToDictionary();
+
+                    double doterajsieKusy = existujucaData.ContainsKey("Kusy") ? Convert.ToDouble(existujucaData["Kusy"]) : 0;
+                    double doterajsiaSuma = existujucaData.ContainsKey("SumaEur") ? Convert.ToDouble(existujucaData["SumaEur"]) : 0;
+
+                    await existujuciDoc.UpdateAsync(new Dictionary<string, object>
+                    {
+                        { "Kusy", doterajsieKusy + kusy },
+                        { "SumaEur", doterajsiaSuma + sumaEur },
+                        { "NakupnaCena", nakupnaCena }
+                    });
+                }
+                else
+                {
+                    // -- neexistuje, vytvor novu poziciu --
+                    Dictionary<string, object> pozicia = new Dictionary<string, object>
+                    {
+                        { "Gmail", gmail },
+                        { "Symbol", symbol },
+                        { "Kusy", kusy },
+                        { "NakupnaCena", nakupnaCena },
+                        { "SumaEur", sumaEur },
+                        { "Datum", DateTime.Now.ToString("dd.MM.yyyy HH:mm") }
+                    };
+                    await col.AddAsync(pozicia);
+                }
             }
             catch (Exception ex)
             {
@@ -227,7 +252,46 @@ namespace bankova_aplikacia
             }
         }
 
-        // -- vymaze poziciu z portfolia pri predaji --
+        // -- ciastocny predaj pozicie, odpocita kusy a sumu --
+        public static async Task<bool> CiastocnyPredaj(string docId, double predavaneKusy, double predavanaSuma)
+        {
+            try
+            {
+                DocumentReference doc = db!.Collection("Portfolio").Document(docId);
+                DocumentSnapshot snapshot = await doc.GetSnapshotAsync();
+                if (!snapshot.Exists) return false;
+
+                var data = snapshot.ToDictionary();
+                double aktualneKusy = data.ContainsKey("Kusy") ? Convert.ToDouble(data["Kusy"]) : 0;
+                double aktualnaSum = data.ContainsKey("SumaEur") ? Convert.ToDouble(data["SumaEur"]) : 0;
+
+                double zostatokKusy = aktualneKusy - predavaneKusy;
+                double zostatokSuma = aktualnaSum - predavanaSuma;
+
+                if (zostatokKusy <= 0)
+                {
+                    // -- predava vsetko, vymaz poziciu --
+                    await doc.DeleteAsync();
+                }
+                else
+                {
+                    // -- predava cast, aktualizuj poziciu --
+                    await doc.UpdateAsync(new Dictionary<string, object>
+                    {
+                        { "Kusy", zostatokKusy },
+                        { "SumaEur", zostatokSuma }
+                    });
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                return false;
+            }
+        }
+
+        // -- vymaze celu poziciu z portfolia pri predaji --
         public static async Task<bool> PredajPozíciu(string docId)
         {
             try

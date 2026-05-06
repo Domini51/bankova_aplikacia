@@ -6,6 +6,10 @@ namespace bankova_aplikacia
     {
         public static string PrihlasenyEmail { get; set; } = "";
 
+        // -- zdielany zostatok a prijem medzi panelmi --
+        public static double AktualnyZostatok { get; set; } = 0;
+        public static double AktualnyPrijem { get; set; } = 0;
+
         protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);

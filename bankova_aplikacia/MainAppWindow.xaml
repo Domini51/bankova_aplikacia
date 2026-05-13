@@ -25,8 +25,8 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="220"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="280"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
         <!-- ===== SIDEBAR ===== -->
@@ -39,17 +39,18 @@
 
             <StackPanel Grid.Row="0" Margin="18,20,18,16">
                 <Image Source="/Assets/investicna_banka_logo-1-removebg-preview.png.png"
-                       Height="60" HorizontalAlignment="Left"
-                       RenderOptions.BitmapScalingMode="HighQuality"/>
-                <Border Height="1" Background="#222222" Margin="0,14,0,0"/>
+                       Height="94" HorizontalAlignment="Left"
+                       RenderOptions.BitmapScalingMode="HighQuality" Width="215"/>
+                <Border Height="1" Background="#333333" Margin="0,16,0,0"/>
             </StackPanel>
 
             <StackPanel Grid.Row="1" Margin="0,8,0,0">
                 <Button x:Name="BtnPrehlad"
-                        Height="46" HorizontalContentAlignment="Left"
+                        Content="  Výpočet výdavkov"
+                        Height="50" HorizontalContentAlignment="Left"
                         Background="#2A2A2A" Foreground="White"
                         BorderThickness="3,0,0,0" BorderBrush="White"
-                        FontSize="13" Padding="17,0,0,0"
+                        FontSize="19" Padding="17,0,0,0"
                         RenderTransformOrigin="0.5,0.5"
                         Click="BtnPrehlad_Click">
                     <Button.Content>
@@ -65,9 +66,10 @@
                 </Button>
 
                 <Button x:Name="BtnHistoria"
-                        Height="46" HorizontalContentAlignment="Left"
-                        Background="Transparent" Foreground="#666666"
-                        BorderThickness="0" FontSize="13" Padding="20,0,0,0"
+                        Content="  História"
+                        Height="50" HorizontalContentAlignment="Left"
+                        Background="Transparent" Foreground="#AAAAAA"
+                        BorderThickness="0" FontSize="19" Padding="20,0,0,0"
                         RenderTransformOrigin="0.5,0.5"
                         Click="BtnHistoria_Click">
                     <Button.Content>
@@ -83,9 +85,10 @@
                 </Button>
 
                 <Button x:Name="BtnInvesticie"
-                        Height="46" HorizontalContentAlignment="Left"
-                        Background="Transparent" Foreground="#666666"
-                        BorderThickness="0" FontSize="13" Padding="20,0,0,0"
+                        Content="  Investície"
+                        Height="50" HorizontalContentAlignment="Left"
+                        Background="Transparent" Foreground="#AAAAAA"
+                        BorderThickness="0" FontSize="19" Padding="20,0,0,0"
                         RenderTransformOrigin="0.5,0.5"
                         Click="BtnInvesticie_Click">
                     <Button.Content>
@@ -101,9 +104,10 @@
                 </Button>
 
                 <Button x:Name="BtnUcet"
-                        Height="46" HorizontalContentAlignment="Left"
-                        Background="Transparent" Foreground="#666666"
-                        BorderThickness="0" FontSize="13" Padding="20,0,0,0"
+                        Content="  Účet"
+                        Height="50" HorizontalContentAlignment="Left"
+                        Background="Transparent" Foreground="#AAAAAA"
+                        BorderThickness="0" FontSize="19" Padding="20,0,0,0"
                         RenderTransformOrigin="0.5,0.5"
                         Click="BtnUcet_Click">
                     <Button.Content>
@@ -122,9 +126,10 @@
             <StackPanel Grid.Row="2" Margin="0,0,0,12">
                 <Border Height="1" Background="#222222" Margin="18,0,18,8"/>
                 <Button x:Name="BtnNastavenia"
-                        Height="46" HorizontalContentAlignment="Left"
-                        Background="Transparent" Foreground="#666666"
-                        BorderThickness="0" FontSize="13" Padding="20,0,0,0"
+                        Content="  Nastavenia"
+                        Height="50" HorizontalContentAlignment="Left"
+                        Background="Transparent" Foreground="#AAAAAA"
+                        BorderThickness="0" FontSize="19" Padding="20,0,0,0"
                         RenderTransformOrigin="0.5,0.5"
                         Click="BtnNastavenia_Click">
                     <Button.Content>
@@ -139,18 +144,11 @@
                     </Button.RenderTransform>
                 </Button>
                 <Button x:Name="BtnOdhlasit"
-                        Height="46" HorizontalContentAlignment="Left"
+                        Content="  Odhlásiť sa"
+                        Height="50" HorizontalContentAlignment="Left"
                         Background="Transparent" Foreground="#E24B4A"
-                        BorderThickness="0" FontSize="13" Padding="20,0,0,0"
-                        Click="BtnOdhlasit_Click">
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="⬡" FontSize="13" Foreground="#6B2020"
-                                       VerticalAlignment="Center" Margin="0,0,8,0"/>
-                            <TextBlock Text="Odhlásiť sa" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button.Content>
-                </Button>
+                        BorderThickness="0" FontSize="19" Padding="20,0,0,0"
+                        Click="BtnOdhlasit_Click"/>
             </StackPanel>
         </Grid>
 

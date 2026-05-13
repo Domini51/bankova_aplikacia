@@ -19,18 +19,14 @@ namespace bankova_aplikacia
             InitializeComponent();
         }
 
-        // -- nacita portfolio a zostatok z databazy --
         public async Task NacitajPortfolio()
         {
-            // -- zobraz spinner kym sa nacitava portfolio --
             SpinnerOverlay.Visibility = Visibility.Visible;
-
-            // -- spomalenie aby bol spinner viditelny --
             await Task.Delay(1500);
 
             var portfolio = await Database.NacitajPortfolio(App.PrihlasenyEmail);
             double zostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
-            TxtUcetZostatok.Text = $"{zostatok:F2} €";
+            TxtUcetZostatok.Text = zostatok.ToString("F2") + " €";
 
             if (portfolio.Count == 0)
             {
@@ -43,19 +39,30 @@ namespace bankova_aplikacia
             TxtPrazdnePortfolio.Visibility = Visibility.Collapsed;
 
             var zoznam = new List<object>();
-            foreach (var poz in portfolio)
+
+            for (int i = 0; i < portfolio.Count; i++)
             {
-                string symbol = poz.ContainsKey("Symbol") ? poz["Symbol"].ToString()! : "-";
-                double kusy = poz.ContainsKey("Kusy") ? Convert.ToDouble(poz["Kusy"]) : 0;
-                double sumaEur = poz.ContainsKey("SumaEur") ? Convert.ToDouble(poz["SumaEur"]) : 0;
-                string docId = poz.ContainsKey("DocId") ? poz["DocId"].ToString()! : "";
-                string datum = poz.ContainsKey("Datum") ? poz["Datum"].ToString()! : "-";
+                var poz = portfolio[i];
+
+                string symbol = "-";
+                double kusy = 0;
+                double sumaEur = 0;
+                string docId = "";
+                string datum = "-";
+
+                if (poz.ContainsKey("Symbol")) symbol = poz["Symbol"].ToString()!;
+                if (poz.ContainsKey("Kusy")) kusy = Convert.ToDouble(poz["Kusy"]);
+                if (poz.ContainsKey("SumaEur")) sumaEur = Convert.ToDouble(poz["SumaEur"]);
+                if (poz.ContainsKey("DocId")) docId = poz["DocId"].ToString()!;
+                if (poz.ContainsKey("Datum")) datum = poz["Datum"].ToString()!;
+
+                string info = kusy.ToString("F4") + " ks • Kúpené: " + datum + " • Zaplatené: " + sumaEur.ToString("F2") + " €";
 
                 zoznam.Add(new
                 {
                     Symbol = symbol,
-                    Info = $"{kusy:F4} ks • Kúpené: {datum} • Zaplatené: {sumaEur:F2} €",
-                    AktualnaHodnota = $"{sumaEur:F2} €",
+                    Info = info,
+                    AktualnaHodnota = sumaEur.ToString("F2") + " €",
                     ZiskStrata = "Načítavam kurz...",
                     ZiskStrataFarba = "#888888",
                     DocId = docId,
@@ -66,14 +73,11 @@ namespace bankova_aplikacia
 
             ZoznamPortfolia.ItemsSource = zoznam;
             AktualizujGrafPortfolia(portfolio);
-
-            // -- skry spinner po nacitani --
             SpinnerOverlay.Visibility = Visibility.Collapsed;
 
             _ = AktualizujHodnotyPortfolia(portfolio);
         }
 
-        // -- aktualizuje aktualne hodnoty pozicii z Yahoo Finance --
         private async Task AktualizujHodnotyPortfolia(List<Dictionary<string, object>> portfolio)
         {
             try
@@ -83,15 +87,27 @@ namespace bankova_aplikacia
                     .QueryAsync();
 
                 var zoznam = new List<object>();
-                foreach (var poz in portfolio)
-                {
-                    string symbol = poz.ContainsKey("Symbol") ? poz["Symbol"].ToString()! : "-";
-                    double kusy = poz.ContainsKey("Kusy") ? Convert.ToDouble(poz["Kusy"]) : 0;
-                    double sumaEur = poz.ContainsKey("SumaEur") ? Convert.ToDouble(poz["SumaEur"]) : 0;
-                    string docId = poz.ContainsKey("DocId") ? poz["DocId"].ToString()! : "";
-                    string datum = poz.ContainsKey("Datum") ? poz["Datum"].ToString()! : "-";
 
-                    string yahooSymbol = symbol == "BTC" ? "BTC-USD" : symbol == "ETH" ? "ETH-USD" : symbol;
+                for (int i = 0; i < portfolio.Count; i++)
+                {
+                    var poz = portfolio[i];
+
+                    string symbol = "-";
+                    double kusy = 0;
+                    double sumaEur = 0;
+                    string docId = "";
+                    string datum = "-";
+
+                    if (poz.ContainsKey("Symbol")) symbol = poz["Symbol"].ToString()!;
+                    if (poz.ContainsKey("Kusy")) kusy = Convert.ToDouble(poz["Kusy"]);
+                    if (poz.ContainsKey("SumaEur")) sumaEur = Convert.ToDouble(poz["SumaEur"]);
+                    if (poz.ContainsKey("DocId")) docId = poz["DocId"].ToString()!;
+                    if (poz.ContainsKey("Datum")) datum = poz["Datum"].ToString()!;
+
+                    string yahooSymbol = symbol;
+                    if (symbol == "BTC") yahooSymbol = "BTC-USD";
+                    if (symbol == "ETH") yahooSymbol = "ETH-USD";
+
                     double aktualnaHodnota = sumaEur;
                     string ziskStrataText = "Kurz nedostupný";
                     string farba = "#888888";
@@ -101,16 +117,26 @@ namespace bankova_aplikacia
                         double aktCena = securities[yahooSymbol][Field.RegularMarketPrice];
                         aktualnaHodnota = kusy * aktCena;
                         double zisk = aktualnaHodnota - sumaEur;
-                        string smer = zisk >= 0 ? "▲" : "▼";
-                        ziskStrataText = $"{smer} {Math.Abs(zisk):F2} € ({(zisk / sumaEur * 100):F1}%)";
-                        farba = zisk >= 0 ? "#32B432" : "#DC3232";
+
+                        string smer = "▲";
+                        if (zisk < 0) smer = "▼";
+
+                        double percent = zisk / sumaEur * 100;
+                        ziskStrataText = smer + " " + Math.Abs(zisk).ToString("F2") + " € (" + percent.ToString("F1") + "%)";
+
+                        if (zisk >= 0)
+                            farba = "#32B432";
+                        else
+                            farba = "#DC3232";
                     }
+
+                    string info = kusy.ToString("F4") + " ks • Kúpené: " + datum + " • Zaplatené: " + sumaEur.ToString("F2") + " €";
 
                     zoznam.Add(new
                     {
                         Symbol = symbol,
-                        Info = $"{kusy:F4} ks • Kúpené: {datum} • Zaplatené: {sumaEur:F2} €",
-                        AktualnaHodnota = $"{aktualnaHodnota:F2} €",
+                        Info = info,
+                        AktualnaHodnota = aktualnaHodnota.ToString("F2") + " €",
                         ZiskStrata = ziskStrataText,
                         ZiskStrataFarba = farba,
                         DocId = docId,
@@ -124,41 +150,46 @@ namespace bankova_aplikacia
             catch { }
         }
 
-        // -- aktualizuje kruhovy graf portfolia --
         private void AktualizujGrafPortfolia(List<Dictionary<string, object>> portfolio)
         {
-            if (portfolio.Count == 0) return;
+            if (portfolio.Count == 0)
+                return;
 
-            var serie = new List<ISeries>();
-            var farby = new[] { "#E24B4A", "#2E6DA4", "#32B432", "#FFA500", "#9B59B6", "#1ABC9C", "#F39C12" };
-
+            string[] farby = { "#E24B4A", "#2E6DA4", "#32B432", "#FFA500", "#9B59B6", "#1ABC9C", "#F39C12" };
             var skupiny = new Dictionary<string, double>();
-            foreach (var poz in portfolio)
+
+            for (int i = 0; i < portfolio.Count; i++)
             {
-                string symbol = poz.ContainsKey("Symbol") ? poz["Symbol"].ToString()! : "-";
-                double suma = poz.ContainsKey("SumaEur") ? Convert.ToDouble(poz["SumaEur"]) : 0;
+                var poz = portfolio[i];
+
+                string symbol = "-";
+                double suma = 0;
+
+                if (poz.ContainsKey("Symbol")) symbol = poz["Symbol"].ToString()!;
+                if (poz.ContainsKey("SumaEur")) suma = Convert.ToDouble(poz["SumaEur"]);
+
                 if (skupiny.ContainsKey(symbol))
                     skupiny[symbol] += suma;
                 else
                     skupiny[symbol] = suma;
             }
 
-            int i = 0;
+            var serie = new List<ISeries>();
+            int index = 0;
+
             foreach (var kvp in skupiny)
             {
-                serie.Add(new PieSeries<double>
-                {
-                    Values = new double[] { kvp.Value },
-                    Name = kvp.Key,
-                    Fill = new SolidColorPaint(SKColor.Parse(farby[i % farby.Length]))
-                });
-                i++;
+                var s = new PieSeries<double>();
+                s.Values = new double[] { kvp.Value };
+                s.Name = kvp.Key;
+                s.Fill = new SolidColorPaint(SKColor.Parse(farby[index % farby.Length]));
+                serie.Add(s);
+                index++;
             }
 
             GrafPortfolia.Series = serie;
         }
 
-        // -- predaj cast alebo vsetky akcie z pozicie --
         private async void BtnPredaj_Click(object sender, RoutedEventArgs e)
         {
             Button btn = (Button)sender;
@@ -170,17 +201,19 @@ namespace bankova_aplikacia
             double celkoveKusy = (double)item.Kusy;
             double sumaEur = (double)item.SumaEur;
 
-            // -- opytaj sa kolko kusov chce predat --
             string vstup = Microsoft.VisualBasic.Interaction.InputBox(
-                $"Koľko kusov chceš predať? (max {celkoveKusy:F4} ks)",
+                "Koľko kusov chceš predať? (max " + celkoveKusy.ToString("F4") + " ks)",
                 "Predaj akcií", celkoveKusy.ToString("F4"));
 
             if (string.IsNullOrEmpty(vstup)) return;
 
-            if (!double.TryParse(vstup, System.Globalization.NumberStyles.Any,
-                System.Globalization.CultureInfo.CurrentCulture, out double predavaneKusy))
+            double predavaneKusy;
+            bool ok = double.TryParse(vstup, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.CurrentCulture, out predavaneKusy);
+
+            if (!ok)
             {
-                MessageBox.Show("Zadaj platné číslo!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Zadaj platné číslo!");
                 return;
             }
 
@@ -189,16 +222,14 @@ namespace bankova_aplikacia
 
             if (predavaneKusy <= 0 || predavaneKusy > celkoveKusy)
             {
-                MessageBox.Show($"Zadaj číslo medzi 0 a {celkoveKusy:F4}!", "Chyba",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Zadaj číslo medzi 0 a " + celkoveKusy.ToString("F4") + "!");
                 return;
             }
 
-            // -- vypocitaj kolko eur dostane za predavane kusy --
             double predavanaSuma = sumaEur * (predavaneKusy / celkoveKusy);
 
             var potvrdit = MessageBox.Show(
-                $"Predať {predavaneKusy:F4} ks za {predavanaSuma:F2} €?",
+                "Predať " + predavaneKusy.ToString("F4") + " ks za " + predavanaSuma.ToString("F2") + " €?",
                 "Potvrdenie predaja", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (potvrdit != MessageBoxResult.Yes) return;
@@ -208,8 +239,7 @@ namespace bankova_aplikacia
             await Database.UlozZostatok(App.PrihlasenyEmail, zostatok);
             await Database.CiastocnyPredaj(docId, predavaneKusy, predavanaSuma);
 
-            MessageBox.Show($"Predaj úspešný! Na účet ti bolo pripísaných {predavanaSuma:F2} €",
-                "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Predaj úspešný! Na účet ti bolo pripísaných " + predavanaSuma.ToString("F2") + " €");
 
             await NacitajPortfolio();
         }

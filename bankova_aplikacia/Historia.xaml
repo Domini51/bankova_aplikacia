@@ -5,65 +5,112 @@
         <ItemsControl x:Name="ZoznamHistorie" Margin="30,20">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="White" CornerRadius="10" Padding="20"
-                            Margin="0,0,0,16" BorderBrush="#D0D0D0" BorderThickness="1">
+                    <Border Padding="20"
+                            Margin="0,0,0,16"
+                            Background="White"
+                            BorderBrush="#D0D0D0"
+                            BorderThickness="1"
+                            CornerRadius="10">
                         <StackPanel>
+
                             <Grid Margin="0,0,0,12">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding Datum}" FontSize="16"
-                                           FontWeight="SemiBold" Foreground="#1A1A1A" VerticalAlignment="Center"/>
-                                <Border Grid.Column="1" Background="#1A1A1A" CornerRadius="6" Padding="12,6">
-                                    <TextBlock Text="{Binding Celkom}" FontSize="14" FontWeight="SemiBold" Foreground="White"/>
+                                <TextBlock Grid.Column="0"
+                                           Text="{Binding Datum}"
+                                           FontSize="16"
+                                           FontWeight="SemiBold"
+                                           Foreground="#1A1A1A"
+                                           VerticalAlignment="Center"/>
+                                <Border Grid.Column="1"
+                                        Padding="12,6"
+                                        Background="#1A1A1A"
+                                        CornerRadius="6">
+                                    <TextBlock Text="{Binding Celkom}"
+                                               FontSize="14"
+                                               FontWeight="SemiBold"
+                                               Foreground="White"/>
                                 </Border>
                             </Grid>
+
                             <Border Height="1" Background="#E0E0E0" Margin="0,0,0,12"/>
+
                             <WrapPanel>
-                                <Border Background="#F5F5F5" CornerRadius="6" Padding="10,6" Margin="0,0,8,8">
+
+                                <Border Padding="10,6"
+                                        Margin="0,0,8,8"
+                                        Background="#F5F5F5"
+                                        CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="SPY  " FontSize="13" Foreground="#888888"/>
                                         <TextBlock Text="{Binding SPY}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
                                     </StackPanel>
                                 </Border>
-                                <Border Background="#F5F5F5" CornerRadius="6" Padding="10,6" Margin="0,0,8,8">
+
+                                <Border Padding="10,6"
+                                        Margin="0,0,8,8"
+                                        Background="#F5F5F5"
+                                        CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="URTH  " FontSize="13" Foreground="#888888"/>
                                         <TextBlock Text="{Binding URTH}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
                                     </StackPanel>
                                 </Border>
-                                <Border Background="#F5F5F5" CornerRadius="6" Padding="10,6" Margin="0,0,8,8">
+
+                                <Border Padding="10,6"
+                                        Margin="0,0,8,8"
+                                        Background="#F5F5F5"
+                                        CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="AAPL  " FontSize="13" Foreground="#888888"/>
                                         <TextBlock Text="{Binding AAPL}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
                                     </StackPanel>
                                 </Border>
-                                <Border Background="#F5F5F5" CornerRadius="6" Padding="10,6" Margin="0,0,8,8">
+
+                                <Border Padding="10,6"
+                                        Margin="0,0,8,8"
+                                        Background="#F5F5F5"
+                                        CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="TSLA  " FontSize="13" Foreground="#888888"/>
                                         <TextBlock Text="{Binding TSLA}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
                                     </StackPanel>
                                 </Border>
-                                <Border Background="#F5F5F5" CornerRadius="6" Padding="10,6" Margin="0,0,8,8">
+
+                                <Border Padding="10,6"
+                                        Margin="0,0,8,8"
+                                        Background="#F5F5F5"
+                                        CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="NVDA  " FontSize="13" Foreground="#888888"/>
                                         <TextBlock Text="{Binding NVDA}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
                                     </StackPanel>
                                 </Border>
-                                <Border Background="#F5F5F5" CornerRadius="6" Padding="10,6" Margin="0,0,8,8">
+
+                                <Border Padding="10,6"
+                                        Margin="0,0,8,8"
+                                        Background="#F5F5F5"
+                                        CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="BTC  " FontSize="13" Foreground="#888888"/>
                                         <TextBlock Text="{Binding BTC}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
                                     </StackPanel>
                                 </Border>
-                                <Border Background="#F5F5F5" CornerRadius="6" Padding="10,6" Margin="0,0,8,8">
+
+                                <Border Padding="10,6"
+                                        Margin="0,0,8,8"
+                                        Background="#F5F5F5"
+                                        CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="ETH  " FontSize="13" Foreground="#888888"/>
                                         <TextBlock Text="{Binding ETH}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
                                     </StackPanel>
                                 </Border>
+
                             </WrapPanel>
+
                         </StackPanel>
                     </Border>
                 </DataTemplate>

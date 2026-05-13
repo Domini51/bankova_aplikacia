@@ -15,16 +15,13 @@ namespace bankova_aplikacia
         {
             try
             {
-                string keyPath = System.IO.Path.Combine(
-                    AppDomain.CurrentDomain.BaseDirectory,
-                    "firebase-key.json"
-                );
+                string keyPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "firebase-key.json");
                 Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", keyPath);
                 db = await FirestoreDb.CreateAsync(projectId);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Init chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Init chyba: " + ex.Message);
             }
         }
 
@@ -33,23 +30,22 @@ namespace bankova_aplikacia
             try
             {
                 CollectionReference col = db!.Collection("Pouzivatelia");
-                Query query = col.WhereEqualTo("Gmail", gmail);
-                QuerySnapshot snapshot = await query.GetSnapshotAsync();
+                QuerySnapshot snapshot = await col.WhereEqualTo("Gmail", gmail).GetSnapshotAsync();
+
                 if (snapshot.Count > 0)
                     return false;
 
-                Dictionary<string, object> pouzivatel = new Dictionary<string, object>
-                {
-                    { "Meno", meno },
-                    { "Gmail", gmail },
-                    { "Heslo", heslo }
-                };
+                var pouzivatel = new Dictionary<string, object>();
+                pouzivatel["Meno"] = meno;
+                pouzivatel["Gmail"] = gmail;
+                pouzivatel["Heslo"] = heslo;
+
                 await col.AddAsync(pouzivatel);
                 return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Registruj chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Chyba pri registracii: " + ex.Message);
                 return false;
             }
         }
@@ -59,13 +55,12 @@ namespace bankova_aplikacia
             try
             {
                 CollectionReference col = db!.Collection("Pouzivatelia");
-                Query query = col.WhereEqualTo("Gmail", gmail).WhereEqualTo("Heslo", heslo);
-                QuerySnapshot snapshot = await query.GetSnapshotAsync();
+                QuerySnapshot snapshot = await col.WhereEqualTo("Gmail", gmail).WhereEqualTo("Heslo", heslo).GetSnapshotAsync();
                 return snapshot.Count > 0;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Prihlas chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Chyba pri prihlaseni: " + ex.Message);
                 return false;
             }
         }
@@ -75,13 +70,12 @@ namespace bankova_aplikacia
             try
             {
                 CollectionReference col = db!.Collection("Pouzivatelia");
-                Query query = col.WhereEqualTo("Gmail", gmail);
-                QuerySnapshot snapshot = await query.GetSnapshotAsync();
+                QuerySnapshot snapshot = await col.WhereEqualTo("Gmail", gmail).GetSnapshotAsync();
                 return snapshot.Count > 0;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Chyba: " + ex.Message);
                 return false;
             }
         }
@@ -91,17 +85,17 @@ namespace bankova_aplikacia
             try
             {
                 CollectionReference col = db!.Collection("Pouzivatelia");
-                Query query = col.WhereEqualTo("Gmail", gmail);
-                QuerySnapshot snapshot = await query.GetSnapshotAsync();
-                if (snapshot.Count == 0) return false;
+                QuerySnapshot snapshot = await col.WhereEqualTo("Gmail", gmail).GetSnapshotAsync();
 
-                DocumentReference doc = snapshot.Documents[0].Reference;
-                await doc.UpdateAsync("Heslo", noveHeslo);
+                if (snapshot.Count == 0)
+                    return false;
+
+                await snapshot.Documents[0].Reference.UpdateAsync("Heslo", noveHeslo);
                 return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Chyba: " + ex.Message);
                 return false;
             }
         }
@@ -110,12 +104,11 @@ namespace bankova_aplikacia
         {
             try
             {
-                CollectionReference col = db!.Collection("Historia");
-                await col.AddAsync(investicia);
+                await db!.Collection("Historia").AddAsync(investicia);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Chyba: " + ex.Message);
             }
         }
 
@@ -124,18 +117,18 @@ namespace bankova_aplikacia
             try
             {
                 CollectionReference col = db!.Collection("Historia");
-                Query query = col.WhereEqualTo("Gmail", gmail);
-                QuerySnapshot snapshot = await query.GetSnapshotAsync();
+                QuerySnapshot snapshot = await col.WhereEqualTo("Gmail", gmail).GetSnapshotAsync();
+
                 var historia = new List<Dictionary<string, object>>();
-                foreach (var doc in snapshot.Documents)
+                for (int i = 0; i < snapshot.Documents.Count; i++)
                 {
-                    historia.Add(doc.ToDictionary());
+                    historia.Add(snapshot.Documents[i].ToDictionary());
                 }
                 return historia;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Chyba: " + ex.Message);
                 return new List<Dictionary<string, object>>();
             }
         }
@@ -145,16 +138,19 @@ namespace bankova_aplikacia
             try
             {
                 CollectionReference col = db!.Collection("Pouzivatelia");
-                Query query = col.WhereEqualTo("Gmail", gmail);
-                QuerySnapshot snapshot = await query.GetSnapshotAsync();
-                if (snapshot.Count == 0) return "";
+                QuerySnapshot snapshot = await col.WhereEqualTo("Gmail", gmail).GetSnapshotAsync();
 
-                var doc = snapshot.Documents[0].ToDictionary();
-                return doc.ContainsKey("Meno") ? doc["Meno"].ToString()! : "";
+                if (snapshot.Count == 0)
+                    return "";
+
+                var data = snapshot.Documents[0].ToDictionary();
+                if (data.ContainsKey("Meno"))
+                    return data["Meno"].ToString()!;
+                return "";
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Chyba: " + ex.Message);
                 return "";
             }
         }
@@ -164,184 +160,182 @@ namespace bankova_aplikacia
             try
             {
                 CollectionReference col = db!.Collection("Pouzivatelia");
-                Query query = col.WhereEqualTo("Gmail", gmail);
-                QuerySnapshot snapshot = await query.GetSnapshotAsync();
-                if (snapshot.Count == 0) return false;
+                QuerySnapshot snapshot = await col.WhereEqualTo("Gmail", gmail).GetSnapshotAsync();
 
-                DocumentReference doc = snapshot.Documents[0].Reference;
-                await doc.UpdateAsync("Meno", noveMeno);
+                if (snapshot.Count == 0)
+                    return false;
+
+                await snapshot.Documents[0].Reference.UpdateAsync("Meno", noveMeno);
                 return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Chyba: " + ex.Message);
                 return false;
             }
         }
 
-        // -- ulozi kupenu poziciu, ak uz existuje pripocita ku existujucej --
         public static async Task UlozPozíciu(string gmail, string symbol, double kusy, double nakupnaCena, double sumaEur)
         {
             try
             {
                 CollectionReference col = db!.Collection("Portfolio");
-
-                // -- skontroluj ci uz existuje pozicia s rovnakym symbolom --
-                Query query = col.WhereEqualTo("Gmail", gmail).WhereEqualTo("Symbol", symbol);
-                QuerySnapshot snapshot = await query.GetSnapshotAsync();
+                QuerySnapshot snapshot = await col.WhereEqualTo("Gmail", gmail).WhereEqualTo("Symbol", symbol).GetSnapshotAsync();
 
                 if (snapshot.Count > 0)
                 {
-                    // -- uz existuje, pripocitaj kusy a sumu k existujucej pozicii --
-                    DocumentReference existujuciDoc = snapshot.Documents[0].Reference;
-                    var existujucaData = snapshot.Documents[0].ToDictionary();
+                    var existData = snapshot.Documents[0].ToDictionary();
 
-                    double doterajsieKusy = existujucaData.ContainsKey("Kusy") ? Convert.ToDouble(existujucaData["Kusy"]) : 0;
-                    double doterajsiaSuma = existujucaData.ContainsKey("SumaEur") ? Convert.ToDouble(existujucaData["SumaEur"]) : 0;
+                    double stareKusy = 0;
+                    double staraSuma = 0;
 
-                    await existujuciDoc.UpdateAsync(new Dictionary<string, object>
-                    {
-                        { "Kusy", doterajsieKusy + kusy },
-                        { "SumaEur", doterajsiaSuma + sumaEur },
-                        { "NakupnaCena", nakupnaCena }
-                    });
+                    if (existData.ContainsKey("Kusy"))
+                        stareKusy = Convert.ToDouble(existData["Kusy"]);
+                    if (existData.ContainsKey("SumaEur"))
+                        staraSuma = Convert.ToDouble(existData["SumaEur"]);
+
+                    var update = new Dictionary<string, object>();
+                    update["Kusy"] = stareKusy + kusy;
+                    update["SumaEur"] = staraSuma + sumaEur;
+                    update["NakupnaCena"] = nakupnaCena;
+
+                    await snapshot.Documents[0].Reference.UpdateAsync(update);
                 }
                 else
                 {
-                    // -- neexistuje, vytvor novu poziciu --
-                    Dictionary<string, object> pozicia = new Dictionary<string, object>
-                    {
-                        { "Gmail", gmail },
-                        { "Symbol", symbol },
-                        { "Kusy", kusy },
-                        { "NakupnaCena", nakupnaCena },
-                        { "SumaEur", sumaEur },
-                        { "Datum", DateTime.Now.ToString("dd.MM.yyyy HH:mm") }
-                    };
+                    var pozicia = new Dictionary<string, object>();
+                    pozicia["Gmail"] = gmail;
+                    pozicia["Symbol"] = symbol;
+                    pozicia["Kusy"] = kusy;
+                    pozicia["NakupnaCena"] = nakupnaCena;
+                    pozicia["SumaEur"] = sumaEur;
+                    pozicia["Datum"] = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
+
                     await col.AddAsync(pozicia);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Chyba: " + ex.Message);
             }
         }
 
-        // -- nacita vsetky pozicie portfolia pre daneho uzivatela --
         public static async Task<List<Dictionary<string, object>>> NacitajPortfolio(string gmail)
         {
             try
             {
                 CollectionReference col = db!.Collection("Portfolio");
-                Query query = col.WhereEqualTo("Gmail", gmail);
-                QuerySnapshot snapshot = await query.GetSnapshotAsync();
+                QuerySnapshot snapshot = await col.WhereEqualTo("Gmail", gmail).GetSnapshotAsync();
+
                 var portfolio = new List<Dictionary<string, object>>();
-                foreach (var doc in snapshot.Documents)
+                for (int i = 0; i < snapshot.Documents.Count; i++)
                 {
-                    // -- pridaj aj id dokumentu aby sme vedeli co mazat pri predaji --
-                    var data = doc.ToDictionary();
-                    data["DocId"] = doc.Id;
+                    var data = snapshot.Documents[i].ToDictionary();
+                    data["DocId"] = snapshot.Documents[i].Id;
                     portfolio.Add(data);
                 }
                 return portfolio;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Chyba: " + ex.Message);
                 return new List<Dictionary<string, object>>();
             }
         }
 
-        // -- ciastocny predaj pozicie, odpocita kusy a sumu --
         public static async Task<bool> CiastocnyPredaj(string docId, double predavaneKusy, double predavanaSuma)
         {
             try
             {
                 DocumentReference doc = db!.Collection("Portfolio").Document(docId);
                 DocumentSnapshot snapshot = await doc.GetSnapshotAsync();
-                if (!snapshot.Exists) return false;
+
+                if (!snapshot.Exists)
+                    return false;
 
                 var data = snapshot.ToDictionary();
-                double aktualneKusy = data.ContainsKey("Kusy") ? Convert.ToDouble(data["Kusy"]) : 0;
-                double aktualnaSum = data.ContainsKey("SumaEur") ? Convert.ToDouble(data["SumaEur"]) : 0;
 
-                double zostatokKusy = aktualneKusy - predavaneKusy;
-                double zostatokSuma = aktualnaSum - predavanaSuma;
+                double aktKusy = 0;
+                double aktSuma = 0;
 
-                if (zostatokKusy <= 0)
+                if (data.ContainsKey("Kusy"))
+                    aktKusy = Convert.ToDouble(data["Kusy"]);
+                if (data.ContainsKey("SumaEur"))
+                    aktSuma = Convert.ToDouble(data["SumaEur"]);
+
+                double novoKusy = aktKusy - predavaneKusy;
+                double novoSuma = aktSuma - predavanaSuma;
+
+                if (novoKusy <= 0)
                 {
-                    // -- predava vsetko, vymaz poziciu --
                     await doc.DeleteAsync();
                 }
                 else
                 {
-                    // -- predava cast, aktualizuj poziciu --
-                    await doc.UpdateAsync(new Dictionary<string, object>
-                    {
-                        { "Kusy", zostatokKusy },
-                        { "SumaEur", zostatokSuma }
-                    });
+                    var update = new Dictionary<string, object>();
+                    update["Kusy"] = novoKusy;
+                    update["SumaEur"] = novoSuma;
+                    await doc.UpdateAsync(update);
                 }
                 return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Chyba: " + ex.Message);
                 return false;
             }
         }
 
-        // -- vymaze celu poziciu z portfolia pri predaji --
         public static async Task<bool> PredajPozíciu(string docId)
         {
             try
             {
-                DocumentReference doc = db!.Collection("Portfolio").Document(docId);
-                await doc.DeleteAsync();
+                await db!.Collection("Portfolio").Document(docId).DeleteAsync();
                 return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Chyba: " + ex.Message);
                 return false;
             }
         }
 
-        // -- ulozi zostatok na ucte uzivatela --
         public static async Task UlozZostatok(string gmail, double zostatok)
         {
             try
             {
                 CollectionReference col = db!.Collection("Pouzivatelia");
-                Query query = col.WhereEqualTo("Gmail", gmail);
-                QuerySnapshot snapshot = await query.GetSnapshotAsync();
-                if (snapshot.Count == 0) return;
+                QuerySnapshot snapshot = await col.WhereEqualTo("Gmail", gmail).GetSnapshotAsync();
 
-                DocumentReference doc = snapshot.Documents[0].Reference;
-                await doc.UpdateAsync("Zostatok", zostatok);
+                if (snapshot.Count == 0)
+                    return;
+
+                await snapshot.Documents[0].Reference.UpdateAsync("Zostatok", zostatok);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Chyba: " + ex.Message);
             }
         }
 
-        // -- nacita zostatok z uctu uzivatela --
         public static async Task<double> NacitajZostatok(string gmail)
         {
             try
             {
                 CollectionReference col = db!.Collection("Pouzivatelia");
-                Query query = col.WhereEqualTo("Gmail", gmail);
-                QuerySnapshot snapshot = await query.GetSnapshotAsync();
-                if (snapshot.Count == 0) return 0;
+                QuerySnapshot snapshot = await col.WhereEqualTo("Gmail", gmail).GetSnapshotAsync();
 
-                var doc = snapshot.Documents[0].ToDictionary();
-                return doc.ContainsKey("Zostatok") ? Convert.ToDouble(doc["Zostatok"]) : 0;
+                if (snapshot.Count == 0)
+                    return 0;
+
+                var data = snapshot.Documents[0].ToDictionary();
+                if (data.ContainsKey("Zostatok"))
+                    return Convert.ToDouble(data["Zostatok"]);
+                return 0;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba: " + ex.Message, "Firebase chyba");
+                MessageBox.Show("Chyba: " + ex.Message);
                 return 0;
             }
         }

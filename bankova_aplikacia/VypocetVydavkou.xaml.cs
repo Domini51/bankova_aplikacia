@@ -15,13 +15,11 @@ namespace bankova_aplikacia
 {
     public partial class VypocetVydavkou : UserControl
     {
-        // -- zostatok a prijem zdielame s ostatnymi panelmi cez App triedu --
         public VypocetVydavkou()
         {
             InitializeComponent();
         }
 
-        // -- prida vydavok do prislusneho zoznamu --
         private void BtnPridajVydavok_Click(object sender, RoutedEventArgs e)
         {
             Button btn = (Button)sender;
@@ -29,18 +27,33 @@ namespace bankova_aplikacia
             TextBox sumaBox;
             ListBox zoznam;
 
-            if (btn.Parent is Grid grid)
+            if (!(btn.Parent is Grid grid))
+                return;
+
+            if (grid.Children.Contains(NazovV1))
             {
-                if (grid.Children.Contains(NazovV1))
-                { nazovBox = NazovV1; sumaBox = Suma1; zoznam = ZoznamVydavkov; }
-                else if (grid.Children.Contains(NazovV2))
-                { nazovBox = NazovV2; sumaBox = Suma2; zoznam = ZoznamVydavkov2; }
-                else if (grid.Children.Contains(NazovV3))
-                { nazovBox = NazovV3; sumaBox = Suma3; zoznam = ZoznamVydavkov3; }
-                else
-                { nazovBox = NazovV4; sumaBox = Suma4; zoznam = ZoznamVydavkov4; }
+                nazovBox = NazovV1;
+                sumaBox = Suma1;
+                zoznam = ZoznamVydavkov;
             }
-            else return;
+            else if (grid.Children.Contains(NazovV2))
+            {
+                nazovBox = NazovV2;
+                sumaBox = Suma2;
+                zoznam = ZoznamVydavkov2;
+            }
+            else if (grid.Children.Contains(NazovV3))
+            {
+                nazovBox = NazovV3;
+                sumaBox = Suma3;
+                zoznam = ZoznamVydavkov3;
+            }
+            else
+            {
+                nazovBox = NazovV4;
+                sumaBox = Suma4;
+                zoznam = ZoznamVydavkov4;
+            }
 
             string nazov = nazovBox.Text;
             string sumaText = sumaBox.Text;
@@ -48,25 +61,28 @@ namespace bankova_aplikacia
             if (string.IsNullOrWhiteSpace(nazov) || nazov == "Názov výdavku")
                 return;
 
-            if (!double.TryParse(sumaText, System.Globalization.NumberStyles.Any,
-                System.Globalization.CultureInfo.CurrentCulture, out double suma))
+            double suma;
+            bool ok = double.TryParse(sumaText, System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.CurrentCulture, out suma);
+
+            if (!ok)
             {
                 MessageBox.Show("Zadaj platnú číselnú hodnotu!");
                 return;
             }
 
             double celkom = SpocitajVsetkyVydavky();
+            double prijem;
             double.TryParse(MPrijem.Text, System.Globalization.NumberStyles.Any,
-                System.Globalization.CultureInfo.CurrentCulture, out double prijem);
+                System.Globalization.CultureInfo.CurrentCulture, out prijem);
 
             if (celkom + suma > prijem)
             {
-                MessageBox.Show($"Nemáš dostatok peňazí! Zostatok: {prijem - celkom:F2} €",
-                    "Nedostatok financií", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Nemáš dostatok peňazí! Zostatok: " + (prijem - celkom).ToString("F2") + " €");
                 return;
             }
 
-            zoznam.Items.Add($"{nazov} - {suma} €");
+            zoznam.Items.Add(nazov + " - " + suma + " €");
 
             nazovBox.Text = "Názov výdavku";
             nazovBox.Foreground = Brushes.Gray;
@@ -77,157 +93,242 @@ namespace bankova_aplikacia
             AktualizujGrafVydavkov();
         }
 
-        // -- spocita vsetky vydavky zo vsetkych zoznamov --
         public double SpocitajVsetkyVydavky()
         {
             double celkom = 0;
-            foreach (var item in ZoznamVydavkov.Items) celkom += ParseSuma(item.ToString());
-            foreach (var item in ZoznamVydavkov2.Items) celkom += ParseSuma(item.ToString());
-            foreach (var item in ZoznamVydavkov3.Items) celkom += ParseSuma(item.ToString());
-            foreach (var item in ZoznamVydavkov4.Items) celkom += ParseSuma(item.ToString());
+
+            for (int i = 0; i < ZoznamVydavkov.Items.Count; i++)
+                celkom += ParseSuma(ZoznamVydavkov.Items[i].ToString());
+
+            for (int i = 0; i < ZoznamVydavkov2.Items.Count; i++)
+                celkom += ParseSuma(ZoznamVydavkov2.Items[i].ToString());
+
+            for (int i = 0; i < ZoznamVydavkov3.Items.Count; i++)
+                celkom += ParseSuma(ZoznamVydavkov3.Items[i].ToString());
+
+            for (int i = 0; i < ZoznamVydavkov4.Items.Count; i++)
+                celkom += ParseSuma(ZoznamVydavkov4.Items[i].ToString());
+
             return celkom;
         }
 
-        // -- rozparsuje sumu z textu ako "Nazov - 50 €" --
-        private double ParseSuma(string? item)
+        private double ParseSuma(string? text)
         {
-            if (item == null) return 0;
-            var parts = item.Split('-');
-            if (parts.Length < 2) return 0;
-            var sumaStr = parts[^1].Replace("€", "").Trim();
+            if (text == null)
+                return 0;
+
+            string[] parts = text.Split('-');
+
+            if (parts.Length < 2)
+                return 0;
+
+            string sumaStr = parts[parts.Length - 1].Replace("€", "").Trim();
+
+            double vysledok;
             double.TryParse(sumaStr, System.Globalization.NumberStyles.Any,
-                System.Globalization.CultureInfo.CurrentCulture, out double suma);
-            return suma;
+                System.Globalization.CultureInfo.CurrentCulture, out vysledok);
+
+            return vysledok;
         }
 
-        // -- aktualizuje textbloky s prijem a celkove minuté --
         public void AktualizujMetriky()
         {
+            double prijem;
             double.TryParse(MPrijem.Text, System.Globalization.NumberStyles.Any,
-                System.Globalization.CultureInfo.CurrentCulture, out double prijem);
+                System.Globalization.CultureInfo.CurrentCulture, out prijem);
 
             double celkom = SpocitajVsetkyVydavky();
             double zostatok = prijem - celkom;
 
-            MetPrijem.Text = $"{prijem:F2} €";
-            MetMinute.Text = $"{celkom:F2} €";
+            MetPrijem.Text = prijem.ToString("F2") + " €";
+            MetMinute.Text = celkom.ToString("F2") + " €";
 
-            // -- ulozime zostatok a prijem do App aby ho videli aj ine panely --
             App.AktualnyZostatok = zostatok;
             App.AktualnyPrijem = prijem;
         }
 
-        // -- ulozi zostatok na ucet do databazy --
         private async void BtnUlozZostatokNaUcet_Click(object sender, RoutedEventArgs e)
         {
+            double prijem;
             double.TryParse(MPrijem.Text, System.Globalization.NumberStyles.Any,
-                System.Globalization.CultureInfo.CurrentCulture, out double prijem);
+                System.Globalization.CultureInfo.CurrentCulture, out prijem);
+
             double celkom = SpocitajVsetkyVydavky();
             double zostatok = prijem - celkom;
 
             if (zostatok <= 0)
             {
-                MessageBox.Show("Nemáš žiadny zostatok na uloženie!", "Chyba",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Nemáš žiadny zostatok na uloženie!");
                 return;
             }
 
-            double aktualnyZostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
-            double novyZostatok = aktualnyZostatok + zostatok;
-            await Database.UlozZostatok(App.PrihlasenyEmail, novyZostatok);
+            double aktualny = await Database.NacitajZostatok(App.PrihlasenyEmail);
+            double novy = aktualny + zostatok;
+            await Database.UlozZostatok(App.PrihlasenyEmail, novy);
 
-            MessageBox.Show($"Na účet bolo pripísaných {zostatok:F2} €\nCelkový zostatok: {novyZostatok:F2} €",
-                "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Na účet bolo pripísaných " + zostatok.ToString("F2") + " €\nCelkový zostatok: " + novy.ToString("F2") + " €");
         }
 
-        // -- aktualizuje kruhovy graf vydavkov --
         private void AktualizujGrafVydavkov()
         {
-            double nutne = 0, hlavne = 0, osobne = 0, volne = 0;
-            foreach (var item in ZoznamVydavkov.Items) nutne += ParseSuma(item.ToString());
-            foreach (var item in ZoznamVydavkov2.Items) hlavne += ParseSuma(item.ToString());
-            foreach (var item in ZoznamVydavkov3.Items) osobne += ParseSuma(item.ToString());
-            foreach (var item in ZoznamVydavkov4.Items) volne += ParseSuma(item.ToString());
+            double nutne = 0;
+            double hlavne = 0;
+            double osobne = 0;
+            double volne = 0;
 
-            if (nutne + hlavne + osobne + volne == 0) return;
+            for (int i = 0; i < ZoznamVydavkov.Items.Count; i++)
+                nutne += ParseSuma(ZoznamVydavkov.Items[i].ToString());
 
-            GrafVydavkov.Series = new ISeries[]
-            {
-                new PieSeries<double> { Values = new double[] { nutne }, Name = "Nutné", Fill = new SolidColorPaint(SKColor.Parse("#E24B4A")) },
-                new PieSeries<double> { Values = new double[] { hlavne }, Name = "Hlavné", Fill = new SolidColorPaint(SKColor.Parse("#2E6DA4")) },
-                new PieSeries<double> { Values = new double[] { osobne }, Name = "Osobné", Fill = new SolidColorPaint(SKColor.Parse("#32B432")) },
-                new PieSeries<double> { Values = new double[] { volne }, Name = "Voľné", Fill = new SolidColorPaint(SKColor.Parse("#FFA500")) }
-            };
+            for (int i = 0; i < ZoznamVydavkov2.Items.Count; i++)
+                hlavne += ParseSuma(ZoznamVydavkov2.Items[i].ToString());
+
+            for (int i = 0; i < ZoznamVydavkov3.Items.Count; i++)
+                osobne += ParseSuma(ZoznamVydavkov3.Items[i].ToString());
+
+            for (int i = 0; i < ZoznamVydavkov4.Items.Count; i++)
+                volne += ParseSuma(ZoznamVydavkov4.Items[i].ToString());
+
+            if (nutne + hlavne + osobne + volne == 0)
+                return;
+
+            var serie = new List<ISeries>();
+
+            var s1 = new PieSeries<double>();
+            s1.Values = new double[] { nutne };
+            s1.Name = "Nutné";
+            s1.Fill = new SolidColorPaint(SKColor.Parse("#E24B4A"));
+            serie.Add(s1);
+
+            var s2 = new PieSeries<double>();
+            s2.Values = new double[] { hlavne };
+            s2.Name = "Hlavné";
+            s2.Fill = new SolidColorPaint(SKColor.Parse("#2E6DA4"));
+            serie.Add(s2);
+
+            var s3 = new PieSeries<double>();
+            s3.Values = new double[] { osobne };
+            s3.Name = "Osobné";
+            s3.Fill = new SolidColorPaint(SKColor.Parse("#32B432"));
+            serie.Add(s3);
+
+            var s4 = new PieSeries<double>();
+            s4.Values = new double[] { volne };
+            s4.Name = "Voľné";
+            s4.Fill = new SolidColorPaint(SKColor.Parse("#FFA500"));
+            serie.Add(s4);
+
+            GrafVydavkov.Series = serie;
         }
 
-        // -- vymaze placeholder text ked uzivatel klikne na pole nazov --
         private void NazovBox_GotFocus(object sender, RoutedEventArgs e)
         {
             TextBox box = (TextBox)sender;
-            if (box.Text == "Názov výdavku") { box.Text = ""; box.Foreground = Brushes.Black; }
+            if (box.Text == "Názov výdavku")
+            {
+                box.Text = "";
+                box.Foreground = Brushes.Black;
+            }
         }
 
-        // -- obnovi placeholder text ak pole ostane prazdne --
         private void NazovBox_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox box = (TextBox)sender;
-            if (string.IsNullOrWhiteSpace(box.Text)) { box.Text = "Názov výdavku"; box.Foreground = Brushes.Gray; }
+            if (string.IsNullOrWhiteSpace(box.Text))
+            {
+                box.Text = "Názov výdavku";
+                box.Foreground = Brushes.Gray;
+            }
         }
 
-        // -- vymaze nulu ked uzivatel klikne na pole sumy --
         private void SumaBox_GotFocus(object sender, RoutedEventArgs e)
         {
             TextBox box = (TextBox)sender;
-            if (box.Text == "0") { box.Text = ""; box.Foreground = Brushes.Black; }
+            if (box.Text == "0")
+            {
+                box.Text = "";
+                box.Foreground = Brushes.Black;
+            }
         }
 
-        // -- obnovi nulu ak pole sumy ostane prazdne --
         private void SumaBox_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox box = (TextBox)sender;
-            if (string.IsNullOrWhiteSpace(box.Text)) { box.Text = "0"; box.Foreground = Brushes.Gray; }
+            if (string.IsNullOrWhiteSpace(box.Text))
+            {
+                box.Text = "0";
+                box.Foreground = Brushes.Gray;
+            }
         }
 
-        // -- pri zmene prijmu prepocita metriky --
         private void MPrijem_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (IsLoaded) AktualizujMetriky();
+            if (IsLoaded)
+                AktualizujMetriky();
         }
 
-        // -- enter v poli prijmu presunie focus dalej --
         private void MPrijem_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
-                if (sender is TextBox tb)
+            {
+                TextBox tb = sender as TextBox;
+                if (tb != null)
                     tb.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            }
         }
 
-        // -- enter v poli nazov presunie focus na pole sumy --
         private void NazovVydavok_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (e.Key != Key.Enter)
+                return;
+
+            TextBox tb = sender as TextBox;
+            if (tb == null) return;
+
+            Grid grid = tb.Parent as Grid;
+            if (grid == null) return;
+
+            TextBox sumaBox = null;
+            for (int i = 0; i < grid.Children.Count; i++)
             {
-                if (sender is not TextBox tb) return;
-                if (tb.Parent is not Grid grid) return;
-                var sumaBox = grid.Children.OfType<TextBox>().FirstOrDefault(x => x != tb);
-                sumaBox?.Focus();
-                sumaBox?.SelectAll();
+                if (grid.Children[i] is TextBox t && t != tb)
+                {
+                    sumaBox = t;
+                    break;
+                }
+            }
+
+            if (sumaBox != null)
+            {
+                sumaBox.Focus();
+                sumaBox.SelectAll();
             }
         }
 
-        // -- enter v poli sumy klikne tlacidlo pridat --
         private void SumaVydavok_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (e.Key != Key.Enter)
+                return;
+
+            TextBox tb = sender as TextBox;
+            if (tb == null) return;
+
+            Grid grid = tb.Parent as Grid;
+            if (grid == null) return;
+
+            Button btn = null;
+            for (int i = 0; i < grid.Children.Count; i++)
             {
-                if (sender is not TextBox tb) return;
-                if (tb.Parent is not Grid grid) return;
-                var btn = grid.Children.OfType<Button>().FirstOrDefault();
-                btn?.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                if (grid.Children[i] is Button b)
+                {
+                    btn = b;
+                    break;
+                }
             }
+
+            if (btn != null)
+                btn.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         }
 
-        // -- prazdna metoda pre event loaded grafu --
         private void GrafVydavkov_Loaded(object sender, RoutedEventArgs e) { }
     }
 }

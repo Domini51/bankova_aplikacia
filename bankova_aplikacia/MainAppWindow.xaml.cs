@@ -11,13 +11,9 @@ namespace bankova_aplikacia
         public MainAppWindow()
         {
             InitializeComponent();
-            // -- nacitaj len udaje uzivatela pri starte --
             _ = NacitajUdajeUzivatela();
         }
 
-        // ===== NAVIGACIA =====
-
-        // -- prepne viditelnost panelov, zvyrazni aktivne tlacidlo a spusti animaciu --
         private void PrepniPanel(UIElement panel, Button aktivne)
         {
             PanelPrehlad.Visibility = Visibility.Collapsed;
@@ -27,43 +23,36 @@ namespace bankova_aplikacia
             PanelNastavenia.Visibility = Visibility.Collapsed;
 
             panel.Visibility = Visibility.Visible;
-
-            // -- spusti fade in animaciu na novom paneli --
             FadeIn(panel);
 
-            // -- reset vsetkych tlacidiel na neaktivny stav --
-            foreach (var btn in new[] { BtnPrehlad, BtnHistoria, BtnInvesticie, BtnUcet, BtnNastavenia })
+            Button[] tlacidla = { BtnPrehlad, BtnHistoria, BtnInvesticie, BtnUcet, BtnNastavenia };
+            for (int i = 0; i < tlacidla.Length; i++)
             {
-                btn.Background = Brushes.Transparent;
-                btn.Foreground = new SolidColorBrush(Color.FromRgb(170, 170, 170));
-                btn.BorderThickness = new Thickness(0);
+                tlacidla[i].Background = Brushes.Transparent;
+                tlacidla[i].Foreground = new SolidColorBrush(Color.FromRgb(170, 170, 170));
+                tlacidla[i].BorderThickness = new Thickness(0);
             }
 
-            // -- zvyrazni aktivne tlacidlo --
             aktivne.Background = new SolidColorBrush(Color.FromRgb(42, 42, 42));
             aktivne.Foreground = Brushes.White;
             aktivne.BorderThickness = new Thickness(3, 0, 0, 0);
             aktivne.BorderBrush = Brushes.White;
         }
 
-        // -- fade in animacia: opacity ide z 0 na 1 za 0.3 sekundy --
         private void FadeIn(UIElement panel)
         {
-            DoubleAnimation animacia = new DoubleAnimation
-            {
-                From = 0,
-                To = 1,
-                Duration = new Duration(System.TimeSpan.FromSeconds(0.3))
-            };
-            panel.BeginAnimation(UIElement.OpacityProperty, animacia);
+            DoubleAnimation anim = new DoubleAnimation();
+            anim.From = 0;
+            anim.To = 1;
+            anim.Duration = new Duration(System.TimeSpan.FromSeconds(0.3));
+            panel.BeginAnimation(UIElement.OpacityProperty, anim);
         }
 
-        // -- spusti pulse animaciu na tlacidlo --
         private void PulseButton(Button btn)
         {
-            Storyboard pulse = (Storyboard)FindResource("PulseAnimacia");
-            Storyboard.SetTarget(pulse, btn);
-            pulse.Begin();
+            Storyboard sb = (Storyboard)FindResource("PulseAnimacia");
+            Storyboard.SetTarget(sb, btn);
+            sb.Begin();
         }
 
         private void BtnPrehlad_Click(object sender, RoutedEventArgs e)
@@ -106,7 +95,6 @@ namespace bankova_aplikacia
             await PanelNastavenia.NacitajUdaje();
         }
 
-        // -- odhlasi uzivatela a zobrazi login okno --
         private void BtnOdhlasit_Click(object sender, RoutedEventArgs e)
         {
             loginWindow login = new loginWindow();
@@ -114,14 +102,11 @@ namespace bankova_aplikacia
             this.Close();
         }
 
-        // -- nacita meno a email prihlaseneho uzivatela do topbaru --
         private async Task NacitajUdajeUzivatela()
         {
             string meno = await Database.NacitajMeno(App.PrihlasenyEmail);
-            TopbarVitaj.Text = $"Vitaj späť, {meno}";
+            TopbarVitaj.Text = "Vitaj späť, " + meno;
             TopbarTitle.Text = "Výpočet výdavkov";
-
-            // -- fade in na prvom paneli pri starte --
             FadeIn(PanelPrehlad);
         }
     }

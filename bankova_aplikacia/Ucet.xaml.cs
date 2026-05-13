@@ -184,6 +184,9 @@ namespace bankova_aplikacia
                 return;
             }
 
+            predavaneKusy = Math.Round(predavaneKusy, 4);
+            celkoveKusy = Math.Round(celkoveKusy, 4);
+
             if (predavaneKusy <= 0 || predavaneKusy > celkoveKusy)
             {
                 MessageBox.Show($"Zadaj číslo medzi 0 a {celkoveKusy:F4}!", "Chyba",

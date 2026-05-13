@@ -2,28 +2,47 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Background="#F5F5F7">
+            <StackPanel Margin="30,24">
 
-        <!-- ===== OBSAH ===== -->
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="30,20">
-
-                <TextBlock x:Name="TxtZostatok" Text="Dostupný zostatok: 0 €"
-                           FontSize="15" Foreground="#888888" Margin="0,0,0,20"/>
-
-                <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
-                        BorderBrush="#D0D0D0" BorderThickness="1">
-                    <StackPanel>
-                        <TextBlock Text="Sporiaci účet (30% z príjmu)" FontSize="18"
-                                   FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,8"/>
-                        <TextBlock x:Name="TxtSporiaci" Text="Odporúčaná suma: 0 €"
-                                   FontSize="16" Foreground="#555555"/>
+                <Border Background="#1A1A1A" CornerRadius="10" Padding="16,10"
+                        Margin="0,0,0,20" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="8" Height="8" Fill="White"
+                                 VerticalAlignment="Center" Margin="0,0,9,0"/>
+                        <TextBlock x:Name="TxtZostatok" Text="Dostupný zostatok: 0 €"
+                                   FontSize="14" Foreground="White" FontWeight="Medium"/>
                     </StackPanel>
                 </Border>
 
-                <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
-                        BorderBrush="#D0D0D0" BorderThickness="1">
+                <!-- Sporiaci účet -->
+                <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,14"
+                        BorderBrush="#EBEBEB" BorderThickness="1">
                     <StackPanel>
-                        <TextBlock Text="ETF" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <Border Width="3" Height="16" Background="#1A1A1A"
+                                    CornerRadius="2" Margin="0,0,10,0"/>
+                            <TextBlock Text="Sporiaci účet" FontSize="16"
+                                       FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                        </StackPanel>
+                        <TextBlock Text="30% z príjmu" FontSize="11" Foreground="#888888"
+                                   FontWeight="Medium" Margin="13,0,0,8"/>
+                        <TextBlock x:Name="TxtSporiaci" Text="Odporúčaná suma: 0 €"
+                                   FontSize="15" Foreground="#555555" Margin="13,0,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- ETF -->
+                <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,14"
+                        BorderBrush="#EBEBEB" BorderThickness="1">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <Border Width="3" Height="16" Background="#1A1A1A"
+                                    CornerRadius="2" Margin="0,0,10,0"/>
+                            <TextBlock Text="ETF" FontSize="16" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                        </StackPanel>
+                        <TextBlock Text="Indexové fondy" FontSize="11" Foreground="#888888"
+                                   FontWeight="Medium" Margin="13,0,0,12"/>
                         <Border Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,10">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -31,28 +50,28 @@
                                     <ColumnDefinition Width="160"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="S&amp;P 500 (SPY)" FontSize="15" FontWeight="SemiBold" Foreground="#1A1A1A"/>
-                                    <TextBlock x:Name="TxtSPY" Text="Načítavam..." FontSize="13" Foreground="#888888"/>
+                                    <TextBlock Text="S&amp;P 500 (SPY)" FontSize="14" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                    <TextBlock x:Name="TxtSPY" Text="Načítavam..." FontSize="12" Foreground="#888888"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock Text="% zostatku" FontSize="11" Foreground="#888888" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="% zostatku" FontSize="10" Foreground="#AAAAAA" HorizontalAlignment="Center"/>
                                     <Slider x:Name="SliderSPY" Minimum="0" Maximum="100" Value="0" Width="150" ValueChanged="Slider_Changed"/>
                                     <TextBlock x:Name="TxtSPYPercent" Text="0%" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#1A1A1A"/>
                                 </StackPanel>
                             </Grid>
                         </Border>
-                        <Border Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                        <Border Background="#F5F5F5" CornerRadius="8" Padding="15">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="160"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="MSCI World (URTH)" FontSize="15" FontWeight="SemiBold" Foreground="#1A1A1A"/>
-                                    <TextBlock x:Name="TxtURTH" Text="Načítavam..." FontSize="13" Foreground="#888888"/>
+                                    <TextBlock Text="MSCI World (URTH)" FontSize="14" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                    <TextBlock x:Name="TxtURTH" Text="Načítavam..." FontSize="12" Foreground="#888888"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock Text="% zostatku" FontSize="11" Foreground="#888888" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="% zostatku" FontSize="10" Foreground="#AAAAAA" HorizontalAlignment="Center"/>
                                     <Slider x:Name="SliderURTH" Minimum="0" Maximum="100" Value="0" Width="150" ValueChanged="Slider_Changed"/>
                                     <TextBlock x:Name="TxtURTHPercent" Text="0%" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#1A1A1A"/>
                                 </StackPanel>
@@ -61,10 +80,17 @@
                     </StackPanel>
                 </Border>
 
-                <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
-                        BorderBrush="#D0D0D0" BorderThickness="1">
+                <!-- Akcie -->
+                <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,14"
+                        BorderBrush="#EBEBEB" BorderThickness="1">
                     <StackPanel>
-                        <TextBlock Text="Akcie" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <Border Width="3" Height="16" Background="#1A1A1A"
+                                    CornerRadius="2" Margin="0,0,10,0"/>
+                            <TextBlock Text="Akcie" FontSize="16" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                        </StackPanel>
+                        <TextBlock Text="Jednotlivé tituly" FontSize="11" Foreground="#888888"
+                                   FontWeight="Medium" Margin="13,0,0,12"/>
                         <Border Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,10">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -72,11 +98,11 @@
                                     <ColumnDefinition Width="160"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="Apple (AAPL)" FontSize="15" FontWeight="SemiBold" Foreground="#1A1A1A"/>
-                                    <TextBlock x:Name="TxtAAPL" Text="Načítavam..." FontSize="13" Foreground="#888888"/>
+                                    <TextBlock Text="Apple (AAPL)" FontSize="14" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                    <TextBlock x:Name="TxtAAPL" Text="Načítavam..." FontSize="12" Foreground="#888888"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock Text="% zostatku" FontSize="11" Foreground="#888888" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="% zostatku" FontSize="10" Foreground="#AAAAAA" HorizontalAlignment="Center"/>
                                     <Slider x:Name="SliderAAPL" Minimum="0" Maximum="100" Value="0" Width="150" ValueChanged="Slider_Changed"/>
                                     <TextBlock x:Name="TxtAAPLPercent" Text="0%" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#1A1A1A"/>
                                 </StackPanel>
@@ -89,28 +115,28 @@
                                     <ColumnDefinition Width="160"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="Tesla (TSLA)" FontSize="15" FontWeight="SemiBold" Foreground="#1A1A1A"/>
-                                    <TextBlock x:Name="TxtTSLA" Text="Načítavam..." FontSize="13" Foreground="#888888"/>
+                                    <TextBlock Text="Tesla (TSLA)" FontSize="14" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                    <TextBlock x:Name="TxtTSLA" Text="Načítavam..." FontSize="12" Foreground="#888888"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock Text="% zostatku" FontSize="11" Foreground="#888888" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="% zostatku" FontSize="10" Foreground="#AAAAAA" HorizontalAlignment="Center"/>
                                     <Slider x:Name="SliderTSLA" Minimum="0" Maximum="100" Value="0" Width="150" ValueChanged="Slider_Changed"/>
                                     <TextBlock x:Name="TxtTSLAPercent" Text="0%" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#1A1A1A"/>
                                 </StackPanel>
                             </Grid>
                         </Border>
-                        <Border Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                        <Border Background="#F5F5F5" CornerRadius="8" Padding="15">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="160"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="NVIDIA (NVDA)" FontSize="15" FontWeight="SemiBold" Foreground="#1A1A1A"/>
-                                    <TextBlock x:Name="TxtNVDA" Text="Načítavam..." FontSize="13" Foreground="#888888"/>
+                                    <TextBlock Text="NVIDIA (NVDA)" FontSize="14" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                    <TextBlock x:Name="TxtNVDA" Text="Načítavam..." FontSize="12" Foreground="#888888"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock Text="% zostatku" FontSize="11" Foreground="#888888" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="% zostatku" FontSize="10" Foreground="#AAAAAA" HorizontalAlignment="Center"/>
                                     <Slider x:Name="SliderNVDA" Minimum="0" Maximum="100" Value="0" Width="150" ValueChanged="Slider_Changed"/>
                                     <TextBlock x:Name="TxtNVDAPercent" Text="0%" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#1A1A1A"/>
                                 </StackPanel>
@@ -119,10 +145,17 @@
                     </StackPanel>
                 </Border>
 
-                <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16"
-                        BorderBrush="#D0D0D0" BorderThickness="1">
+                <!-- Krypto -->
+                <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,14"
+                        BorderBrush="#EBEBEB" BorderThickness="1">
                     <StackPanel>
-                        <TextBlock Text="Kryptomeny" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,10"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <Border Width="3" Height="16" Background="#1A1A1A"
+                                    CornerRadius="2" Margin="0,0,10,0"/>
+                            <TextBlock Text="Kryptomeny" FontSize="16" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                        </StackPanel>
+                        <TextBlock Text="Digitálne aktíva" FontSize="11" Foreground="#888888"
+                                   FontWeight="Medium" Margin="13,0,0,12"/>
                         <Border Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,10">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -130,28 +163,28 @@
                                     <ColumnDefinition Width="160"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="Bitcoin (BTC)" FontSize="15" FontWeight="SemiBold" Foreground="#1A1A1A"/>
-                                    <TextBlock x:Name="TxtBTC" Text="Načítavam..." FontSize="13" Foreground="#888888"/>
+                                    <TextBlock Text="Bitcoin (BTC)" FontSize="14" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                    <TextBlock x:Name="TxtBTC" Text="Načítavam..." FontSize="12" Foreground="#888888"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock Text="% zostatku" FontSize="11" Foreground="#888888" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="% zostatku" FontSize="10" Foreground="#AAAAAA" HorizontalAlignment="Center"/>
                                     <Slider x:Name="SliderBTC" Minimum="0" Maximum="100" Value="0" Width="150" ValueChanged="Slider_Changed"/>
                                     <TextBlock x:Name="TxtBTCPercent" Text="0%" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#1A1A1A"/>
                                 </StackPanel>
                             </Grid>
                         </Border>
-                        <Border Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+                        <Border Background="#F5F5F5" CornerRadius="8" Padding="15">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="160"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="Ethereum (ETH)" FontSize="15" FontWeight="SemiBold" Foreground="#1A1A1A"/>
-                                    <TextBlock x:Name="TxtETH" Text="Načítavam..." FontSize="13" Foreground="#888888"/>
+                                    <TextBlock Text="Ethereum (ETH)" FontSize="14" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                    <TextBlock x:Name="TxtETH" Text="Načítavam..." FontSize="12" Foreground="#888888"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock Text="% zostatku" FontSize="11" Foreground="#888888" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="% zostatku" FontSize="10" Foreground="#AAAAAA" HorizontalAlignment="Center"/>
                                     <Slider x:Name="SliderETH" Minimum="0" Maximum="100" Value="0" Width="150" ValueChanged="Slider_Changed"/>
                                     <TextBlock x:Name="TxtETHPercent" Text="0%" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#1A1A1A"/>
                                 </StackPanel>
@@ -160,55 +193,66 @@
                     </StackPanel>
                 </Border>
 
-                <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,20"
-                        BorderBrush="#D0D0D0" BorderThickness="1">
+                <!-- Súhrn -->
+                <Border Background="White" CornerRadius="12" Padding="20" Margin="0,0,0,24"
+                        BorderBrush="#EBEBEB" BorderThickness="1">
                     <StackPanel>
-                        <TextBlock Text="Súhrn investícií" FontSize="18" FontWeight="SemiBold" Foreground="#1A1A1A" Margin="0,0,0,15"/>
-                        <TextBlock x:Name="TxtCelkovePercento" Text="Celkovo alokované: 0%" FontSize="15" Foreground="#555555" Margin="0,0,0,5"/>
-                        <TextBlock x:Name="TxtCelkovaSuma" Text="Celková suma: 0 €" FontSize="15" Foreground="#555555" Margin="0,0,0,15"/>
-                        <ProgressBar x:Name="ProgressInvest" Height="18" Minimum="0" Maximum="100"
-                                     Value="0" Background="#E0E0E0" BorderThickness="0" Margin="0,0,0,15"/>
-                        <Button Content="Potvrdiť investície" Height="44"
-                                Background="#1A1A1A" Foreground="White"
-                                FontSize="15" FontWeight="SemiBold" BorderThickness="0"
-                                Click="BtnPotvrdit_Click"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <Border Width="3" Height="16" Background="#1A1A1A"
+                                    CornerRadius="2" Margin="0,0,10,0"/>
+                            <TextBlock Text="Súhrn investícií" FontSize="16" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                        </StackPanel>
+                        <TextBlock Text="Alokácia portfólia" FontSize="11" Foreground="#888888"
+                                   FontWeight="Medium" Margin="13,0,0,12"/>
+                        <TextBlock x:Name="TxtCelkovePercento" Text="Celkovo alokované: 0%"
+                                   FontSize="14" Foreground="#555555" Margin="0,0,0,4"/>
+                        <TextBlock x:Name="TxtCelkovaSuma" Text="Celková suma: 0 €"
+                                   FontSize="14" Foreground="#555555" Margin="0,0,0,14"/>
+                        <ProgressBar x:Name="ProgressInvest" Height="6" Minimum="0" Maximum="100"
+                                     Value="0" Background="#E0E0E0" BorderThickness="0"
+                                     Foreground="#1A1A1A" Margin="0,0,0,16"/>
+                        <Border CornerRadius="10" Background="#1A1A1A">
+                            <Button Content="Potvrdiť investície" Height="44"
+                                    Background="Transparent" Foreground="White"
+                                    FontSize="14" FontWeight="SemiBold" BorderThickness="0"
+                                    Click="BtnPotvrdit_Click"/>
+                        </Border>
                     </StackPanel>
                 </Border>
 
             </StackPanel>
         </ScrollViewer>
 
-        <!-- ===== SPINNER ===== -->
-        <Grid x:Name="SpinnerOverlay"
-              Background="#88F5F5F5"
-              Visibility="Visible">
+        <!-- Spinner -->
+        <Grid x:Name="SpinnerOverlay" Background="#CCF5F5F7" Visibility="Visible">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Border Width="60" Height="60">
+                <Border Width="56" Height="56">
                     <Border.RenderTransform>
-                        <RotateTransform x:Name="SpinnerRotate" CenterX="30" CenterY="30"/>
+                        <RotateTransform x:Name="SpinnerRotate" CenterX="28" CenterY="28"/>
                     </Border.RenderTransform>
                     <Border.Triggers>
                         <EventTrigger RoutedEvent="Loaded">
                             <BeginStoryboard>
                                 <Storyboard RepeatBehavior="Forever">
-                                    <DoubleAnimation
-                                        Storyboard.TargetName="SpinnerRotate"
-                                        Storyboard.TargetProperty="Angle"
-                                        From="0" To="360"
-                                        Duration="0:0:0.8"/>
+                                    <DoubleAnimation Storyboard.TargetName="SpinnerRotate"
+                                                     Storyboard.TargetProperty="Angle"
+                                                     From="0" To="360" Duration="0:0:0.9"/>
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
                     </Border.Triggers>
-                    <Ellipse Width="60" Height="60"
-                             Stroke="#2E6DA4" StrokeThickness="5"
+                    <Ellipse Width="56" Height="56"
+                             Stroke="#1A1A1A" StrokeThickness="4"
                              StrokeDashArray="10 5"/>
                 </Border>
-                <TextBlock Text="Načítavam kurzy..."
-                           FontSize="14" Foreground="#555555"
-                           HorizontalAlignment="Center" Margin="0,12,0,0"/>
+                <Border Background="#1A1A1A" CornerRadius="8" Padding="14,7" Margin="0,14,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="5" Height="5" Fill="White"
+                                 VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBlock Text="Načítavam kurzy..." FontSize="13" Foreground="White"/>
+                    </StackPanel>
+                </Border>
             </StackPanel>
         </Grid>
-
     </Grid>
 </UserControl>

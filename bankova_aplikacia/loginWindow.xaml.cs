@@ -1,75 +1,98 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace bankova_aplikacia
 {
-    public partial class Window1 : Window
+    public partial class loginWindow : Window
     {
-        public Window1()
+        private bool _jeLogin = true;
+
+        public loginWindow()
         {
             InitializeComponent();
         }
 
+        private bool JeValidnyEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
-            MainButton.Content = "Login";
+            _jeLogin = true;
             PanelLoginBorder.Visibility = Visibility.Visible;
+            ForgotPasswordButton.Visibility = Visibility.Visible;
             PanelRegisterBorder.Visibility = Visibility.Collapsed;
 
-            Login.Background = new SolidColorBrush(Color.FromRgb(85, 85, 85));
-            Login.Foreground = Brushes.White;
+            Login.FontWeight = FontWeights.SemiBold;
+            Login.Foreground = new SolidColorBrush(Color.FromRgb(26, 26, 26));
+            Login.BorderBrush = new SolidColorBrush(Color.FromRgb(26, 26, 26));
+            Login.BorderThickness = new Thickness(0, 0, 0, 2);
 
-            Register.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
-            Register.Foreground = Brushes.White;
+            Register.FontWeight = FontWeights.Normal;
+            Register.Foreground = new SolidColorBrush(Color.FromRgb(170, 170, 170));
+            Register.BorderBrush = new SolidColorBrush(Color.FromRgb(224, 224, 224));
+            Register.BorderThickness = new Thickness(0, 0, 0, 1);
         }
 
         private void BtnRegister_Click(object sender, RoutedEventArgs e)
         {
-            MainButton.Content = "Registrovať";
+            _jeLogin = false;
             PanelLoginBorder.Visibility = Visibility.Collapsed;
+            ForgotPasswordButton.Visibility = Visibility.Collapsed;
             PanelRegisterBorder.Visibility = Visibility.Visible;
 
-            Register.Background = new SolidColorBrush(Color.FromRgb(85, 85, 85));
-            Register.Foreground = Brushes.White;
+            Register.FontWeight = FontWeights.SemiBold;
+            Register.Foreground = new SolidColorBrush(Color.FromRgb(26, 26, 26));
+            Register.BorderBrush = new SolidColorBrush(Color.FromRgb(26, 26, 26));
+            Register.BorderThickness = new Thickness(0, 0, 0, 2);
 
-            Login.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
-            Login.Foreground = Brushes.White;
+            Login.FontWeight = FontWeights.Normal;
+            Login.Foreground = new SolidColorBrush(Color.FromRgb(170, 170, 170));
+            Login.BorderBrush = new SolidColorBrush(Color.FromRgb(224, 224, 224));
+            Login.BorderThickness = new Thickness(0, 0, 0, 1);
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (MainButton.Content.ToString() == "Login")
+            if (_jeLogin)
             {
                 string gmail = LoginMeno.Text;
                 string heslo = LoginHeslo.Password;
 
                 if (string.IsNullOrEmpty(gmail) || string.IsNullOrEmpty(heslo))
                 {
-                    MessageBox.Show("Vyplň všetky polia!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Vyplň všetky polia!");
+                    return;
+                }
+
+                if (!JeValidnyEmail(gmail))
+                {
+                    MessageBox.Show("Zadaj platný email!");
                     return;
                 }
 
                 bool uspech = await Database.Prihlas(gmail, heslo);
                 if (uspech)
                 {
-                    MainWindow main = new MainWindow();
+                    App.PrihlasenyEmail = gmail;
+                    MainAppWindow main = new MainAppWindow();
                     main.Show();
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("Nesprávny email alebo heslo!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Nesprávny email alebo heslo!");
                 }
             }
             else
@@ -80,61 +103,81 @@ namespace bankova_aplikacia
 
                 if (string.IsNullOrEmpty(meno) || string.IsNullOrEmpty(gmail) || string.IsNullOrEmpty(heslo))
                 {
-                    MessageBox.Show("Vyplň všetky polia!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Vyplň všetky polia!");
+                    return;
+                }
+
+                if (!JeValidnyEmail(gmail))
+                {
+                    MessageBox.Show("Zadaj platný email!");
                     return;
                 }
 
                 bool uspech = await Database.Registruj(meno, gmail, heslo);
                 if (uspech)
                 {
-                    MessageBox.Show("Registrácia úspešná! Teraz sa prihláste.", "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Registrácia úspešná! Teraz sa prihláste.");
                     BtnLogin_Click(null!, null!);
                 }
                 else
                 {
-                    MessageBox.Show("Tento email už existuje!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Tento email už existuje!");
                 }
             }
         }
 
-        private void LoginMeno_TextChanged(object sender, TextChangedEventArgs e)
+        private void LoginHeslo_PasswordChanged(object sender, RoutedEventArgs e)
         {
+            if (LoginHesloHint == null)
+                return;
 
+            if (LoginHeslo.Password.Length == 0)
+                LoginHesloHint.Visibility = Visibility.Visible;
+            else
+                LoginHesloHint.Visibility = Visibility.Collapsed;
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void RegisterHeslo_PasswordChanged(object sender, RoutedEventArgs e)
         {
+            if (RegisterHesloHint == null)
+                return;
 
+            if (RegisterHeslo.Password.Length == 0)
+                RegisterHesloHint.Visibility = Visibility.Visible;
+            else
+                RegisterHesloHint.Visibility = Visibility.Collapsed;
         }
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            // Krok 1 - zadaj email
-            string gmail = Microsoft.VisualBasic.Interaction.InputBox(
-                "Zadaj svoj email:", "Reset hesla", "");
+            string gmail = Microsoft.VisualBasic.Interaction.InputBox("Zadaj svoj email:", "Reset hesla", "");
 
             if (string.IsNullOrEmpty(gmail))
                 return;
 
-            bool existuje = await Database.EmailExistuje(gmail);
-            if (!existuje)
+            if (!JeValidnyEmail(gmail))
             {
-                MessageBox.Show("Email neexistuje!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Zadaj platný email!");
                 return;
             }
 
-            // Krok 2 - zadaj nove heslo
-            string noveHeslo = Microsoft.VisualBasic.Interaction.InputBox(
-                "Zadaj nové heslo:", "Reset hesla", "");
+            bool existuje = await Database.EmailExistuje(gmail);
+            if (!existuje)
+            {
+                MessageBox.Show("Email neexistuje!");
+                return;
+            }
+
+            string noveHeslo = Microsoft.VisualBasic.Interaction.InputBox("Zadaj nové heslo:", "Reset hesla", "");
 
             if (string.IsNullOrEmpty(noveHeslo))
                 return;
 
             bool uspech = await Database.ZmenHeslo(gmail, noveHeslo);
             if (uspech)
-                MessageBox.Show("Heslo bolo úspešne zmenené!", "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Heslo bolo úspešne zmenené!");
             else
-                MessageBox.Show("Chyba pri zmene hesla!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Chyba pri zmene hesla!");
         }
     }
 }

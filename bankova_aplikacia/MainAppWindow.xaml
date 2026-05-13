@@ -31,7 +31,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- ===== SIDEBAR ===== -->
-        <Grid Grid.Column="0" Background="#1A1A1A">
+        <Grid Grid.Column="0" Background="Black">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>

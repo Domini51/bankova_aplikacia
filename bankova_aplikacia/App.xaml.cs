@@ -14,9 +14,8 @@ namespace bankova_aplikacia
         {
             base.OnStartup(e);
             await Database.Init();
-            // -- zobraz splash screen ako prve okno --
-            var splash = new SplashScreen();
-            splash.Show();
+            var window = new loginWindow();
+            window.Show();
         }
     }
 }

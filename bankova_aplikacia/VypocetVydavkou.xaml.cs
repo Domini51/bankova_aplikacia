@@ -15,6 +15,7 @@ namespace bankova_aplikacia
 {
     public partial class VypocetVydavkou : UserControl
     {
+        // -- zostatok a prijem zdielame s ostatnymi panelmi cez App triedu --
         public VypocetVydavkou()
         {
             InitializeComponent();
@@ -76,27 +77,6 @@ namespace bankova_aplikacia
             AktualizujGrafVydavkov();
         }
 
-        // -- odstrani vydavok zo zoznamu po kliknuti na X --
-        private void BtnOdstranVydavok_Click(object sender, RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-            string? polozka = btn.Tag?.ToString();
-
-            // -- zisti z ktoreho zoznamu polozka pochodzi --
-            if (ZoznamVydavkov.Items.Contains(polozka))
-                ZoznamVydavkov.Items.Remove(polozka);
-            else if (ZoznamVydavkov2.Items.Contains(polozka))
-                ZoznamVydavkov2.Items.Remove(polozka);
-            else if (ZoznamVydavkov3.Items.Contains(polozka))
-                ZoznamVydavkov3.Items.Remove(polozka);
-            else if (ZoznamVydavkov4.Items.Contains(polozka))
-                ZoznamVydavkov4.Items.Remove(polozka);
-
-            // -- prepocitaj metriky po odstraneni --
-            AktualizujMetriky();
-            AktualizujGrafVydavkov();
-        }
-
         // -- spocita vsetky vydavky zo vsetkych zoznamov --
         public double SpocitajVsetkyVydavky()
         {
@@ -120,7 +100,7 @@ namespace bankova_aplikacia
             return suma;
         }
 
-        // -- aktualizuje textbloky s prijem a celkove minute --
+        // -- aktualizuje textbloky s prijem a celkove minuté --
         public void AktualizujMetriky()
         {
             double.TryParse(MPrijem.Text, System.Globalization.NumberStyles.Any,
@@ -137,7 +117,7 @@ namespace bankova_aplikacia
             App.AktualnyPrijem = prijem;
         }
 
-        // -- ulozi zostatok na ucet do databazy a vymaze vsetky vydavky --
+        // -- ulozi zostatok na ucet do databazy --
         private async void BtnUlozZostatokNaUcet_Click(object sender, RoutedEventArgs e)
         {
             double.TryParse(MPrijem.Text, System.Globalization.NumberStyles.Any,
@@ -158,19 +138,6 @@ namespace bankova_aplikacia
 
             MessageBox.Show($"Na účet bolo pripísaných {zostatok:F2} €\nCelkový zostatok: {novyZostatok:F2} €",
                 "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            // -- vymaz vsetky vydavky a vynuluj prijem po ulozeni --
-            ZoznamVydavkov.Items.Clear();
-            ZoznamVydavkov2.Items.Clear();
-            ZoznamVydavkov3.Items.Clear();
-            ZoznamVydavkov4.Items.Clear();
-
-            MPrijem.Text = "0";
-            MPrijem.Foreground = Brushes.Gray;
-
-            // -- aktualizuj metriky a vymaz graf po ulozeni --
-            AktualizujMetriky();
-            GrafVydavkov.Series = null;
         }
 
         // -- aktualizuje kruhovy graf vydavkov --

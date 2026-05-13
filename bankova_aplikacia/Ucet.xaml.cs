@@ -184,8 +184,8 @@ namespace bankova_aplikacia
                 return;
             }
 
-            predavaneKusy = Math.Round(predavaneKusy, 4);
-            celkoveKusy = Math.Round(celkoveKusy, 4);
+            predavaneKusy = Math.Round(predavaneKusy, 3);
+            celkoveKusy = Math.Round(celkoveKusy, 3);
 
             if (predavaneKusy <= 0 || predavaneKusy > celkoveKusy)
             {

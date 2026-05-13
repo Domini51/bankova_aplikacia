@@ -1,116 +1,131 @@
 ﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using YahooFinanceApi;
 
 namespace bankova_aplikacia
 {
-    public partial class InvestWindow : Window
+    public partial class loginWindow : Window
     {
-        private double _zostatok;
-        private double _prijem;
-
-        public InvestWindow(double zostatok, double prijem)
+        public loginWindow()
         {
             InitializeComponent();
-            _zostatok = zostatok;
-            _prijem = prijem;
-            TxtZostatok.Text = $"Dostupný zostatok: {zostatok:F2} €";
-            TxtSporiaci.Text = $"Odporúčaná suma: {prijem * 0.30:F2} € (30% z príjmu {prijem:F2} €)";
-            _ = NacitajCeny();
         }
 
-        private async Task NacitajCeny()
+        private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                var securities = await Yahoo.Symbols("SPY", "URTH", "AAPL", "TSLA", "NVDA", "BTC-USD", "ETH-USD")
-                    .Fields(Field.RegularMarketPrice, Field.RegularMarketChangePercent)
-                    .QueryAsync();
+            MainButton.Content = "Login";
+            PanelLoginBorder.Visibility = Visibility.Visible;
+            PanelRegisterBorder.Visibility = Visibility.Collapsed;
+            Login.Background = new SolidColorBrush(Color.FromRgb(85, 85, 85));
+            Login.Foreground = Brushes.White;
+            Register.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
+            Register.Foreground = Brushes.White;
+        }
 
-                Dispatcher.Invoke(() =>
+        private void BtnRegister_Click(object sender, RoutedEventArgs e)
+        {
+            MainButton.Content = "Registrovať";
+            PanelLoginBorder.Visibility = Visibility.Collapsed;
+            PanelRegisterBorder.Visibility = Visibility.Visible;
+            Register.Background = new SolidColorBrush(Color.FromRgb(85, 85, 85));
+            Register.Foreground = Brushes.White;
+            Login.Background = new SolidColorBrush(Color.FromRgb(26, 26, 26));
+            Login.Foreground = Brushes.White;
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (MainButton.Content.ToString() == "Login")
+            {
+                string gmail = LoginMeno.Text;
+                string heslo = LoginHeslo.Password;
+
+                if (string.IsNullOrEmpty(gmail) || string.IsNullOrEmpty(heslo))
                 {
-                    SetCena(TxtSPY, securities["SPY"]);
-                    SetCena(TxtURTH, securities["URTH"]);
-                    SetCena(TxtAAPL, securities["AAPL"]);
-                    SetCena(TxtTSLA, securities["TSLA"]);
-                    SetCena(TxtNVDA, securities["NVDA"]);
-                    SetCena(TxtBTC, securities["BTC-USD"]);
-                    SetCena(TxtETH, securities["ETH-USD"]);
-                });
-            }
-            catch
-            {
-                Dispatcher.Invoke(() =>
+                    MessageBox.Show("Vyplň všetky polia!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                bool uspech = await Database.Prihlas(gmail, heslo);
+                if (uspech)
                 {
-                    TxtSPY.Text = TxtURTH.Text = TxtAAPL.Text =
-                    TxtTSLA.Text = TxtNVDA.Text = TxtBTC.Text =
-                    TxtETH.Text = "Cena nedostupná";
-                });
-            }
-        }
-
-        private void SetCena(TextBlock txt, Security security)
-        {
-            double cena = security[Field.RegularMarketPrice];
-            double zmena = security[Field.RegularMarketChangePercent];
-            string smer = zmena >= 0 ? "▲" : "▼";
-            txt.Text = $"{cena:F2} USD  {smer} {Math.Abs(zmena):F2}%";
-            txt.Foreground = zmena >= 0
-                ? new SolidColorBrush(Color.FromRgb(50, 180, 50))
-                : new SolidColorBrush(Color.FromRgb(220, 50, 50));
-        }
-
-        private void Slider_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (!IsLoaded) return;
-
-            double total = SliderSPY.Value + SliderURTH.Value + SliderAAPL.Value +
-                           SliderTSLA.Value + SliderNVDA.Value + SliderBTC.Value + SliderETH.Value;
-
-            TxtSPYPercent.Text = $"{SliderSPY.Value:F0}%  ({_zostatok * SliderSPY.Value / 100:F2} €)";
-            TxtURTHPercent.Text = $"{SliderURTH.Value:F0}%  ({_zostatok * SliderURTH.Value / 100:F2} €)";
-            TxtAAPLPercent.Text = $"{SliderAAPL.Value:F0}%  ({_zostatok * SliderAAPL.Value / 100:F2} €)";
-            TxtTSLAPercent.Text = $"{SliderTSLA.Value:F0}%  ({_zostatok * SliderTSLA.Value / 100:F2} €)";
-            TxtNVDAPercent.Text = $"{SliderNVDA.Value:F0}%  ({_zostatok * SliderNVDA.Value / 100:F2} €)";
-            TxtBTCPercent.Text = $"{SliderBTC.Value:F0}%  ({_zostatok * SliderBTC.Value / 100:F2} €)";
-            TxtETHPercent.Text = $"{SliderETH.Value:F0}%  ({_zostatok * SliderETH.Value / 100:F2} €)";
-
-            TxtCelkovePercento.Text = $"Celkovo alokované: {total:F0}%";
-            TxtCelkovaSuma.Text = $"Celková suma: {_zostatok * total / 100:F2} €";
-            ProgressInvest.Value = Math.Min(total, 100);
-
-            ProgressInvest.Foreground = total > 100
-                ? new SolidColorBrush(Color.FromRgb(220, 50, 50))
-                : new SolidColorBrush(Color.FromRgb(50, 180, 50));
-            if (total > 100)
-            {
-                TxtCelkovePercento.Foreground = new SolidColorBrush(Color.FromRgb(220, 50, 50));
-                ((Slider)sender).Value -= e.NewValue - e.OldValue;
+                    MainWindow main = new MainWindow();
+                    main.Show();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Nesprávny email alebo heslo!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             else
             {
-                TxtCelkovePercento.Foreground = new SolidColorBrush(Color.FromRgb(50, 180, 50));
+                string meno = RegisterMeno.Text;
+                string gmail = RegisterGmail.Text;
+                string heslo = RegisterHeslo.Password;
+
+                if (string.IsNullOrEmpty(meno) || string.IsNullOrEmpty(gmail) || string.IsNullOrEmpty(heslo))
+                {
+                    MessageBox.Show("Vyplň všetky polia!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                bool uspech = await Database.Registruj(meno, gmail, heslo);
+                if (uspech)
+                {
+                    MessageBox.Show("Registrácia úspešná! Teraz sa prihláste.", "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
+                    BtnLogin_Click(null!, null!);
+                }
+                else
+                {
+                    MessageBox.Show("Tento email už existuje!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
-        private void BtnPotvrdit_Click(object sender, RoutedEventArgs e)
+        private void LoginHeslo_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            double total = SliderSPY.Value + SliderURTH.Value + SliderAAPL.Value +
-                           SliderTSLA.Value + SliderNVDA.Value + SliderBTC.Value + SliderETH.Value;
+            if (LoginHesloHint != null)
+                LoginHesloHint.Visibility = LoginHeslo.Password.Length == 0
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+        }
 
-            if (total > 100)
+        private void RegisterHeslo_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (RegisterHesloHint != null)
+                RegisterHesloHint.Visibility = RegisterHeslo.Password.Length == 0
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
+        }
+
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            string gmail = Microsoft.VisualBasic.Interaction.InputBox(
+                "Zadaj svoj email:", "Reset hesla", "");
+
+            if (string.IsNullOrEmpty(gmail))
+                return;
+
+            bool existuje = await Database.EmailExistuje(gmail);
+            if (!existuje)
             {
-                MessageBox.Show("Celkový súčet percent presahuje 100%!", "Chyba",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Email neexistuje!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            MessageBox.Show($"Investície potvrdené!\nCelkom investované: {_zostatok * total / 100:F2} €",
-                "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
+            string noveHeslo = Microsoft.VisualBasic.Interaction.InputBox(
+                "Zadaj nové heslo:", "Reset hesla", "");
+
+            if (string.IsNullOrEmpty(noveHeslo))
+                return;
+
+            bool uspech = await Database.ZmenHeslo(gmail, noveHeslo);
+            if (uspech)
+                MessageBox.Show("Heslo bolo úspešne zmenené!", "Úspech", MessageBoxButton.OK, MessageBoxImage.Information);
+            else
+                MessageBox.Show("Chyba pri zmene hesla!", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

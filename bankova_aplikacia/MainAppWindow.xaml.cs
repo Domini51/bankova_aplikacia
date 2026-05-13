@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -8,49 +8,52 @@ namespace bankova_aplikacia
 {
     public partial class MainAppWindow : Window
     {
+        Button? _aktivneTlacidlo;
+
         public MainAppWindow()
         {
             InitializeComponent();
             _ = NacitajUdajeUzivatela();
         }
 
-        private void PrepniPanel(UIElement panel, Button aktivne)
+        private async Task NacitajUdajeUzivatela()
         {
-            PanelPrehlad.Visibility = Visibility.Collapsed;
-            PanelHistoria.Visibility = Visibility.Collapsed;
-            PanelInvesticie.Visibility = Visibility.Collapsed;
-            PanelUcet.Visibility = Visibility.Collapsed;
-            PanelNastavenia.Visibility = Visibility.Collapsed;
+            string meno = await Database.NacitajMeno(App.PrihlasenyEmail);
+            TopbarVitaj.Text = "Vitaj, " + meno + "!";
+        }
+
+        void PrepniPanel(UIElement panel, Button btn)
+        {
+            UIElement[] panely = { PanelPrehlad, PanelHistoria, PanelInvesticie, PanelUcet, PanelNastavenia };
+            foreach (var p in panely)
+                p.Visibility = Visibility.Collapsed;
 
             panel.Visibility = Visibility.Visible;
-            FadeIn(panel);
+            SpustitFadeIn(panel);
 
-            Button[] tlacidla = { BtnPrehlad, BtnHistoria, BtnInvesticie, BtnUcet, BtnNastavenia };
-            for (int i = 0; i < tlacidla.Length; i++)
+            if (_aktivneTlacidlo != null)
             {
-                tlacidla[i].Background = Brushes.Transparent;
-                tlacidla[i].Foreground = new SolidColorBrush(Color.FromRgb(170, 170, 170));
-                tlacidla[i].BorderThickness = new Thickness(0);
+                _aktivneTlacidlo.Background = Brushes.Transparent;
+                _aktivneTlacidlo.Foreground = new SolidColorBrush(Color.FromRgb(170, 170, 170));
+                _aktivneTlacidlo.BorderThickness = new Thickness(0);
             }
 
-            aktivne.Background = new SolidColorBrush(Color.FromRgb(42, 42, 42));
-            aktivne.Foreground = Brushes.White;
-            aktivne.BorderThickness = new Thickness(3, 0, 0, 0);
-            aktivne.BorderBrush = Brushes.White;
+            btn.Background = new SolidColorBrush(Color.FromRgb(42, 42, 42));
+            btn.Foreground = Brushes.White;
+            btn.BorderThickness = new Thickness(3, 0, 0, 0);
+            btn.BorderBrush = Brushes.White;
+            _aktivneTlacidlo = btn;
         }
 
-        private void FadeIn(UIElement panel)
+        void SpustitFadeIn(UIElement el)
         {
-            DoubleAnimation anim = new DoubleAnimation();
-            anim.From = 0;
-            anim.To = 1;
-            anim.Duration = new Duration(System.TimeSpan.FromSeconds(0.3));
-            panel.BeginAnimation(UIElement.OpacityProperty, anim);
+            var anim = new DoubleAnimation(0, 1, new Duration(System.TimeSpan.FromSeconds(0.3)));
+            el.BeginAnimation(UIElement.OpacityProperty, anim);
         }
 
-        private void PulseButton(Button btn)
+        void PulseButton(Button btn)
         {
-            Storyboard sb = (Storyboard)FindResource("PulseAnimacia");
+            var sb = (Storyboard)FindResource("PulseAnimacia");
             Storyboard.SetTarget(sb, btn);
             sb.Begin();
         }
@@ -93,21 +96,6 @@ namespace bankova_aplikacia
             PrepniPanel(PanelNastavenia, BtnNastavenia);
             TopbarTitle.Text = "Nastavenia";
             await PanelNastavenia.NacitajUdaje();
-        }
-
-        private void BtnOdhlasit_Click(object sender, RoutedEventArgs e)
-        {
-            loginWindow login = new loginWindow();
-            login.Show();
-            this.Close();
-        }
-
-        private async Task NacitajUdajeUzivatela()
-        {
-            string meno = await Database.NacitajMeno(App.PrihlasenyEmail);
-            TopbarVitaj.Text = "Vitaj späť, " + meno;
-            TopbarTitle.Text = "Výpočet výdavkov";
-            FadeIn(PanelPrehlad);
         }
     }
 }

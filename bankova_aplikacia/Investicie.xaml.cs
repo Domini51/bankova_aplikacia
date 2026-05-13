@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,6 +10,9 @@ namespace bankova_aplikacia
 {
     public partial class Investicie : UserControl
     {
+        // zoznam symbolov pre jednoduchsi pristup
+        readonly string[] _symboly = { "SPY", "URTH", "AAPL", "TSLA", "NVDA", "BTC-USD", "ETH-USD" };
+
         public Investicie()
         {
             InitializeComponent();
@@ -22,7 +25,8 @@ namespace bankova_aplikacia
             TxtZostatok.Text = "Dostupný zostatok: " + zostatok.ToString("F2") + " €";
 
             double odporucana = App.AktualnyPrijem * 0.30;
-            TxtSporiaci.Text = "Odporúčaná suma: " + odporucana.ToString("F2") + " € (30% z príjmu " + App.AktualnyPrijem.ToString("F2") + " €)";
+            TxtSporiaci.Text = "Odporúčaná suma: " + odporucana.ToString("F2")
+                + " € (30% z príjmu " + App.AktualnyPrijem.ToString("F2") + " €)";
 
             UpdateSlidersLock();
         }
@@ -34,32 +38,27 @@ namespace bankova_aplikacia
 
             try
             {
-                var securities = await Yahoo.Symbols("SPY", "URTH", "AAPL", "TSLA", "NVDA", "BTC-USD", "ETH-USD")
+                var data = await Yahoo.Symbols(_symboly)
                     .Fields(Field.RegularMarketPrice, Field.RegularMarketChangePercent)
                     .QueryAsync();
 
                 Dispatcher.Invoke(() =>
                 {
-                    SetCena(TxtSPY, securities["SPY"]);
-                    SetCena(TxtURTH, securities["URTH"]);
-                    SetCena(TxtAAPL, securities["AAPL"]);
-                    SetCena(TxtTSLA, securities["TSLA"]);
-                    SetCena(TxtNVDA, securities["NVDA"]);
-                    SetCena(TxtBTC, securities["BTC-USD"]);
-                    SetCena(TxtETH, securities["ETH-USD"]);
+                    NastavCenu(TxtSPY,  data["SPY"]);
+                    NastavCenu(TxtURTH, data["URTH"]);
+                    NastavCenu(TxtAAPL, data["AAPL"]);
+                    NastavCenu(TxtTSLA, data["TSLA"]);
+                    NastavCenu(TxtNVDA, data["NVDA"]);
+                    NastavCenu(TxtBTC,  data["BTC-USD"]);
+                    NastavCenu(TxtETH,  data["ETH-USD"]);
                 });
             }
             catch
             {
                 Dispatcher.Invoke(() =>
                 {
-                    TxtSPY.Text = "Cena nedostupná";
-                    TxtURTH.Text = "Cena nedostupná";
-                    TxtAAPL.Text = "Cena nedostupná";
-                    TxtTSLA.Text = "Cena nedostupná";
-                    TxtNVDA.Text = "Cena nedostupná";
-                    TxtBTC.Text = "Cena nedostupná";
-                    TxtETH.Text = "Cena nedostupná";
+                    foreach (var txt in new[] { TxtSPY, TxtURTH, TxtAAPL, TxtTSLA, TxtNVDA, TxtBTC, TxtETH })
+                        txt.Text = "Cena nedostupná";
                 });
             }
             finally
@@ -68,163 +67,129 @@ namespace bankova_aplikacia
             }
         }
 
-        private void SetCena(TextBlock txt, Security security)
+        void NastavCenu(TextBlock txt, Security s)
         {
-            double cena = security[Field.RegularMarketPrice];
-            double zmena = security[Field.RegularMarketChangePercent];
+            double cena = s[Field.RegularMarketPrice];
+            double zmena = s[Field.RegularMarketChangePercent];
+            bool kladna = zmena >= 0;
 
-            string smer = "▲";
-            if (zmena < 0) smer = "▼";
+            txt.Text = cena.ToString("F2") + " USD  " + (kladna ? "▲" : "▼") + " " + Math.Abs(zmena).ToString("F2") + "%";
+            txt.Foreground = new SolidColorBrush(kladna
+                ? Color.FromRgb(50, 180, 50)
+                : Color.FromRgb(220, 50, 50));
+        }
 
-            txt.Text = cena.ToString("F2") + " USD  " + smer + " " + Math.Abs(zmena).ToString("F2") + "%";
-
-            if (zmena >= 0)
-                txt.Foreground = new SolidColorBrush(Color.FromRgb(50, 180, 50));
-            else
-                txt.Foreground = new SolidColorBrush(Color.FromRgb(220, 50, 50));
+        double SpocitajAlokáciu()
+        {
+            return SliderSPY.Value + SliderURTH.Value + SliderAAPL.Value
+                 + SliderTSLA.Value + SliderNVDA.Value + SliderBTC.Value + SliderETH.Value;
         }
 
         private void Slider_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (!IsLoaded)
-                return;
+            if (!IsLoaded) return;
 
-            double total = SliderSPY.Value + SliderURTH.Value + SliderAAPL.Value +
-                           SliderTSLA.Value + SliderNVDA.Value + SliderBTC.Value + SliderETH.Value;
-
+            double total = SpocitajAlokáciu();
             double z = App.AktualnyZostatok;
 
-            TxtSPYPercent.Text = SliderSPY.Value.ToString("F0") + "%  (" + (z * SliderSPY.Value / 100).ToString("F2") + " €)";
-            TxtURTHPercent.Text = SliderURTH.Value.ToString("F0") + "%  (" + (z * SliderURTH.Value / 100).ToString("F2") + " €)";
-            TxtAAPLPercent.Text = SliderAAPL.Value.ToString("F0") + "%  (" + (z * SliderAAPL.Value / 100).ToString("F2") + " €)";
-            TxtTSLAPercent.Text = SliderTSLA.Value.ToString("F0") + "%  (" + (z * SliderTSLA.Value / 100).ToString("F2") + " €)";
-            TxtNVDAPercent.Text = SliderNVDA.Value.ToString("F0") + "%  (" + (z * SliderNVDA.Value / 100).ToString("F2") + " €)";
-            TxtBTCPercent.Text = SliderBTC.Value.ToString("F0") + "%  (" + (z * SliderBTC.Value / 100).ToString("F2") + " €)";
-            TxtETHPercent.Text = SliderETH.Value.ToString("F0") + "%  (" + (z * SliderETH.Value / 100).ToString("F2") + " €)";
+            // helper na formatovanie textu
+            string F(double val) => val.ToString("F0") + "%  (" + (z * val / 100).ToString("F2") + " €)";
+
+            TxtSPYPercent.Text  = F(SliderSPY.Value);
+            TxtURTHPercent.Text = F(SliderURTH.Value);
+            TxtAAPLPercent.Text = F(SliderAAPL.Value);
+            TxtTSLAPercent.Text = F(SliderTSLA.Value);
+            TxtNVDAPercent.Text = F(SliderNVDA.Value);
+            TxtBTCPercent.Text  = F(SliderBTC.Value);
+            TxtETHPercent.Text  = F(SliderETH.Value);
 
             TxtCelkovePercento.Text = "Celkovo alokované: " + total.ToString("F0") + "%";
             TxtCelkovaSuma.Text = "Celková suma: " + (z * total / 100).ToString("F2") + " €";
             ProgressInvest.Value = Math.Min(total, 100);
 
-            if (total > 100)
-            {
-                ProgressInvest.Foreground = new SolidColorBrush(Color.FromRgb(220, 50, 50));
-                TxtCelkovePercento.Foreground = new SolidColorBrush(Color.FromRgb(220, 50, 50));
+            bool prekrocene = total > 100;
+            var farba = new SolidColorBrush(prekrocene ? Color.FromRgb(220, 50, 50) : Color.FromRgb(50, 180, 50));
+            ProgressInvest.Foreground = farba;
+            TxtCelkovePercento.Foreground = farba;
+
+            if (prekrocene)
                 ((Slider)sender).Value -= e.NewValue - e.OldValue;
-            }
-            else
-            {
-                ProgressInvest.Foreground = new SolidColorBrush(Color.FromRgb(50, 180, 50));
-                TxtCelkovePercento.Foreground = new SolidColorBrush(Color.FromRgb(50, 180, 50));
-            }
         }
 
         private async void BtnPotvrdit_Click(object sender, RoutedEventArgs e)
         {
-            double total = SliderSPY.Value + SliderURTH.Value + SliderAAPL.Value +
-                           SliderTSLA.Value + SliderNVDA.Value + SliderBTC.Value + SliderETH.Value;
+            double total = SpocitajAlokáciu();
+            if (total > 100) { MessageBox.Show("Celkový súčet percent presahuje 100%!"); return; }
+            if (total == 0)  { MessageBox.Show("Nenastavil si žiadne investície!"); return; }
 
-            if (total > 100)
-            {
-                MessageBox.Show("Celkový súčet percent presahuje 100%!");
-                return;
-            }
-
-            if (total == 0)
-            {
-                MessageBox.Show("Nenastavil si žiadne investície!");
-                return;
-            }
-
-            var ceny = new Dictionary<string, double>();
-
+            // nacitaj aktualne kurzy
+            Dictionary<string, double> ceny;
             try
             {
-                var securities = await Yahoo.Symbols("SPY", "URTH", "AAPL", "TSLA", "NVDA", "BTC-USD", "ETH-USD")
-                    .Fields(Field.RegularMarketPrice)
-                    .QueryAsync();
-
-                ceny["SPY"] = securities["SPY"][Field.RegularMarketPrice];
-                ceny["URTH"] = securities["URTH"][Field.RegularMarketPrice];
-                ceny["AAPL"] = securities["AAPL"][Field.RegularMarketPrice];
-                ceny["TSLA"] = securities["TSLA"][Field.RegularMarketPrice];
-                ceny["NVDA"] = securities["NVDA"][Field.RegularMarketPrice];
-                ceny["BTC"] = securities["BTC-USD"][Field.RegularMarketPrice];
-                ceny["ETH"] = securities["ETH-USD"][Field.RegularMarketPrice];
+                var data = await Yahoo.Symbols(_symboly).Fields(Field.RegularMarketPrice).QueryAsync();
+                ceny = new Dictionary<string, double>
+                {
+                    ["SPY"]  = data["SPY"][Field.RegularMarketPrice],
+                    ["URTH"] = data["URTH"][Field.RegularMarketPrice],
+                    ["AAPL"] = data["AAPL"][Field.RegularMarketPrice],
+                    ["TSLA"] = data["TSLA"][Field.RegularMarketPrice],
+                    ["NVDA"] = data["NVDA"][Field.RegularMarketPrice],
+                    ["BTC"]  = data["BTC-USD"][Field.RegularMarketPrice],
+                    ["ETH"]  = data["ETH-USD"][Field.RegularMarketPrice]
+                };
             }
-            catch
-            {
-                MessageBox.Show("Nepodarilo sa načítať aktuálne kurzy!");
-                return;
-            }
+            catch { MessageBox.Show("Nepodarilo sa načítať aktuálne kurzy!"); return; }
 
             double z = App.AktualnyZostatok;
 
-            var slidery = new Dictionary<string, double>();
-            slidery["SPY"] = SliderSPY.Value;
-            slidery["URTH"] = SliderURTH.Value;
-            slidery["AAPL"] = SliderAAPL.Value;
-            slidery["TSLA"] = SliderTSLA.Value;
-            slidery["NVDA"] = SliderNVDA.Value;
-            slidery["BTC"] = SliderBTC.Value;
-            slidery["ETH"] = SliderETH.Value;
-
-            foreach (var slider in slidery)
+            var slidery = new Dictionary<string, double>
             {
-                if (slider.Value > 0)
-                {
-                    double sumaEur = z * slider.Value / 100;
-                    double nakupnaCena = ceny[slider.Key];
-                    double kusy = sumaEur / nakupnaCena;
-                    await Database.UlozPozíciu(App.PrihlasenyEmail, slider.Key, kusy, nakupnaCena, sumaEur);
-                }
+                ["SPY"]  = SliderSPY.Value,
+                ["URTH"] = SliderURTH.Value,
+                ["AAPL"] = SliderAAPL.Value,
+                ["TSLA"] = SliderTSLA.Value,
+                ["NVDA"] = SliderNVDA.Value,
+                ["BTC"]  = SliderBTC.Value,
+                ["ETH"]  = SliderETH.Value
+            };
+
+            var investicia = new Dictionary<string, object>
+            {
+                ["Gmail"] = App.PrihlasenyEmail,
+                ["Datum"] = DateTime.Now.ToString("dd.MM.yyyy HH:mm")
+            };
+
+            foreach (var kv in slidery)
+            {
+                if (kv.Value <= 0) continue;
+                double suma = z * kv.Value / 100;
+                await Database.UlozPozíciu(App.PrihlasenyEmail, kv.Key, suma / ceny[kv.Key], ceny[kv.Key], suma);
+                investicia[kv.Key] = kv.Value.ToString("F0") + "% (" + suma.ToString("F2") + " €)";
             }
 
             double investovana = z * total / 100;
             double aktZostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
             await Database.UlozZostatok(App.PrihlasenyEmail, aktZostatok - investovana);
 
-            var investicia = new Dictionary<string, object>();
-            investicia["Gmail"] = App.PrihlasenyEmail;
-            investicia["Datum"] = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
-            investicia["SPY"] = SliderSPY.Value.ToString("F0") + "% (" + (z * SliderSPY.Value / 100).ToString("F2") + " €)";
-            investicia["URTH"] = SliderURTH.Value.ToString("F0") + "% (" + (z * SliderURTH.Value / 100).ToString("F2") + " €)";
-            investicia["AAPL"] = SliderAAPL.Value.ToString("F0") + "% (" + (z * SliderAAPL.Value / 100).ToString("F2") + " €)";
-            investicia["TSLA"] = SliderTSLA.Value.ToString("F0") + "% (" + (z * SliderTSLA.Value / 100).ToString("F2") + " €)";
-            investicia["NVDA"] = SliderNVDA.Value.ToString("F0") + "% (" + (z * SliderNVDA.Value / 100).ToString("F2") + " €)";
-            investicia["BTC"] = SliderBTC.Value.ToString("F0") + "% (" + (z * SliderBTC.Value / 100).ToString("F2") + " €)";
-            investicia["ETH"] = SliderETH.Value.ToString("F0") + "% (" + (z * SliderETH.Value / 100).ToString("F2") + " €)";
             investicia["Celkom"] = investovana.ToString("F2") + " €";
-
             await Database.UlozHistoriu(App.PrihlasenyEmail, investicia);
 
             MessageBox.Show("Investície potvrdené!\nCelkom investované: " + investovana.ToString("F2") + " €");
-
             ResetSliders();
             UpdateSlidersLock();
         }
 
-        private void ResetSliders()
+        void ResetSliders()
         {
-            SliderSPY.Value = 0;
-            SliderURTH.Value = 0;
-            SliderAAPL.Value = 0;
-            SliderTSLA.Value = 0;
-            SliderNVDA.Value = 0;
-            SliderBTC.Value = 0;
-            SliderETH.Value = 0;
+            SliderSPY.Value = SliderURTH.Value = SliderAAPL.Value = SliderTSLA.Value = 0;
+            SliderNVDA.Value = SliderBTC.Value = SliderETH.Value = 0;
         }
 
         public void UpdateSlidersLock()
         {
             bool enabled = App.AktualnyZostatok > 0;
-            SliderSPY.IsEnabled = enabled;
-            SliderURTH.IsEnabled = enabled;
-            SliderAAPL.IsEnabled = enabled;
-            SliderTSLA.IsEnabled = enabled;
-            SliderNVDA.IsEnabled = enabled;
-            SliderBTC.IsEnabled = enabled;
-            SliderETH.IsEnabled = enabled;
+            SliderSPY.IsEnabled = SliderURTH.IsEnabled = SliderAAPL.IsEnabled = enabled;
+            SliderTSLA.IsEnabled = SliderNVDA.IsEnabled = SliderBTC.IsEnabled = SliderETH.IsEnabled = enabled;
         }
     }
 }

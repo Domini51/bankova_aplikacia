@@ -1,4 +1,6 @@
+using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Firestore;
+using Google.Cloud.Firestore.V1;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,9 +16,19 @@ namespace bankova_aplikacia
         public static async Task Init()
         {
             string keyPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "firebase-key.json");
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", keyPath);
 
-            try { db = await FirestoreDb.CreateAsync(PROJECT); }
+            try
+            {
+                var credential = GoogleCredential.FromFile(keyPath)
+                    .CreateScoped("https://www.googleapis.com/auth/datastore");
+
+                var firestoreClient = await new FirestoreClientBuilder
+                {
+                    Credential = credential
+                }.BuildAsync();
+
+                db = FirestoreDb.Create(PROJECT, firestoreClient);
+            }
             catch (Exception ex) { MessageBox.Show("Init chyba: " + ex.Message); }
         }
 
@@ -54,7 +66,6 @@ namespace bankova_aplikacia
             return snap.Count > 0;
         }
 
-        // ziska prvy dokument pouzivatela podla emailu
         static async Task<DocumentReference?> NajdiPouzivatela(string gmail)
         {
             var snap = await Pouzivatelia().WhereEqualTo("Gmail", gmail).GetSnapshotAsync();
@@ -125,7 +136,6 @@ namespace bankova_aplikacia
 
             if (snap.Count > 0)
             {
-                // uz mame tuto pozíciu, len pridame
                 var existData = snap.Documents[0].ToDictionary();
                 double stareKusy = existData.ContainsKey("Kusy") ? Convert.ToDouble(existData["Kusy"]) : 0;
                 double staraSuma = existData.ContainsKey("SumaEur") ? Convert.ToDouble(existData["SumaEur"]) : 0;

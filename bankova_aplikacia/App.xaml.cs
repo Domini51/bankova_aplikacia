@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using System.Windows;
 
 namespace bankova_aplikacia
 {
@@ -11,6 +13,10 @@ namespace bankova_aplikacia
         protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            LiveCharts.Configure(config => config
+                .AddSkiaSharp()
+                .AddDefaultMappers()
+                .AddLightTheme());
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
             await Database.Init();
             var splash = new SplashWindow();

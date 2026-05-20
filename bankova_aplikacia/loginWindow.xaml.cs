@@ -63,14 +63,21 @@ namespace bankova_aplikacia
                 if (!JeValidnyEmail(gmail))
                 { MessageBox.Show("Zadaj platný email!"); return; }
 
-                bool ok = await Database.Prihlas(gmail, heslo);
-                if (ok)
+                try
                 {
-                    App.PrihlasenyEmail = gmail;
-                    new MainAppWindow().Show();
-                    Close();
+                    bool ok = await Database.Prihlas(gmail, heslo);
+                    if (ok)
+                    {
+                        App.PrihlasenyEmail = gmail;
+                        new MainAppWindow().Show();
+                        Close();
+                    }
+                    else MessageBox.Show("Nesprávny email alebo heslo!");
                 }
-                else MessageBox.Show("Nesprávny email alebo heslo!");
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Chyba pripojenia k databáze: " + ex.Message);
+                }
             }
             else
             {
@@ -84,13 +91,20 @@ namespace bankova_aplikacia
                 if (!JeValidnyEmail(gmail))
                 { MessageBox.Show("Zadaj platný email!"); return; }
 
-                bool ok = await Database.Registruj(meno, gmail, heslo);
-                if (ok)
+                try
                 {
-                    MessageBox.Show("Registrácia úspešná! Teraz sa prihláste.");
-                    PrepniTab(true);
+                    bool ok = await Database.Registruj(meno, gmail, heslo);
+                    if (ok)
+                    {
+                        MessageBox.Show("Registrácia úspešná! Teraz sa prihláste.");
+                        PrepniTab(true);
+                    }
+                    else MessageBox.Show("Tento email už existuje!");
                 }
-                else MessageBox.Show("Tento email už existuje!");
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Chyba pripojenia k databáze: " + ex.Message);
+                }
             }
         }
 
@@ -116,15 +130,22 @@ namespace bankova_aplikacia
             if (!JeValidnyEmail(gmail))
             { MessageBox.Show("Zadaj platný email!"); return; }
 
-            bool existuje = await Database.EmailExistuje(gmail);
-            if (!existuje)
-            { MessageBox.Show("Email neexistuje!"); return; }
+            try
+            {
+                bool existuje = await Database.EmailExistuje(gmail);
+                if (!existuje)
+                { MessageBox.Show("Email neexistuje!"); return; }
 
-            string noveHeslo = Microsoft.VisualBasic.Interaction.InputBox("Zadaj nové heslo:", "Reset hesla", "");
-            if (string.IsNullOrEmpty(noveHeslo)) return;
+                string noveHeslo = Microsoft.VisualBasic.Interaction.InputBox("Zadaj nové heslo:", "Reset hesla", "");
+                if (string.IsNullOrEmpty(noveHeslo)) return;
 
-            bool zmenene = await Database.ZmenHeslo(gmail, noveHeslo);
-            MessageBox.Show(zmenene ? "Heslo bolo úspešne zmenené!" : "Chyba pri zmene hesla!");
+                bool zmenene = await Database.ZmenHeslo(gmail, noveHeslo);
+                MessageBox.Show(zmenene ? "Heslo bolo úspešne zmenené!" : "Chyba pri zmene hesla!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba pripojenia k databáze: " + ex.Message);
+            }
         }
     }
 }

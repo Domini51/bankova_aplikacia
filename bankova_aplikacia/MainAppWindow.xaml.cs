@@ -103,5 +103,12 @@ namespace bankova_aplikacia
             App.PrepniTemu();
             IkonaTema.Text = App.JeTmavy ? "🌞" : "🌙";
         }
+
+        private void BtnOdhlasit_Click(object sender, RoutedEventArgs e)
+        {
+            App.PrihlasenyEmail = "";
+            new loginWindow().Show();
+            Close();
+        }
     }
 }

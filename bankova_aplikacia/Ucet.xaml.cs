@@ -71,6 +71,43 @@ namespace bankova_aplikacia
             _ = AktualizujKurzy(portfolio);
         }
 
+        private async void BtnPredat_Click(object sender, RoutedEventArgs e)
+        {
+            dynamic item = ((Button)sender).DataContext;
+            string docId  = item.DocId.ToString();
+            string symbol = item.Symbol.ToString();
+            double kusy   = (double)item.Kusy;
+            double sumaEur = (double)item.SumaEur;
+
+            double aktualnaHodnota = sumaEur;
+            try
+            {
+                string ySymbol = (symbol == "BTC" || symbol == "ETH") ? symbol + "-USD" : symbol;
+                var data = await Yahoo.Symbols(ySymbol).Fields(Field.RegularMarketPrice).QueryAsync();
+                aktualnaHodnota = kusy * (double)data[ySymbol][Field.RegularMarketPrice];
+            }
+            catch { }
+
+            var result = MessageBox.Show(
+                $"Predať {symbol}?\nAktuálna hodnota: {aktualnaHodnota:F2} €\nSuma bude pripísaná na váš účet.",
+                "Potvrdiť predaj", MessageBoxButton.YesNo);
+            if (result != MessageBoxResult.Yes) return;
+
+            await Database.PredajPozíciu(docId);
+            double zostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
+            await Database.UlozZostatok(App.PrihlasenyEmail, zostatok + aktualnaHodnota);
+            await Database.UlozHistoriu(App.PrihlasenyEmail, new Dictionary<string, object>
+            {
+                ["Gmail"] = App.PrihlasenyEmail,
+                ["Datum"] = DateTime.Now.ToString("dd.MM.yyyy HH:mm"),
+                ["Typ"]   = "Predaj",
+                [symbol]  = kusy.ToString("F4") + " ks (" + aktualnaHodnota.ToString("F2") + " €)"
+            });
+
+            MessageBox.Show($"{symbol} predaný za {aktualnaHodnota:F2} €");
+            await NacitajPortfolio();
+        }
+
         async Task AktualizujKurzy(List<Dictionary<string, object>> portfolio)
         {
             // ziskaj unikatne symboly

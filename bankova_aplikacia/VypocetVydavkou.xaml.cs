@@ -161,7 +161,7 @@ namespace bankova_aplikacia
         private void NazovBox_GotFocus(object sender, RoutedEventArgs e)
         {
             var box = (TextBox)sender;
-            if (box.Text == "Názov výdavku") { box.Text = ""; box.Foreground = Brushes.Black; }
+            if (box.Text == "Názov výdavku") { box.Text = ""; box.Foreground = (Brush)Application.Current.Resources["HlavnyText"]; }
         }
 
         private void NazovBox_LostFocus(object sender, RoutedEventArgs e)
@@ -173,7 +173,7 @@ namespace bankova_aplikacia
         private void SumaBox_GotFocus(object sender, RoutedEventArgs e)
         {
             var box = (TextBox)sender;
-            if (box.Text == "0") { box.Text = ""; box.Foreground = Brushes.Black; }
+            if (box.Text == "0") { box.Text = ""; box.Foreground = (Brush)Application.Current.Resources["HlavnyText"]; }
         }
 
         private void SumaBox_LostFocus(object sender, RoutedEventArgs e)

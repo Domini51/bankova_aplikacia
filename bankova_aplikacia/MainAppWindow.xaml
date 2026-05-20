@@ -161,7 +161,7 @@
                 </Button>
 
                 <Button x:Name="BtnOdhlasit"
-                       
+                        Click="BtnOdhlasit_Click"
                         Height="50"
                         FontSize="19"
                         Padding="20,0,0,0"

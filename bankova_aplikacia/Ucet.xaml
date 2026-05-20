@@ -100,11 +100,10 @@
                                             </StackPanel>
 
                                             <Button Grid.Column="2"
-
+                                                    Click="BtnPredat_Click"
                                                     Content="Predať"
                                                     Height="36" Width="80"
                                                     FontSize="13"
-                                                    Tag="{Binding DocId}"
                                                     Background="#E24B4A"
                                                     Foreground="White"
                                                     BorderThickness="0"/>

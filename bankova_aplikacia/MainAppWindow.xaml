@@ -5,7 +5,7 @@
         Title="Investičná Banka"
         Height="900" Width="1200"
         WindowState="Maximized"
-        Background="#F5F5F7">
+        Background="{DynamicResource HlavnyBg}">
 
     <Window.Resources>
         <Storyboard x:Key="PulseAnimacia">
@@ -169,8 +169,8 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0"
-                    Background="White"
-                    BorderBrush="#E8E8E8"
+                    Background="{DynamicResource TopbarBg}"
+                    BorderBrush="{DynamicResource TopbarBorder}"
                     BorderThickness="0,0,0,1">
                 <Grid Margin="30,0">
                     <Grid.ColumnDefinitions>
@@ -189,7 +189,7 @@
                                    Text=""
                                    FontSize="18"
                                    FontWeight="SemiBold"
-                                   Foreground="#1A1A1A"
+                                   Foreground="{DynamicResource HlavnyText}"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
 
@@ -206,7 +206,7 @@
                             <TextBlock x:Name="TopbarVitaj"
                                        Text=""
                                        FontSize="13"
-                                       Foreground="#1A1A1A"
+                                       Foreground="{DynamicResource HlavnyText}"
                                        FontWeight="Medium"
                                        VerticalAlignment="Center"/>
                         </StackPanel>

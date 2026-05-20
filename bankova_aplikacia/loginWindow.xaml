@@ -44,11 +44,11 @@
         </Grid>
 
         <!-- prava strana -->
-        <Grid Grid.Column="1" Background="#F5F5F5">
+        <Grid Grid.Column="1" Background="{DynamicResource LoginPanelBg}">
             <Border Width="420"
                     Padding="48,44"
-                    Background="White"
-                    BorderBrush="#E0E0E0"
+                    Background="{DynamicResource LoginKartaBg}"
+                    BorderBrush="{DynamicResource LoginKartaBorder}"
                     BorderThickness="1"
                     CornerRadius="12"
                     VerticalAlignment="Center"

@@ -7,8 +7,8 @@
 
             <!-- prijem -->
             <Border Padding="20"
-                    Background="White"
-                    BorderBrush="#D0D0D0"
+                    Background="{DynamicResource PanelBg}"
+                    BorderBrush="{DynamicResource PanelBorder}"
                     BorderThickness="1"
                     CornerRadius="10">
                 <StackPanel>
@@ -16,7 +16,7 @@
                                Margin="0,0,0,10"
                                FontSize="18"
                                FontWeight="SemiBold"
-                               Foreground="#1A1A1A"/>
+                               Foreground="{DynamicResource HlavnyText}"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -43,8 +43,8 @@
             <!-- nutne vydavky -->
             <Border Padding="20"
                     Margin="0,14,0,7"
-                    Background="White"
-                    BorderBrush="#D0D0D0"
+                    Background="{DynamicResource PanelBg}"
+                    BorderBrush="{DynamicResource PanelBorder}"
                     BorderThickness="1"
                     CornerRadius="10">
                 <StackPanel>
@@ -52,7 +52,7 @@
                                Margin="0,0,0,10"
                                FontSize="18"
                                FontWeight="SemiBold"
-                               Foreground="#1A1A1A"/>
+                               Foreground="{DynamicResource HlavnyText}"/>
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -99,7 +99,7 @@
                              MinHeight="50"
                              FontSize="16"
                              Padding="5"
-                             BorderBrush="#D0D0D0"
+                             BorderBrush="{DynamicResource VstupBorder}"
                              BorderThickness="1"/>
                 </StackPanel>
             </Border>
@@ -107,8 +107,8 @@
             <!-- hlavne vydavky -->
             <Border Padding="20"
                     Margin="0,7,0,7"
-                    Background="White"
-                    BorderBrush="#D0D0D0"
+                    Background="{DynamicResource PanelBg}"
+                    BorderBrush="{DynamicResource PanelBorder}"
                     BorderThickness="1"
                     CornerRadius="10">
                 <StackPanel>
@@ -116,7 +116,7 @@
                                Margin="0,0,0,10"
                                FontSize="18"
                                FontWeight="SemiBold"
-                               Foreground="#1A1A1A"/>
+                               Foreground="{DynamicResource HlavnyText}"/>
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -163,7 +163,7 @@
                              MinHeight="50"
                              FontSize="16"
                              Padding="5"
-                             BorderBrush="#D0D0D0"
+                             BorderBrush="{DynamicResource VstupBorder}"
                              BorderThickness="1"/>
                 </StackPanel>
             </Border>
@@ -171,8 +171,8 @@
             <!-- osobne vydavky -->
             <Border Padding="20"
                     Margin="0,7,0,7"
-                    Background="White"
-                    BorderBrush="#D0D0D0"
+                    Background="{DynamicResource PanelBg}"
+                    BorderBrush="{DynamicResource PanelBorder}"
                     BorderThickness="1"
                     CornerRadius="10">
                 <StackPanel>
@@ -180,7 +180,7 @@
                                Margin="0,0,0,10"
                                FontSize="18"
                                FontWeight="SemiBold"
-                               Foreground="#1A1A1A"/>
+                               Foreground="{DynamicResource HlavnyText}"/>
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -227,7 +227,7 @@
                              MinHeight="50"
                              FontSize="16"
                              Padding="5"
-                             BorderBrush="#D0D0D0"
+                             BorderBrush="{DynamicResource VstupBorder}"
                              BorderThickness="1"/>
                 </StackPanel>
             </Border>
@@ -235,8 +235,8 @@
             <!-- volne vydavky -->
             <Border Padding="20"
                     Margin="0,7,0,15"
-                    Background="White"
-                    BorderBrush="#D0D0D0"
+                    Background="{DynamicResource PanelBg}"
+                    BorderBrush="{DynamicResource PanelBorder}"
                     BorderThickness="1"
                     CornerRadius="10">
                 <StackPanel>
@@ -244,7 +244,7 @@
                                Margin="0,0,0,10"
                                FontSize="18"
                                FontWeight="SemiBold"
-                               Foreground="#1A1A1A"/>
+                               Foreground="{DynamicResource HlavnyText}"/>
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -291,7 +291,7 @@
                              MinHeight="50"
                              FontSize="16"
                              Padding="5"
-                             BorderBrush="#D0D0D0"
+                             BorderBrush="{DynamicResource VstupBorder}"
                              BorderThickness="1"/>
                 </StackPanel>
             </Border>
@@ -314,12 +314,12 @@
                         <TextBlock Text="Mesačný príjem"
                                    Margin="0,0,0,6"
                                    FontSize="13"
-                                   Foreground="#888888"/>
+                                   Foreground="{DynamicResource SekundarnyText}"/>
                         <TextBlock x:Name="MetPrijem"
                                    Text="0 €"
                                    FontSize="26"
                                    FontWeight="SemiBold"
-                                   Foreground="#1A1A1A"/>
+                                   Foreground="{DynamicResource HlavnyText}"/>
                     </StackPanel>
                 </Border>
                 <Border Grid.Column="2"
@@ -333,20 +333,20 @@
                         <TextBlock Text="Celkom minuté"
                                    Margin="0,0,0,6"
                                    FontSize="13"
-                                   Foreground="#888888"/>
+                                   Foreground="{DynamicResource SekundarnyText}"/>
                         <TextBlock x:Name="MetMinute"
                                    Text="0 €"
                                    FontSize="26"
                                    FontWeight="SemiBold"
-                                   Foreground="#1A1A1A"/>
+                                   Foreground="{DynamicResource HlavnyText}"/>
                     </StackPanel>
                 </Border>
             </Grid>
 
             <!-- graf -->
             <Border Padding="20"
-                    Background="White"
-                    BorderBrush="#D0D0D0"
+                    Background="{DynamicResource PanelBg}"
+                    BorderBrush="{DynamicResource PanelBorder}"
                     BorderThickness="1"
                     CornerRadius="10">
                 <StackPanel Height="351">
@@ -354,7 +354,7 @@
                                Margin="0,0,0,10"
                                FontSize="18"
                                FontWeight="SemiBold"
-                               Foreground="#1A1A1A"/>
+                               Foreground="{DynamicResource HlavnyText}"/>
                     <lvc:PieChart x:Name="GrafVydavkov"
                                   Height="318"
                                   LegendPosition="Right"

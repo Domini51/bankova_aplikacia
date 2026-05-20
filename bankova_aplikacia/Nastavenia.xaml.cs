@@ -37,5 +37,10 @@ namespace bankova_aplikacia
             if (await Database.ZmenHeslo(App.PrihlasenyEmail, noveHeslo))
                 MessageBox.Show("Heslo bolo úspešne zmenené!");
         }
+
+        private void BtnTema_Click(object sender, RoutedEventArgs e)
+        {
+            App.PrepniTemu();
+        }
     }
 }

@@ -7,8 +7,8 @@
                 <DataTemplate>
                     <Border Padding="20"
                             Margin="0,0,0,16"
-                            Background="White"
-                            BorderBrush="#D0D0D0"
+                            Background="{DynamicResource PanelBg}"
+                            BorderBrush="{DynamicResource PanelBorder}"
                             BorderThickness="1"
                             CornerRadius="10">
                         <StackPanel>
@@ -22,7 +22,7 @@
                                            Text="{Binding Datum}"
                                            FontSize="16"
                                            FontWeight="SemiBold"
-                                           Foreground="#1A1A1A"
+                                           Foreground="{DynamicResource HlavnyText}"
                                            VerticalAlignment="Center"/>
                                 <Border Grid.Column="1"
                                         Padding="12,6"
@@ -35,77 +35,77 @@
                                 </Border>
                             </Grid>
 
-                            <Border Height="1" Background="#E0E0E0" Margin="0,0,0,12"/>
+                            <Border Height="1" Background="{DynamicResource Oddelovac}" Margin="0,0,0,12"/>
 
                             <WrapPanel>
 
                                 <Border Padding="10,6"
                                         Margin="0,0,8,8"
-                                        Background="#F5F5F5"
+                                        Background="{DynamicResource PolozkaBg}"
                                         CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="SPY  " FontSize="13" Foreground="#888888"/>
-                                        <TextBlock Text="{Binding SPY}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                        <TextBlock Text="SPY  " FontSize="13" Foreground="{DynamicResource SekundarnyText}"/>
+                                        <TextBlock Text="{Binding SPY}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource HlavnyText}"/>
                                     </StackPanel>
                                 </Border>
 
                                 <Border Padding="10,6"
                                         Margin="0,0,8,8"
-                                        Background="#F5F5F5"
+                                        Background="{DynamicResource PolozkaBg}"
                                         CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="URTH  " FontSize="13" Foreground="#888888"/>
-                                        <TextBlock Text="{Binding URTH}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                        <TextBlock Text="URTH  " FontSize="13" Foreground="{DynamicResource SekundarnyText}"/>
+                                        <TextBlock Text="{Binding URTH}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource HlavnyText}"/>
                                     </StackPanel>
                                 </Border>
 
                                 <Border Padding="10,6"
                                         Margin="0,0,8,8"
-                                        Background="#F5F5F5"
+                                        Background="{DynamicResource PolozkaBg}"
                                         CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="AAPL  " FontSize="13" Foreground="#888888"/>
-                                        <TextBlock Text="{Binding AAPL}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                        <TextBlock Text="AAPL  " FontSize="13" Foreground="{DynamicResource SekundarnyText}"/>
+                                        <TextBlock Text="{Binding AAPL}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource HlavnyText}"/>
                                     </StackPanel>
                                 </Border>
 
                                 <Border Padding="10,6"
                                         Margin="0,0,8,8"
-                                        Background="#F5F5F5"
+                                        Background="{DynamicResource PolozkaBg}"
                                         CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="TSLA  " FontSize="13" Foreground="#888888"/>
-                                        <TextBlock Text="{Binding TSLA}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                        <TextBlock Text="TSLA  " FontSize="13" Foreground="{DynamicResource SekundarnyText}"/>
+                                        <TextBlock Text="{Binding TSLA}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource HlavnyText}"/>
                                     </StackPanel>
                                 </Border>
 
                                 <Border Padding="10,6"
                                         Margin="0,0,8,8"
-                                        Background="#F5F5F5"
+                                        Background="{DynamicResource PolozkaBg}"
                                         CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="NVDA  " FontSize="13" Foreground="#888888"/>
-                                        <TextBlock Text="{Binding NVDA}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                        <TextBlock Text="NVDA  " FontSize="13" Foreground="{DynamicResource SekundarnyText}"/>
+                                        <TextBlock Text="{Binding NVDA}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource HlavnyText}"/>
                                     </StackPanel>
                                 </Border>
 
                                 <Border Padding="10,6"
                                         Margin="0,0,8,8"
-                                        Background="#F5F5F5"
+                                        Background="{DynamicResource PolozkaBg}"
                                         CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="BTC  " FontSize="13" Foreground="#888888"/>
-                                        <TextBlock Text="{Binding BTC}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                        <TextBlock Text="BTC  " FontSize="13" Foreground="{DynamicResource SekundarnyText}"/>
+                                        <TextBlock Text="{Binding BTC}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource HlavnyText}"/>
                                     </StackPanel>
                                 </Border>
 
                                 <Border Padding="10,6"
                                         Margin="0,0,8,8"
-                                        Background="#F5F5F5"
+                                        Background="{DynamicResource PolozkaBg}"
                                         CornerRadius="6">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="ETH  " FontSize="13" Foreground="#888888"/>
-                                        <TextBlock Text="{Binding ETH}" FontSize="13" FontWeight="SemiBold" Foreground="#1A1A1A"/>
+                                        <TextBlock Text="ETH  " FontSize="13" Foreground="{DynamicResource SekundarnyText}"/>
+                                        <TextBlock Text="{Binding ETH}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource HlavnyText}"/>
                                     </StackPanel>
                                 </Border>
 

@@ -117,10 +117,11 @@ namespace bankova_aplikacia
             await Database.UlozZostatok(App.PrihlasenyEmail, zostatok + predavanaSuma);
             await Database.UlozHistoriu(App.PrihlasenyEmail, new Dictionary<string, object>
             {
-                ["Gmail"] = App.PrihlasenyEmail,
-                ["Datum"] = DateTime.Now.ToString("dd.MM.yyyy HH:mm"),
-                ["Typ"]   = "Predaj",
-                [symbol]  = predavaneKusy.ToString("F4") + " ks (" + predavanaSuma.ToString("F2") + " €)"
+                ["Gmail"]  = App.PrihlasenyEmail,
+                ["Datum"]  = DateTime.Now.ToString("dd.MM.yyyy HH:mm"),
+                ["Typ"]    = "Predaj",
+                ["Celkom"] = predavanaSuma.ToString("F2") + " €",
+                [symbol]   = predavaneKusy.ToString("F4") + " ks (" + predavanaSuma.ToString("F2") + " €)"
             });
 
             MessageBox.Show($"Predaných {predavaneKusy:F4} ks {symbol} za {predavanaSuma:F2} €");

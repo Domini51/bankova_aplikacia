@@ -179,6 +179,34 @@ namespace bankova_aplikacia
             UpdateSlidersLock();
         }
 
+        private async void BtnUlozSporiaci_Click(object sender, RoutedEventArgs e)
+        {
+            double odporucana = App.AktualnyPrijem * 0.30;
+            if (odporucana <= 0) { MessageBox.Show("Najprv nastav mesačný príjem vo Výpočte výdavkov!"); return; }
+
+            double zostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
+            if (zostatok < odporucana)
+            { MessageBox.Show($"Nemáš dostatok! Potrebuješ {odporucana:F2} €, máš {zostatok:F2} €."); return; }
+
+            var result = MessageBox.Show(
+                $"Uložiť {odporucana:F2} € na sporenie?",
+                "Potvrdiť sporenie", MessageBoxButton.YesNo);
+            if (result != MessageBoxResult.Yes) return;
+
+            await Database.UlozZostatok(App.PrihlasenyEmail, zostatok - odporucana);
+            await Database.UlozHistoriu(App.PrihlasenyEmail, new Dictionary<string, object>
+            {
+                ["Gmail"]  = App.PrihlasenyEmail,
+                ["Datum"]  = DateTime.Now.ToString("dd.MM.yyyy HH:mm"),
+                ["Typ"]    = "Sporiaci",
+                ["Celkom"] = odporucana.ToString("F2") + " €"
+            });
+
+            App.AktualnyZostatok = zostatok - odporucana;
+            TxtZostatok.Text = "Dostupný zostatok: " + App.AktualnyZostatok.ToString("F2") + " €";
+            MessageBox.Show($"Uložených {odporucana:F2} € na sporenie!");
+        }
+
         void ResetSliders()
         {
             SliderSPY.Value = SliderURTH.Value = SliderAAPL.Value = SliderTSLA.Value = 0;

@@ -19,9 +19,35 @@
                                    Margin="0,0,0,6"
                                    FontSize="13"
                                    Foreground="{DynamicResource SekundarnyText}"/>
-                        <TextBlock x:Name="TxtUcetZostatok"
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="TxtUcetZostatok"
+                                       Text="0 €"
+                                       FontSize="32"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource HlavnyText}"
+                                       VerticalAlignment="Center"/>
+                            <Button Grid.Column="1"
+                                    Click="BtnVybrat_Click"
+                                    Content="Vybrať"
+                                    Height="40" Width="100"
+                                    FontSize="14"
+                                    VerticalAlignment="Center"
+                                    Background="#E24B4A"
+                                    Foreground="White"
+                                    BorderThickness="0"/>
+                        </Grid>
+                        <Border Height="1" Background="{DynamicResource Oddelovac}" Margin="0,14,0,14"/>
+                        <TextBlock Text="Celková hodnota portfólia"
+                                   Margin="0,0,0,4"
+                                   FontSize="13"
+                                   Foreground="{DynamicResource SekundarnyText}"/>
+                        <TextBlock x:Name="TxtCelkovePortfolio"
                                    Text="0 €"
-                                   FontSize="32"
+                                   FontSize="22"
                                    FontWeight="SemiBold"
                                    Foreground="{DynamicResource HlavnyText}"/>
                     </StackPanel>

@@ -9,6 +9,7 @@ using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using System.Globalization;
 
 namespace bankova_aplikacia
 {
@@ -65,10 +66,47 @@ namespace bankova_aplikacia
             }
 
             ZoznamPortfolia.ItemsSource = zoznam;
+
+            double celkomNakup = 0;
+            foreach (var poz in portfolio)
+                if (poz.ContainsKey("SumaEur")) celkomNakup += Convert.ToDouble(poz["SumaEur"]);
+            TxtCelkovePortfolio.Text = celkomNakup.ToString("F2") + " €";
+
             SpinnerOverlay.Visibility = Visibility.Collapsed;
 
             // donacitaj aktualne kurzy na pozadi
             _ = AktualizujKurzy(portfolio);
+        }
+
+        private async void BtnVybrat_Click(object sender, RoutedEventArgs e)
+        {
+            double zostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
+
+            string vstup = Microsoft.VisualBasic.Interaction.InputBox(
+                $"Dostupný zostatok: {zostatok:F2} €\n\nKoľko chceš vybrať?",
+                "Výber", "0");
+
+            if (string.IsNullOrWhiteSpace(vstup)) return;
+
+            if (!double.TryParse(vstup.Replace(",", "."),
+                    NumberStyles.Any, CultureInfo.InvariantCulture,
+                    out double suma) || suma <= 0)
+            { MessageBox.Show("Zadaj platné číslo!"); return; }
+
+            if (suma > zostatok)
+            { MessageBox.Show($"Nemáš dostatok! Zostatok: {zostatok:F2} €"); return; }
+
+            await Database.UlozZostatok(App.PrihlasenyEmail, zostatok - suma);
+            await Database.UlozHistoriu(App.PrihlasenyEmail, new Dictionary<string, object>
+            {
+                ["Gmail"]  = App.PrihlasenyEmail,
+                ["Datum"]  = DateTime.Now.ToString("dd.MM.yyyy HH:mm"),
+                ["Typ"]    = "Výber",
+                ["Celkom"] = suma.ToString("F2") + " €"
+            });
+
+            TxtUcetZostatok.Text = (zostatok - suma).ToString("F2") + " €";
+            MessageBox.Show($"Vybratých {suma:F2} €");
         }
 
         private async void BtnPredat_Click(object sender, RoutedEventArgs e)
@@ -183,7 +221,21 @@ namespace bankova_aplikacia
                     });
                 }
 
-                Dispatcher.Invoke(() => ZoznamPortfolia.ItemsSource = aktualizovany);
+                double celkomHodnota = 0;
+                foreach (var poz in portfolio)
+                {
+                    string sym = poz.ContainsKey("Symbol") ? poz["Symbol"].ToString()! : "";
+                    string yS  = (sym == "BTC" || sym == "ETH") ? sym + "-USD" : sym;
+                    double k   = poz.ContainsKey("Kusy") ? Convert.ToDouble(poz["Kusy"]) : 0;
+                    double c   = data.ContainsKey(yS) ? (double)data[yS][Field.RegularMarketPrice] : 0;
+                    celkomHodnota += k * c;
+                }
+
+                Dispatcher.Invoke(() =>
+                {
+                    ZoznamPortfolia.ItemsSource = aktualizovany;
+                    TxtCelkovePortfolio.Text = celkomHodnota.ToString("F2") + " €";
+                });
             }
             catch { /* kurzy nedostupne, necháme posledné hodnoty */ }
         }

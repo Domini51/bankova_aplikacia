@@ -29,6 +29,15 @@
                                    Text="Odporúčaná suma: 0 €"
                                    FontSize="16"
                                    Foreground="{DynamicResource StrednyText}"/>
+                        <Button Click="BtnUlozSporiaci_Click"
+                                Content="Uložiť na sporenie"
+                                Height="40"
+                                Margin="0,10,0,0"
+                                FontSize="14"
+                                FontWeight="SemiBold"
+                                Background="#FFA500"
+                                Foreground="White"
+                                BorderThickness="0"/>
                     </StackPanel>
                 </Border>
 

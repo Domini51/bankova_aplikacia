@@ -118,6 +118,15 @@ namespace bankova_aplikacia
             await Database.UlozZostatok(App.PrihlasenyEmail, novy);
 
             MessageBox.Show("Na účet bolo pripísaných " + zostatok.ToString("F2") + " €\nCelkový zostatok: " + novy.ToString("F2") + " €");
+
+            // vymazat vsetky vydavky a resetovat panel
+            foreach (var lb in new[] { ZoznamVydavkov, ZoznamVydavkov2, ZoznamVydavkov3, ZoznamVydavkov4 })
+                lb.Items.Clear();
+
+            MPrijem.Text = "0";
+            MPrijem.Foreground = Brushes.Gray;
+            GrafVydavkov.Series = null;
+            AktualizujMetriky();
         }
 
         void AktualizujGrafVydavkov()

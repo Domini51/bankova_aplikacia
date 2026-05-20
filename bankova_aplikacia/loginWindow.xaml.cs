@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace bankova_aplikacia
@@ -106,6 +107,12 @@ namespace bankova_aplikacia
                     MessageBox.Show("Chyba pripojenia k databáze: " + ex.Message);
                 }
             }
+        }
+
+        private void Input_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                Button_Click(sender, e);
         }
 
         private void LoginHeslo_PasswordChanged(object sender, RoutedEventArgs e)

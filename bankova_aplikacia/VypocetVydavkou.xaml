@@ -28,14 +28,15 @@
                                  Height="46"
                                  FontSize="24"
                                  Padding="10,8"
-                                 Foreground="Gray"
-                                 BorderBrush="#D0D0D0"
+                                 Foreground="{DynamicResource SekundarnyText}"
+                                 Background="{DynamicResource VstupBg}"
+                                 BorderBrush="{DynamicResource VstupBorder}"
                                  BorderThickness="1"
                                  GotFocus="SumaBox_GotFocus"
                                  LostFocus="SumaBox_LostFocus"
                                  TextChanged="MPrijem_TextChanged"
                                  KeyDown="MPrijem_KeyDown"/>
-                        <Label Grid.Column="1" Content="€" FontSize="24" Padding="10,8"/>
+                        <Label Grid.Column="1" Content="€" FontSize="24" Padding="10,8" Foreground="{DynamicResource HlavnyText}"/>
                     </Grid>
                 </StackPanel>
             </Border>
@@ -66,8 +67,9 @@
                                  Height="42"
                                  FontSize="16"
                                  Padding="10,8"
-                                 Foreground="Gray"
-                                 BorderBrush="#D0D0D0"
+                                 Foreground="{DynamicResource SekundarnyText}"
+                                 Background="{DynamicResource VstupBg}"
+                                 BorderBrush="{DynamicResource VstupBorder}"
                                  BorderThickness="1"
                                  GotFocus="NazovBox_GotFocus"
                                  LostFocus="NazovBox_LostFocus"
@@ -79,13 +81,14 @@
                                  FontSize="16"
                                  Margin="10,0,0,0"
                                  Padding="10,8"
-                                 Foreground="Gray"
-                                 BorderBrush="#D0D0D0"
+                                 Foreground="{DynamicResource SekundarnyText}"
+                                 Background="{DynamicResource VstupBg}"
+                                 BorderBrush="{DynamicResource VstupBorder}"
                                  BorderThickness="1"
                                  GotFocus="SumaBox_GotFocus"
                                  LostFocus="SumaBox_LostFocus"
                                  KeyDown="SumaVydavok_KeyDown"/>
-                        <Label Grid.Column="2" Content="€" FontSize="20" Padding="6,8"/>
+                        <Label Grid.Column="2" Content="€" FontSize="20" Padding="6,8" Foreground="{DynamicResource HlavnyText}"/>
                         <Button Grid.Column="3"
                                 Click="BtnPridajVydavok_Click"
                                 Content="+"
@@ -99,6 +102,8 @@
                              MinHeight="50"
                              FontSize="16"
                              Padding="5"
+                             Background="{DynamicResource VstupBg}"
+                             Foreground="{DynamicResource HlavnyText}"
                              BorderBrush="{DynamicResource VstupBorder}"
                              BorderThickness="1"/>
                 </StackPanel>
@@ -130,8 +135,9 @@
                                  Height="42"
                                  FontSize="16"
                                  Padding="10,8"
-                                 Foreground="Gray"
-                                 BorderBrush="#D0D0D0"
+                                 Foreground="{DynamicResource SekundarnyText}"
+                                 Background="{DynamicResource VstupBg}"
+                                 BorderBrush="{DynamicResource VstupBorder}"
                                  BorderThickness="1"
                                  GotFocus="NazovBox_GotFocus"
                                  LostFocus="NazovBox_LostFocus"
@@ -143,13 +149,14 @@
                                  FontSize="16"
                                  Margin="10,0,0,0"
                                  Padding="10,8"
-                                 Foreground="Gray"
-                                 BorderBrush="#D0D0D0"
+                                 Foreground="{DynamicResource SekundarnyText}"
+                                 Background="{DynamicResource VstupBg}"
+                                 BorderBrush="{DynamicResource VstupBorder}"
                                  BorderThickness="1"
                                  GotFocus="SumaBox_GotFocus"
                                  LostFocus="SumaBox_LostFocus"
                                  KeyDown="SumaVydavok_KeyDown"/>
-                        <Label Grid.Column="2" Content="€" FontSize="20" Padding="6,8"/>
+                        <Label Grid.Column="2" Content="€" FontSize="20" Padding="6,8" Foreground="{DynamicResource HlavnyText}"/>
                         <Button Grid.Column="3"
                                 Click="BtnPridajVydavok_Click"
                                 Content="+"
@@ -163,6 +170,8 @@
                              MinHeight="50"
                              FontSize="16"
                              Padding="5"
+                             Background="{DynamicResource VstupBg}"
+                             Foreground="{DynamicResource HlavnyText}"
                              BorderBrush="{DynamicResource VstupBorder}"
                              BorderThickness="1"/>
                 </StackPanel>
@@ -194,8 +203,9 @@
                                  Height="42"
                                  FontSize="16"
                                  Padding="10,8"
-                                 Foreground="Gray"
-                                 BorderBrush="#D0D0D0"
+                                 Foreground="{DynamicResource SekundarnyText}"
+                                 Background="{DynamicResource VstupBg}"
+                                 BorderBrush="{DynamicResource VstupBorder}"
                                  BorderThickness="1"
                                  GotFocus="NazovBox_GotFocus"
                                  LostFocus="NazovBox_LostFocus"
@@ -207,13 +217,14 @@
                                  FontSize="16"
                                  Margin="10,0,0,0"
                                  Padding="10,8"
-                                 Foreground="Gray"
-                                 BorderBrush="#D0D0D0"
+                                 Foreground="{DynamicResource SekundarnyText}"
+                                 Background="{DynamicResource VstupBg}"
+                                 BorderBrush="{DynamicResource VstupBorder}"
                                  BorderThickness="1"
                                  GotFocus="SumaBox_GotFocus"
                                  LostFocus="SumaBox_LostFocus"
                                  KeyDown="SumaVydavok_KeyDown"/>
-                        <Label Grid.Column="2" Content="€" FontSize="20" Padding="6,8"/>
+                        <Label Grid.Column="2" Content="€" FontSize="20" Padding="6,8" Foreground="{DynamicResource HlavnyText}"/>
                         <Button Grid.Column="3"
                                 Click="BtnPridajVydavok_Click"
                                 Content="+"
@@ -227,6 +238,8 @@
                              MinHeight="50"
                              FontSize="16"
                              Padding="5"
+                             Background="{DynamicResource VstupBg}"
+                             Foreground="{DynamicResource HlavnyText}"
                              BorderBrush="{DynamicResource VstupBorder}"
                              BorderThickness="1"/>
                 </StackPanel>
@@ -258,8 +271,9 @@
                                  Height="42"
                                  FontSize="16"
                                  Padding="10,8"
-                                 Foreground="Gray"
-                                 BorderBrush="#D0D0D0"
+                                 Foreground="{DynamicResource SekundarnyText}"
+                                 Background="{DynamicResource VstupBg}"
+                                 BorderBrush="{DynamicResource VstupBorder}"
                                  BorderThickness="1"
                                  GotFocus="NazovBox_GotFocus"
                                  LostFocus="NazovBox_LostFocus"
@@ -271,13 +285,14 @@
                                  FontSize="16"
                                  Margin="10,0,0,0"
                                  Padding="10,8"
-                                 Foreground="Gray"
-                                 BorderBrush="#D0D0D0"
+                                 Foreground="{DynamicResource SekundarnyText}"
+                                 Background="{DynamicResource VstupBg}"
+                                 BorderBrush="{DynamicResource VstupBorder}"
                                  BorderThickness="1"
                                  GotFocus="SumaBox_GotFocus"
                                  LostFocus="SumaBox_LostFocus"
                                  KeyDown="SumaVydavok_KeyDown"/>
-                        <Label Grid.Column="2" Content="€" FontSize="20" Padding="6,8"/>
+                        <Label Grid.Column="2" Content="€" FontSize="20" Padding="6,8" Foreground="{DynamicResource HlavnyText}"/>
                         <Button Grid.Column="3"
                                 Click="BtnPridajVydavok_Click"
                                 Content="+"
@@ -291,6 +306,8 @@
                              MinHeight="50"
                              FontSize="16"
                              Padding="5"
+                             Background="{DynamicResource VstupBg}"
+                             Foreground="{DynamicResource HlavnyText}"
                              BorderBrush="{DynamicResource VstupBorder}"
                              BorderThickness="1"/>
                 </StackPanel>
@@ -306,8 +323,8 @@
                 <Border Grid.Column="0"
                         Padding="20,16"
                         Margin="0,0,8,0"
-                        Background="White"
-                        BorderBrush="#D0D0D0"
+                        Background="{DynamicResource PanelBg}"
+                        BorderBrush="{DynamicResource PanelBorder}"
                         BorderThickness="1"
                         CornerRadius="10">
                     <StackPanel>
@@ -325,8 +342,8 @@
                 <Border Grid.Column="2"
                         Padding="20,16"
                         Margin="6,0,0,0"
-                        Background="White"
-                        BorderBrush="#D0D0D0"
+                        Background="{DynamicResource PanelBg}"
+                        BorderBrush="{DynamicResource PanelBorder}"
                         BorderThickness="1"
                         CornerRadius="10">
                     <StackPanel>
@@ -368,7 +385,7 @@
                     Margin="0,14,0,20"
                     FontSize="15"
                     FontWeight="SemiBold"
-                    Background="Black"
+                    Background="#1A1A1A"
                     Foreground="White"
                     BorderThickness="0"/>
 

@@ -97,5 +97,11 @@ namespace bankova_aplikacia
             TopbarTitle.Text = "Nastavenia";
             await PanelNastavenia.NacitajUdaje();
         }
+
+        private void BtnTema_Click(object sender, RoutedEventArgs e)
+        {
+            App.PrepniTemu();
+            IkonaTema.Text = App.JeTmavy ? "🌞" : "🌙";
+        }
     }
 }

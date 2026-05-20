@@ -98,7 +98,8 @@
                                      Padding="14,10"
                                      Margin="0,0,0,16"
                                      BorderBrush="#E0E0E0"
-                                     BorderThickness="1">
+                                     BorderThickness="1"
+                                     KeyDown="Input_KeyDown">
                                 <TextBox.Style>
                                     <Style TargetType="TextBox">
                                         <Style.Triggers>
@@ -127,7 +128,8 @@
                                              Height="46"
                                              FontSize="15"
                                              Padding="14,10"
-                                             PasswordChanged="LoginHeslo_PasswordChanged">
+                                             PasswordChanged="LoginHeslo_PasswordChanged"
+                                             KeyDown="Input_KeyDown">
                                     <PasswordBox.Style>
                                         <Style TargetType="PasswordBox">
                                             <Setter Property="Template">
@@ -189,7 +191,8 @@
                                      Padding="14,10"
                                      Margin="0,0,0,16"
                                      BorderBrush="#E0E0E0"
-                                     BorderThickness="1">
+                                     BorderThickness="1"
+                                     KeyDown="Input_KeyDown">
                                 <TextBox.Style>
                                     <Style TargetType="TextBox">
                                         <Style.Triggers>
@@ -219,7 +222,8 @@
                                      Padding="14,10"
                                      Margin="0,0,0,16"
                                      BorderBrush="#E0E0E0"
-                                     BorderThickness="1">
+                                     BorderThickness="1"
+                                     KeyDown="Input_KeyDown">
                                 <TextBox.Style>
                                     <Style TargetType="TextBox">
                                         <Style.Triggers>
@@ -248,7 +252,8 @@
                                              Height="46"
                                              FontSize="15"
                                              Padding="14,10"
-                                             PasswordChanged="RegisterHeslo_PasswordChanged">
+                                             PasswordChanged="RegisterHeslo_PasswordChanged"
+                                             KeyDown="Input_KeyDown">
                                     <PasswordBox.Style>
                                         <Style TargetType="PasswordBox">
                                             <Setter Property="Template">

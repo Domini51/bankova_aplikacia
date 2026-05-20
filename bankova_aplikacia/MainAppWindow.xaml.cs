@@ -13,6 +13,8 @@ namespace bankova_aplikacia
         public MainAppWindow()
         {
             InitializeComponent();
+            _aktivneTlacidlo = BtnPrehlad;
+            TopbarTitle.Text = "Výpočet výdavkov";
             _ = NacitajUdajeUzivatela();
         }
 

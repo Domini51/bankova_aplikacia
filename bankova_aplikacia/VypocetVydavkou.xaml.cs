@@ -216,6 +216,26 @@ namespace bankova_aplikacia
             }
         }
 
+        private void BtnOdstranVydavok_Click(object sender, RoutedEventArgs e)
+        {
+            var lbi = ItemsControl.ContainerFromElement(null, (Button)sender) as ListBoxItem;
+            if (lbi == null)
+            {
+                // prejdi vizualny strom nahor po ListBoxItem
+                DependencyObject p = (Button)sender;
+                while (p != null && p is not ListBoxItem) p = System.Windows.Media.VisualTreeHelper.GetParent(p);
+                lbi = p as ListBoxItem;
+            }
+            if (lbi == null) return;
+
+            var lb = ItemsControl.ItemsControlFromItemContainer(lbi) as ListBox;
+            if (lb == null) return;
+
+            lb.Items.Remove(lbi.Content);
+            AktualizujMetriky();
+            AktualizujGrafVydavkov();
+        }
+
         private void GrafVydavkov_Loaded(object sender, RoutedEventArgs e) { }
     }
 }

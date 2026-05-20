@@ -156,7 +156,8 @@ namespace bankova_aplikacia
             var investicia = new Dictionary<string, object>
             {
                 ["Gmail"] = App.PrihlasenyEmail,
-                ["Datum"] = DateTime.Now.ToString("dd.MM.yyyy HH:mm")
+                ["Datum"] = DateTime.Now.ToString("dd.MM.yyyy HH:mm"),
+                ["Typ"]   = "Nákup"
             };
 
             foreach (var kv in slidery)

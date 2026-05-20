@@ -74,37 +74,56 @@ namespace bankova_aplikacia
         private async void BtnPredat_Click(object sender, RoutedEventArgs e)
         {
             dynamic item = ((Button)sender).DataContext;
-            string docId  = item.DocId.ToString();
-            string symbol = item.Symbol.ToString();
-            double kusy   = (double)item.Kusy;
-            double sumaEur = (double)item.SumaEur;
+            string docId   = item.DocId.ToString();
+            string symbol  = item.Symbol.ToString();
+            double celkKusy = (double)item.Kusy;
+            double sumaEur  = (double)item.SumaEur;
 
-            double aktualnaHodnota = sumaEur;
+            // Nacitaj aktualnu cenu
+            double aktCena = celkKusy > 0 ? sumaEur / celkKusy : 0;
             try
             {
                 string ySymbol = (symbol == "BTC" || symbol == "ETH") ? symbol + "-USD" : symbol;
                 var data = await Yahoo.Symbols(ySymbol).Fields(Field.RegularMarketPrice).QueryAsync();
-                aktualnaHodnota = kusy * (double)data[ySymbol][Field.RegularMarketPrice];
+                aktCena = (double)data[ySymbol][Field.RegularMarketPrice];
             }
             catch { }
 
+            // Opytaj sa kolko kusov chce predat
+            string vstup = Microsoft.VisualBasic.Interaction.InputBox(
+                $"Máš {celkKusy:F4} ks {symbol} (aktuálna cena: {aktCena:F2} €/ks)\n\nKoľko kusov chceš predať?",
+                "Predaj", celkKusy.ToString("F4"));
+
+            if (string.IsNullOrWhiteSpace(vstup)) return;
+
+            if (!double.TryParse(vstup.Replace(",", "."),
+                    System.Globalization.NumberStyles.Any,
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    out double predavaneKusy) || predavaneKusy <= 0)
+            { MessageBox.Show("Zadaj platné číslo!"); return; }
+
+            if (predavaneKusy > celkKusy)
+            { MessageBox.Show($"Nemáš dosť kusov! Máš len {celkKusy:F4} ks."); return; }
+
+            double predavanaSuma = predavaneKusy * aktCena;
+
             var result = MessageBox.Show(
-                $"Predať {symbol}?\nAktuálna hodnota: {aktualnaHodnota:F2} €\nSuma bude pripísaná na váš účet.",
+                $"Predať {predavaneKusy:F4} ks {symbol} za {predavanaSuma:F2} €?",
                 "Potvrdiť predaj", MessageBoxButton.YesNo);
             if (result != MessageBoxResult.Yes) return;
 
-            await Database.PredajPozíciu(docId);
+            await Database.CiastocnyPredaj(docId, predavaneKusy, predavaneKusy / celkKusy * sumaEur);
             double zostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
-            await Database.UlozZostatok(App.PrihlasenyEmail, zostatok + aktualnaHodnota);
+            await Database.UlozZostatok(App.PrihlasenyEmail, zostatok + predavanaSuma);
             await Database.UlozHistoriu(App.PrihlasenyEmail, new Dictionary<string, object>
             {
                 ["Gmail"] = App.PrihlasenyEmail,
                 ["Datum"] = DateTime.Now.ToString("dd.MM.yyyy HH:mm"),
                 ["Typ"]   = "Predaj",
-                [symbol]  = kusy.ToString("F4") + " ks (" + aktualnaHodnota.ToString("F2") + " €)"
+                [symbol]  = predavaneKusy.ToString("F4") + " ks (" + predavanaSuma.ToString("F2") + " €)"
             });
 
-            MessageBox.Show($"{symbol} predaný za {aktualnaHodnota:F2} €");
+            MessageBox.Show($"Predaných {predavaneKusy:F4} ks {symbol} za {predavanaSuma:F2} €");
             await NacitajPortfolio();
         }
 

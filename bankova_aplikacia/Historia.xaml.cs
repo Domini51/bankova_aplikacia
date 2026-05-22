@@ -59,7 +59,7 @@ namespace bankova_aplikacia
                     if (_ignorovane.Contains(kv.Key)) continue;
                     string val = kv.Value?.ToString() ?? "";
                     if (string.IsNullOrEmpty(val) || val == "-") continue;
-                    polozky.Add(new HistoriaChip { Kluc = kv.Key, Hodnota = val.TrimStart('-') });
+                    polozky.Add(new HistoriaChip { Kluc = kv.Key, Hodnota = val.Replace("-", "") });
                 }
 
                 zoznam.Add(new HistoriaPolozka

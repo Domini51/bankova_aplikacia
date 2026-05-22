@@ -1,40 +1,72 @@
- <UserControl x:Class="bankova_aplikacia.Nastavenia"
+<UserControl x:Class="bankova_aplikacia.Nastavenia"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel HorizontalAlignment="Left" MaxWidth="500" Margin="30,20">
+        <StackPanel MaxWidth="520" Margin="30,20">
 
-            <Border Padding="20"
+            <TextBlock Text="Nastavenia"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Foreground="{DynamicResource HlavnyText}"
+                       Margin="0,0,0,24"/>
+
+            <!-- Profil -->
+            <Border Padding="24"
                     Margin="0,0,0,16"
                     Background="{DynamicResource PanelBg}"
-                    BorderThickness="1"
                     BorderBrush="{DynamicResource PanelBorder}"
-                    CornerRadius="10">
+                    BorderThickness="1"
+                    CornerRadius="12">
                 <StackPanel>
 
-                    <TextBlock Text="Účet"
-                               Margin="0,0,0,15"
-                               FontSize="18"
+                    <TextBlock Text="PROFIL"
+                               FontSize="11"
                                FontWeight="SemiBold"
-                               Foreground="{DynamicResource HlavnyText}"/>
+                               Foreground="{DynamicResource SekundarnyText}"
+                               Margin="0,0,0,16"/>
 
-                    <Grid Margin="0,0,0,12">
+                    <!-- Avatar + info -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                        <Border Width="54" Height="54"
+                                Background="{DynamicResource AkcentFarba}"
+                                CornerRadius="27">
+                            <TextBlock x:Name="TxtInitials"
+                                       Text="?"
+                                       FontSize="22"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Margin="16,0,0,0" VerticalAlignment="Center">
+                            <TextBlock x:Name="TxtMeno"
+                                       FontSize="17"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource HlavnyText}"/>
+                            <TextBlock x:Name="TxtEmail"
+                                       FontSize="13"
+                                       Foreground="{DynamicResource SekundarnyText}"
+                                       Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Border Height="1" Background="{DynamicResource Oddelovac}" Margin="0,0,0,16"/>
+
+                    <!-- Zmeniť meno -->
+                    <Grid Margin="0,0,0,14">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock Text="Meno"
-                                       Margin="0,0,0,4"
                                        FontSize="13"
-                                       Foreground="{DynamicResource SekundarnyText}"/>
-                            <TextBlock x:Name="TxtMeno"
-                                       Text=""
-                                       FontSize="15"
                                        Foreground="{DynamicResource HlavnyText}"/>
+                            <TextBlock Text="Zmeniť zobrazované meno"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource SekundarnyText}"
+                                       Margin="0,2,0,0"/>
                         </StackPanel>
-
                         <Button Grid.Column="1"
                                 Click="BtnZmenitMeno_Click"
                                 Content="Zmeniť"
@@ -47,37 +79,23 @@
                                 BorderThickness="1"/>
                     </Grid>
 
-                    <Border Height="1" Background="{DynamicResource Oddelovac}" Margin="0,0,0,12"/>
+                    <Border Height="1" Background="{DynamicResource Oddelovac}" Margin="0,0,0,14"/>
 
-                    <StackPanel Margin="0,0,0,12">
-                        <TextBlock Text="Email"
-                                   Margin="0,0,0,4"
-                                   FontSize="13"
-                                   Foreground="{DynamicResource SekundarnyText}"/>
-                        <TextBlock x:Name="TxtEmail"
-                                   Text=""
-                                   FontSize="15"
-                                   Foreground="{DynamicResource HlavnyText}"/>
-                    </StackPanel>
-
-                    <Border Height="1" Background="{DynamicResource Oddelovac}" Margin="0,0,0,12"/>
-
+                    <!-- Zmeniť heslo -->
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock Text="Heslo"
-                                       Margin="0,0,0,4"
                                        FontSize="13"
-                                       Foreground="{DynamicResource SekundarnyText}"/>
-                            <TextBlock Text="••••••••"
-                                       FontSize="15"
                                        Foreground="{DynamicResource HlavnyText}"/>
+                            <TextBlock Text="Zmeniť prihlasovacie heslo"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource SekundarnyText}"
+                                       Margin="0,2,0,0"/>
                         </StackPanel>
-
                         <Button Grid.Column="1"
                                 Click="BtnZmenitHeslo_Click"
                                 Content="Zmeniť"
@@ -93,42 +111,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- tema -->
-            <Border Padding="20"
-                    Margin="0,0,0,16"
-                    Background="{DynamicResource PanelBg}"
-                    BorderThickness="1"
-                    BorderBrush="{DynamicResource PanelBorder}"
-                    CornerRadius="10">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                        <TextBlock Text="Tmavý režim"
-                                   FontSize="15"
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource HlavnyText}"/>
-                        <TextBlock Text="Prepnúť medzi svetlým a tmavým vzhľadom"
-                                   Margin="0,3,0,0"
-                                   FontSize="13"
-                                   Foreground="{DynamicResource SekundarnyText}"/>
-                    </StackPanel>
-
-                    <Button Grid.Column="1"
-                            x:Name="BtnTema"
-                            Click="BtnTema_Click"
-                            Content="Prepnúť"
-                            Height="36" Width="90"
-                            FontSize="13"
-                            VerticalAlignment="Center"
-                            Background="#1A1A1A"
-                            Foreground="White"
-                            BorderThickness="0"/>
-                </Grid>
-            </Border>
+            <!-- Vzhľad -->
 
         </StackPanel>
     </ScrollViewer>

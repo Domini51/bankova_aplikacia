@@ -68,9 +68,16 @@ namespace bankova_aplikacia
             ZoznamPortfolia.ItemsSource = zoznam;
 
             double celkomNakup = 0;
+            var grafData = new List<(string, double)>();
             foreach (var poz in portfolio)
-                if (poz.ContainsKey("SumaEur")) celkomNakup += Convert.ToDouble(poz["SumaEur"]);
+            {
+                double suma = poz.ContainsKey("SumaEur") ? Convert.ToDouble(poz["SumaEur"]) : 0;
+                string sym = poz.ContainsKey("Symbol") ? poz["Symbol"].ToString()! : "";
+                celkomNakup += suma;
+                grafData.Add((sym, suma));
+            }
             TxtCelkovePortfolio.Text = celkomNakup.ToString("F2") + " €";
+            AktualizujGrafPortfolia(grafData);
 
             SpinnerOverlay.Visibility = Visibility.Collapsed;
 
@@ -231,13 +238,43 @@ namespace bankova_aplikacia
                     celkomHodnota += k * c;
                 }
 
+                var grafData2 = new List<(string, double)>();
+                foreach (var poz in portfolio)
+                {
+                    string sym = poz.ContainsKey("Symbol") ? poz["Symbol"].ToString()! : "";
+                    string yS  = (sym == "BTC" || sym == "ETH") ? sym + "-USD" : sym;
+                    double k   = poz.ContainsKey("Kusy") ? Convert.ToDouble(poz["Kusy"]) : 0;
+                    double c   = data.ContainsKey(yS) ? (double)data[yS][Field.RegularMarketPrice] : 0;
+                    grafData2.Add((sym, k * c));
+                }
+
                 Dispatcher.Invoke(() =>
                 {
                     ZoznamPortfolia.ItemsSource = aktualizovany;
                     TxtCelkovePortfolio.Text = celkomHodnota.ToString("F2") + " €";
+                    AktualizujGrafPortfolia(grafData2);
                 });
             }
             catch { /* kurzy nedostupne, necháme posledné hodnoty */ }
+        }
+
+        void AktualizujGrafPortfolia(List<(string sym, double val)> items)
+        {
+            string[] farby = { "#2E6DA4", "#E24B4A", "#32B432", "#FFA500", "#9B59B6", "#E67E22", "#1ABC9C" };
+            var serie = new List<ISeries>();
+            int i = 0;
+            foreach (var (sym, val) in items)
+            {
+                if (val <= 0) continue;
+                serie.Add(new PieSeries<double>
+                {
+                    Values = new double[] { val },
+                    Name = sym,
+                    Fill = new SolidColorPaint(SKColor.Parse(farby[i % farby.Length]))
+                });
+                i++;
+            }
+            GrafPortfolia.Series = serie;
         }
     }
 }

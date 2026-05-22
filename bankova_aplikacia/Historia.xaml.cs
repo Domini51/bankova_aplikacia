@@ -51,6 +51,7 @@ namespace bankova_aplikacia
             {
                 string Get(string k) => inv.ContainsKey(k) ? inv[k].ToString()! : "-";
                 string typ = Get("Typ");
+                if (typ == "Zostatok" || typ == "Výber") continue;
 
                 var polozky = new List<HistoriaChip>();
                 foreach (var kv in inv)
@@ -58,7 +59,7 @@ namespace bankova_aplikacia
                     if (_ignorovane.Contains(kv.Key)) continue;
                     string val = kv.Value?.ToString() ?? "";
                     if (string.IsNullOrEmpty(val) || val == "-") continue;
-                    polozky.Add(new HistoriaChip { Kluc = kv.Key, Hodnota = val });
+                    polozky.Add(new HistoriaChip { Kluc = kv.Key, Hodnota = val.TrimStart('-') });
                 }
 
                 zoznam.Add(new HistoriaPolozka

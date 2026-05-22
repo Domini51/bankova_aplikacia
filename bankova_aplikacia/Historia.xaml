@@ -17,7 +17,6 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0"
                                            Text="{Binding Datum}"
@@ -27,20 +26,10 @@
                                            VerticalAlignment="Center"/>
                                 <Border Grid.Column="1"
                                         Padding="10,5"
-                                        Margin="0,0,8,0"
                                         CornerRadius="6"
                                         Background="{Binding TypFarba}">
                                     <TextBlock Text="{Binding Typ}"
                                                FontSize="13"
-                                               FontWeight="SemiBold"
-                                               Foreground="White"/>
-                                </Border>
-                                <Border Grid.Column="2"
-                                        Padding="12,6"
-                                        Background="#1A1A1A"
-                                        CornerRadius="6">
-                                    <TextBlock Text="{Binding Celkom}"
-                                               FontSize="14"
                                                FontWeight="SemiBold"
                                                Foreground="White"/>
                                 </Border>

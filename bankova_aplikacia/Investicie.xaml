@@ -12,34 +12,7 @@
                            FontSize="15"
                            Foreground="{DynamicResource SekundarnyText}"/>
 
-                <!-- sporiaci -->
-                <Border Padding="20"
-                        Margin="0,0,0,16"
-                        Background="{DynamicResource PanelBg}"
-                        BorderBrush="{DynamicResource PanelBorder}"
-                        BorderThickness="1"
-                        CornerRadius="10">
-                    <StackPanel>
-                        <TextBlock Text="Sporiaci účet (30% z príjmu)"
-                                   Margin="0,0,0,8"
-                                   FontSize="18"
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource HlavnyText}"/>
-                        <TextBlock x:Name="TxtSporiaci"
-                                   Text="Odporúčaná suma: 0 €"
-                                   FontSize="16"
-                                   Foreground="{DynamicResource StrednyText}"/>
-                        <Button Click="BtnUlozSporiaci_Click"
-                                Content="Uložiť na sporenie"
-                                Height="40"
-                                Margin="0,10,0,0"
-                                FontSize="14"
-                                FontWeight="SemiBold"
-                                Background="#FFA500"
-                                Foreground="White"
-                                BorderThickness="0"/>
-                    </StackPanel>
-                </Border>
+              
 
                 <!-- etf -->
                 <Border Padding="20"
@@ -240,8 +213,14 @@
                                    Foreground="{DynamicResource StrednyText}"/>
                         <TextBlock x:Name="TxtCelkovaSuma"
                                    Text="Celková suma: 0 €"
+                                   Margin="0,0,0,5"
+                                   FontSize="15"
+                                   Foreground="{DynamicResource StrednyText}"/>
+                        <TextBlock x:Name="TxtZostokPo"
+                                   Text="Zostatok po investovaní: 0 €"
                                    Margin="0,0,0,15"
                                    FontSize="15"
+                                   FontWeight="SemiBold"
                                    Foreground="{DynamicResource StrednyText}"/>
                         <ProgressBar x:Name="ProgressInvest"
                                      Height="18"
@@ -255,7 +234,7 @@
                                 Height="44"
                                 FontSize="15"
                                 FontWeight="SemiBold"
-                                Background="#1A1A1A"
+                                Background="{DynamicResource HlavnyText}"
                                 Foreground="White"
                                 BorderThickness="0"/>
                     </StackPanel>
@@ -267,7 +246,7 @@
         <!-- spinner -->
         <Grid x:Name="SpinnerOverlay"
               Background="{DynamicResource SpinnerBg}"
-              Visibility="Visible">
+              Visibility="Collapsed">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Border Width="60" Height="60">
                     <Border.RenderTransform>

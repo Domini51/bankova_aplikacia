@@ -60,16 +60,21 @@
                         BorderBrush="{DynamicResource PanelBorder}"
                         BorderThickness="1"
                         CornerRadius="10">
-                    <StackPanel>
-                        <TextBlock Text="Rozloženie portfólia"
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="380"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Text="Rozloženie portfólia"
                                    Margin="0,0,0,10"
                                    FontSize="18"
                                    FontWeight="SemiBold"
                                    Foreground="{DynamicResource HlavnyText}"/>
-                        <lvc:PieChart x:Name="GrafPortfolia"
-                                      Height="347"
-                                      LegendPosition="Right"/>
-                    </StackPanel>
+                        <lvc:PieChart Grid.Row="1"
+                                      x:Name="GrafPortfolia"
+                                      LegendPosition="Bottom"/>
+                    </Grid>
                 </Border>
 
                 <!-- zoznam pozicii -->

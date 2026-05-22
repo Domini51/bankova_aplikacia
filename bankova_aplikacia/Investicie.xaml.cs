@@ -24,10 +24,6 @@ namespace bankova_aplikacia
             App.AktualnyZostatok = zostatok;
             TxtZostatok.Text = "Dostupný zostatok: " + zostatok.ToString("F2") + " €";
 
-            double odporucana = App.AktualnyPrijem * 0.30;
-            TxtSporiaci.Text = "Odporúčaná suma: " + odporucana.ToString("F2")
-                + " € (30% z príjmu " + App.AktualnyPrijem.ToString("F2") + " €)";
-
             UpdateSlidersLock();
         }
 
@@ -105,6 +101,11 @@ namespace bankova_aplikacia
 
             TxtCelkovePercento.Text = "Celkovo alokované: " + total.ToString("F0") + "%";
             TxtCelkovaSuma.Text = "Celková suma: " + (z * total / 100).ToString("F2") + " €";
+            double zostokPo = z - (z * total / 100);
+            TxtZostokPo.Text = "Zostatok po investovaní: " + zostokPo.ToString("F2") + " €";
+            TxtZostokPo.Foreground = new SolidColorBrush(zostokPo > 0
+                ? Color.FromRgb(50, 180, 50)
+                : Color.FromRgb(150, 150, 150));
             ProgressInvest.Value = Math.Min(total, 100);
 
             bool prekrocene = total > 100;
@@ -178,34 +179,6 @@ namespace bankova_aplikacia
             MessageBox.Show("Investície potvrdené!\nCelkom investované: " + investovana.ToString("F2") + " €");
             ResetSliders();
             UpdateSlidersLock();
-        }
-
-        private async void BtnUlozSporiaci_Click(object sender, RoutedEventArgs e)
-        {
-            double odporucana = App.AktualnyPrijem * 0.30;
-            if (odporucana <= 0) { MessageBox.Show("Najprv nastav mesačný príjem vo Výpočte výdavkov!"); return; }
-
-            double zostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
-            if (zostatok < odporucana)
-            { MessageBox.Show($"Nemáš dostatok! Potrebuješ {odporucana:F2} €, máš {zostatok:F2} €."); return; }
-
-            var result = MessageBox.Show(
-                $"Uložiť {odporucana:F2} € na sporenie?",
-                "Potvrdiť sporenie", MessageBoxButton.YesNo);
-            if (result != MessageBoxResult.Yes) return;
-
-            await Database.UlozZostatok(App.PrihlasenyEmail, zostatok - odporucana);
-            await Database.UlozHistoriu(App.PrihlasenyEmail, new Dictionary<string, object>
-            {
-                ["Gmail"]  = App.PrihlasenyEmail,
-                ["Datum"]  = DateTime.Now.ToString("dd.MM.yyyy HH:mm"),
-                ["Typ"]    = "Sporiaci",
-                ["Celkom"] = odporucana.ToString("F2") + " €"
-            });
-
-            App.AktualnyZostatok = zostatok - odporucana;
-            TxtZostatok.Text = "Dostupný zostatok: " + App.AktualnyZostatok.ToString("F2") + " €";
-            MessageBox.Show($"Uložených {odporucana:F2} € na sporenie!");
         }
 
         void ResetSliders()

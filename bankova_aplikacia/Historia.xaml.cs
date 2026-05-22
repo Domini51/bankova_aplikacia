@@ -51,7 +51,7 @@ namespace bankova_aplikacia
             {
                 string Get(string k) => inv.ContainsKey(k) ? inv[k].ToString()! : "-";
                 string typ = Get("Typ");
-                if (typ == "Zostatok" || typ == "Výber") continue;
+                if (typ != "Nákup" && typ != "Predaj" && typ != "Sporiaci") continue;
 
                 var polozky = new List<HistoriaChip>();
                 foreach (var kv in inv)

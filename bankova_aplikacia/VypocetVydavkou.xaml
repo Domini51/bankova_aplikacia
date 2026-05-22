@@ -112,7 +112,7 @@
                                 Content="+"
                                 Height="42" Width="42"
                                 FontSize="22"
-                                Background="#2E6DA4"
+                                Background="#1A1A1A"
                                 Foreground="White"
                                 BorderThickness="0"/>
                     </Grid>
@@ -181,7 +181,7 @@
                                 Content="+"
                                 Height="42" Width="42"
                                 FontSize="22"
-                                Background="#2E6DA4"
+                                Background="#1A1A1A"
                                 Foreground="White"
                                 BorderThickness="0"/>
                     </Grid>
@@ -250,7 +250,7 @@
                                 Content="+"
                                 Height="42" Width="42"
                                 FontSize="22"
-                                Background="#2E6DA4"
+                                Background="#1A1A1A"
                                 Foreground="White"
                                 BorderThickness="0"/>
                     </Grid>
@@ -319,7 +319,7 @@
                                 Content="+"
                                 Height="42" Width="42"
                                 FontSize="22"
-                                Background="#2E6DA4"
+                                Background="#1A1A1A"
                                 Foreground="White"
                                 BorderThickness="0"/>
                     </Grid>
@@ -407,7 +407,7 @@
                     Margin="0,14,0,20"
                     FontSize="15"
                     FontWeight="SemiBold"
-                    Background="#2E6DA4"
+                    Background="#1A1A1A"
                     Foreground="White"
                     BorderThickness="0"/>
 

@@ -234,7 +234,7 @@
                                 Height="44"
                                 FontSize="15"
                                 FontWeight="SemiBold"
-                                Background="#2E6DA4"
+                                Background="#1A1A1A"
                                 Foreground="White"
                                 BorderThickness="0"/>
                     </StackPanel>

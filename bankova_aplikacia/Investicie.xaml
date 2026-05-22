@@ -234,7 +234,7 @@
                                 Height="44"
                                 FontSize="15"
                                 FontWeight="SemiBold"
-                                Background="{DynamicResource HlavnyText}"
+                                Background="#2E6DA4"
                                 Foreground="White"
                                 BorderThickness="0"/>
                     </StackPanel>

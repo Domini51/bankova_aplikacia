@@ -112,7 +112,7 @@
                                 Content="+"
                                 Height="42" Width="42"
                                 FontSize="22"
-                                Background="#1A1A1A"
+                                Background="#2E6DA4"
                                 Foreground="White"
                                 BorderThickness="0"/>
                     </Grid>
@@ -181,7 +181,7 @@
                                 Content="+"
                                 Height="42" Width="42"
                                 FontSize="22"
-                                Background="#1A1A1A"
+                                Background="#2E6DA4"
                                 Foreground="White"
                                 BorderThickness="0"/>
                     </Grid>
@@ -250,7 +250,7 @@
                                 Content="+"
                                 Height="42" Width="42"
                                 FontSize="22"
-                                Background="#1A1A1A"
+                                Background="#2E6DA4"
                                 Foreground="White"
                                 BorderThickness="0"/>
                     </Grid>
@@ -319,7 +319,7 @@
                                 Content="+"
                                 Height="42" Width="42"
                                 FontSize="22"
-                                Background="#1A1A1A"
+                                Background="#2E6DA4"
                                 Foreground="White"
                                 BorderThickness="0"/>
                     </Grid>
@@ -401,39 +401,13 @@
                 </StackPanel>
             </Border>
 
-            <Grid Margin="0,14,0,8">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="12"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Button Grid.Column="0"
-                        Click="BtnUlozPlan_Click"
-                        Content="Uložiť plán"
-                        Height="44"
-                        FontSize="14"
-                        FontWeight="SemiBold"
-                        Background="#2E6DA4"
-                        Foreground="White"
-                        BorderThickness="0"/>
-                <Button Grid.Column="2"
-                        Click="BtnNacitajPlan_Click"
-                        Content="Načítať plán"
-                        Height="44"
-                        FontSize="14"
-                        FontWeight="SemiBold"
-                        Background="#32B432"
-                        Foreground="White"
-                        BorderThickness="0"/>
-            </Grid>
-
             <Button Click="BtnUlozZostatokNaUcet_Click"
                     Content="Uložiť zostatok na účet"
-                    Height="48"
-                    Margin="0,0,0,20"
+                    Height="46"
+                    Margin="0,14,0,20"
                     FontSize="15"
                     FontWeight="SemiBold"
-                    Background="#1A1A1A"
+                    Background="#2E6DA4"
                     Foreground="White"
                     BorderThickness="0"/>
 

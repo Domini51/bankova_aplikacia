@@ -16,4 +16,6 @@
     <SolidColorBrush x:Key="LoginKartaBg"     Color="#2C2C2E"/>
     <SolidColorBrush x:Key="LoginKartaBorder" Color="#3A3A3C"/>
     <SolidColorBrush x:Key="SpinnerBg"        Color="#881C1C1E"/>
+    <SolidColorBrush x:Key="AkcentFarba"     Color="#3A83C2"/>
+    <SolidColorBrush x:Key="AkcentHover"     Color="#2E6DA4"/>
 </ResourceDictionary>

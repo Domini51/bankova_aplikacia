@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,6 +16,7 @@ namespace bankova_aplikacia
         public VypocetVydavkou()
         {
             InitializeComponent();
+            IsVisibleChanged += (_, e) => { if ((bool)e.NewValue) AktualizujGrafVydavkov(); };
         }
 
         // vráti dvojicu (nazovBox, sumaBox, listBox) pre dané tlačidlo
@@ -230,7 +228,8 @@ namespace bankova_aplikacia
         {
             if (e.Key != Key.Enter) return;
             var grid = ((TextBox)sender).Parent as Grid;
-            foreach (var child in grid!.Children)
+            if (grid == null) return;
+            foreach (var child in grid.Children)
             {
                 if (child is Button btn) { btn.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); break; }
             }
@@ -238,14 +237,9 @@ namespace bankova_aplikacia
 
         private void BtnOdstranVydavok_Click(object sender, RoutedEventArgs e)
         {
-            var lbi = ItemsControl.ContainerFromElement(null, (Button)sender) as ListBoxItem;
-            if (lbi == null)
-            {
-                // prejdi vizualny strom nahor po ListBoxItem
-                DependencyObject p = (Button)sender;
-                while (p != null && p is not ListBoxItem) p = System.Windows.Media.VisualTreeHelper.GetParent(p);
-                lbi = p as ListBoxItem;
-            }
+            DependencyObject p = (Button)sender;
+            while (p != null && p is not ListBoxItem) p = System.Windows.Media.VisualTreeHelper.GetParent(p);
+            var lbi = p as ListBoxItem;
             if (lbi == null) return;
 
             var lb = ItemsControl.ItemsControlFromItemContainer(lbi) as ListBox;
@@ -257,63 +251,5 @@ namespace bankova_aplikacia
         }
 
         private void GrafVydavkov_Loaded(object sender, RoutedEventArgs e) { }
-
-        static string PlanPath()
-        {
-            string dir = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "BankovaAplikacia");
-            Directory.CreateDirectory(dir);
-            string emailSafe = App.PrihlasenyEmail.Replace("@", "_at_").Replace(".", "_");
-            return Path.Combine(dir, "plan_" + emailSafe + ".json");
-        }
-
-        private void BtnUlozPlan_Click(object sender, RoutedEventArgs e)
-        {
-            var plan = new
-            {
-                Prijem = MPrijem.Text,
-                Nutne  = ZoznamVydavkov.Items  .Cast<object>().Select(i => i.ToString()).ToArray(),
-                Hlavne = ZoznamVydavkov2.Items .Cast<object>().Select(i => i.ToString()).ToArray(),
-                Osobne = ZoznamVydavkov3.Items .Cast<object>().Select(i => i.ToString()).ToArray(),
-                Volne  = ZoznamVydavkov4.Items .Cast<object>().Select(i => i.ToString()).ToArray()
-            };
-
-            File.WriteAllText(PlanPath(), JsonSerializer.Serialize(plan,
-                new JsonSerializerOptions { WriteIndented = true }));
-            MessageBox.Show("Plán bol uložený!");
-        }
-
-        private void BtnNacitajPlan_Click(object sender, RoutedEventArgs e)
-        {
-            string path = PlanPath();
-            if (!File.Exists(path)) { MessageBox.Show("Žiadny uložený plán!"); return; }
-
-            try
-            {
-                using var doc = JsonDocument.Parse(File.ReadAllText(path));
-                var root = doc.RootElement;
-
-                MPrijem.Text = root.GetProperty("Prijem").GetString() ?? "0";
-                MPrijem.Foreground = (Brush)Application.Current.Resources["HlavnyText"];
-
-                void NacitajZoznam(ListBox lb, string klic)
-                {
-                    lb.Items.Clear();
-                    foreach (var item in root.GetProperty(klic).EnumerateArray())
-                        lb.Items.Add(item.GetString());
-                }
-
-                NacitajZoznam(ZoznamVydavkov,  "Nutne");
-                NacitajZoznam(ZoznamVydavkov2, "Hlavne");
-                NacitajZoznam(ZoznamVydavkov3, "Osobne");
-                NacitajZoznam(ZoznamVydavkov4, "Volne");
-
-                AktualizujMetriky();
-                AktualizujGrafVydavkov();
-                MessageBox.Show("Plán bol načítaný!");
-            }
-            catch { MessageBox.Show("Chyba pri načítaní plánu."); }
-        }
     }
 }

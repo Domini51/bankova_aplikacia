@@ -13,9 +13,14 @@ namespace bankova_aplikacia
 
         public async Task NacitajUdaje()
         {
-            TxtMeno.Text = await Database.NacitajMeno(App.PrihlasenyEmail);
+            string meno = await Database.NacitajMeno(App.PrihlasenyEmail);
+            TxtMeno.Text = meno;
             TxtEmail.Text = App.PrihlasenyEmail;
+            TxtInitials.Text = meno.Length > 0 ? meno[0].ToString().ToUpper() : "?";
+            
         }
+
+      
 
         private async void BtnZmenitMeno_Click(object sender, RoutedEventArgs e)
         {
@@ -25,6 +30,7 @@ namespace bankova_aplikacia
             if (await Database.ZmenMeno(App.PrihlasenyEmail, noveMeno))
             {
                 TxtMeno.Text = noveMeno;
+                TxtInitials.Text = noveMeno.Length > 0 ? noveMeno[0].ToString().ToUpper() : "?";
                 MessageBox.Show("Meno bolo úspešne zmenené!");
             }
         }
@@ -38,9 +44,6 @@ namespace bankova_aplikacia
                 MessageBox.Show("Heslo bolo úspešne zmenené!");
         }
 
-        private void BtnTema_Click(object sender, RoutedEventArgs e)
-        {
-            App.PrepniTemu();
-        }
+       
     }
 }

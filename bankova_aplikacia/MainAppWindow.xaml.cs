@@ -36,14 +36,14 @@ namespace bankova_aplikacia
             if (_aktivneTlacidlo != null)
             {
                 _aktivneTlacidlo.Background = Brushes.Transparent;
-                _aktivneTlacidlo.Foreground = new SolidColorBrush(Color.FromRgb(170, 170, 170));
+                _aktivneTlacidlo.Foreground = new SolidColorBrush(Color.FromRgb(136, 136, 136));
                 _aktivneTlacidlo.BorderThickness = new Thickness(0);
             }
 
-            btn.Background = new SolidColorBrush(Color.FromRgb(42, 42, 42));
+            btn.Background = new SolidColorBrush(Color.FromRgb(30, 30, 30));
             btn.Foreground = Brushes.White;
             btn.BorderThickness = new Thickness(3, 0, 0, 0);
-            btn.BorderBrush = Brushes.White;
+            btn.BorderBrush = new SolidColorBrush(Color.FromRgb(46, 109, 164));
             _aktivneTlacidlo = btn;
         }
 

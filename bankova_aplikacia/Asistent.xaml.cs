@@ -167,26 +167,30 @@ namespace bankova_aplikacia
             var container = new StackPanel
             {
                 HorizontalAlignment = jeUzivatel ? HorizontalAlignment.Right : HorizontalAlignment.Left,
-                Margin = new Thickness(0, 4, 0, 4)
+                Margin = new Thickness(0, 6, 0, 6),
+                MaxWidth = 580
             };
 
             Brush bubbleBg = jeUzivatel
-                ? new SolidColorBrush(Color.FromRgb(46, 109, 164))
-                : (Application.Current.Resources["PanelBg"] as Brush
-                    ?? new SolidColorBrush(Color.FromRgb(30, 30, 30)));
+                ? new SolidColorBrush(Color.FromRgb(17, 17, 17))
+                : new SolidColorBrush(Color.FromRgb(255, 255, 255));
 
             Brush textFg = jeUzivatel
                 ? Brushes.White
-                : (Application.Current.Resources["HlavnyText"] as Brush ?? Brushes.White);
+                : (Application.Current.Resources["HlavnyText"] as Brush
+                    ?? new SolidColorBrush(Color.FromRgb(26, 26, 26)));
 
             var bubble = new Border
             {
-                Padding = new Thickness(12, 8, 12, 8),
+                Padding = new Thickness(14, 10, 14, 10),
                 CornerRadius = jeUzivatel
-                    ? new CornerRadius(12, 12, 4, 12)
-                    : new CornerRadius(12, 12, 12, 4),
-                MaxWidth = 560,
+                    ? new CornerRadius(18, 18, 4, 18)
+                    : new CornerRadius(18, 18, 18, 4),
                 Background = bubbleBg,
+                BorderBrush = jeUzivatel
+                    ? Brushes.Transparent
+                    : new SolidColorBrush(Color.FromRgb(229, 229, 234)),
+                BorderThickness = new Thickness(1),
                 Child = new TextBlock
                 {
                     Text = text,
@@ -197,7 +201,18 @@ namespace bankova_aplikacia
                 }
             };
 
+            var cas = new TextBlock
+            {
+                Text = DateTime.Now.ToString("HH:mm"),
+                FontSize = 11,
+                Foreground = Application.Current.Resources["SekundarnyText"] as Brush
+                             ?? new SolidColorBrush(Color.FromRgb(142, 142, 147)),
+                HorizontalAlignment = jeUzivatel ? HorizontalAlignment.Right : HorizontalAlignment.Left,
+                Margin = new Thickness(4, 3, 4, 0)
+            };
+
             container.Children.Add(bubble);
+            container.Children.Add(cas);
             PanelSprav.Children.Add(container);
             Dispatcher.InvokeAsync(() => ScrollChat.ScrollToEnd());
         }

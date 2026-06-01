@@ -5,103 +5,92 @@
         Height="700" Width="1100"
         MinHeight="500" MinWidth="800"
         WindowState="Maximized"
-        Background="#F2F2F7">
+        Background="#0D0D0D">
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="520"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- ===== ĽAVÁ STRANA – branding ===== -->
-        <Border Grid.Column="0"
-                Background="White"
-                BorderBrush="#EBEBEB"
-                BorderThickness="0,0,1,0">
+        <!-- ===== ĽAVÁ – branding ===== -->
+        <Grid Grid.Column="0" ClipToBounds="True">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#161616" Offset="0"/>
+                    <GradientStop Color="#0D0D0D" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
 
-            <!-- dekoratívne kruhy v pozadí -->
-            <Grid ClipToBounds="True">
-                <Ellipse Width="420" Height="420"
-                         HorizontalAlignment="Left" VerticalAlignment="Top"
-                         Margin="-180,-160,0,0"
-                         Fill="#F7F7F7"/>
-                <Ellipse Width="300" Height="300"
-                         HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                         Margin="0,0,-120,-120"
-                         Fill="#F7F7F7"/>
+            <!-- obrysové kruhy -->
+            <Ellipse Width="450" Height="450"
+                     HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                     Margin="0,0,-160,-160"
+                     Stroke="#202020" StrokeThickness="1"
+                     Fill="Transparent"/>
 
-                <StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Width="300">
+            <Ellipse Width="220" Height="220"
+                     HorizontalAlignment="Left" VerticalAlignment="Top"
+                     Margin="-60,-60,0,0"
+                     Stroke="#1E1E1E" StrokeThickness="1"
+                     Fill="Transparent"/>
 
-                    <Image Source="/Assets/investicna_banka_logo-1-removebg-preview.png.png"
-                           Height="56"
-                           HorizontalAlignment="Left"
-                           RenderOptions.BitmapScalingMode="HighQuality"/>
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Width="300">
 
-                    <TextBlock Text="Investičná Banka"
-                               FontSize="26"
-                               FontWeight="Bold"
+                <Border Width="72" Height="72"
+                        CornerRadius="18"
+                        Background="White"
+                        HorizontalAlignment="Left"
+                        Margin="0,0,0,36">
+                    <TextBlock Text="IB"
+                               FontSize="28" FontWeight="Bold"
                                Foreground="#111111"
-                               Margin="0,22,0,0"/>
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </Border>
 
-                    <TextBlock Text="Vaše investície na jednom mieste."
-                               FontSize="15"
-                               Foreground="#8E8E93"
-                               Margin="0,8,0,0"
-                               TextWrapping="Wrap"/>
+                <TextBlock Text="Investičná Banka"
+                           FontSize="34" FontWeight="Bold"
+                           Foreground="White"
+                           Margin="0,0,0,14"/>
 
-                    <Border Height="1" Background="#EBEBEB" Margin="0,36,0,36"/>
+                <TextBlock Text="Vaše investície na jednom mieste."
+                           FontSize="15"
+                           Foreground="#555555"
+                           TextWrapping="Wrap"/>
 
-                    <!-- value props -->
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
-                            <Border Width="5" Height="5" CornerRadius="3"
-                                    Background="#111111" Margin="0,5,12,0"
-                                    VerticalAlignment="Top"/>
-                            <TextBlock Text="Investície do ETF, akcií a kryptomien"
-                                       FontSize="14" Foreground="#555555" TextWrapping="Wrap" MaxWidth="260"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
-                            <Border Width="5" Height="5" CornerRadius="3"
-                                    Background="#111111" Margin="0,5,12,0"
-                                    VerticalAlignment="Top"/>
-                            <TextBlock Text="AI investičný asistent v reálnom čase"
-                                       FontSize="14" Foreground="#555555" TextWrapping="Wrap" MaxWidth="260"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Border Width="5" Height="5" CornerRadius="3"
-                                    Background="#111111" Margin="0,5,12,0"
-                                    VerticalAlignment="Top"/>
-                            <TextBlock Text="Prehľad portfólia a histórie transakcií"
-                                       FontSize="14" Foreground="#555555" TextWrapping="Wrap" MaxWidth="260"/>
-                        </StackPanel>
-                    </StackPanel>
+            </StackPanel>
+        </Grid>
 
-                </StackPanel>
-            </Grid>
-        </Border>
+        <!-- ===== PRAVÁ – formulár ===== -->
+        <Grid Grid.Column="1" Background="#F5F5F7">
 
-        <!-- ===== PRAVÁ STRANA – formulár ===== -->
-        <Grid Grid.Column="1">
-
-            <Border Width="420"
+            <Border MaxWidth="580"
                     VerticalAlignment="Center"
+                    Margin="60,0"
                     Background="White"
-                    CornerRadius="16"
-                    Padding="48,44">
+                    CornerRadius="20"
+                    Padding="56,54">
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="48"
-                                      ShadowDepth="4"
-                                      Opacity="0.09"
-                                      Color="#000000"
-                                      Direction="270"/>
+                    <DropShadowEffect BlurRadius="50" ShadowDepth="0"
+                                      Opacity="0.1" Color="#000000"/>
                 </Border.Effect>
 
                 <StackPanel>
 
+                    <TextBlock Text="Vitajte späť"
+                               FontSize="30" FontWeight="Bold"
+                               Foreground="#111111"
+                               Margin="0,0,0,6"/>
+                    <TextBlock Text="Prihláste sa do svojho účtu"
+                               FontSize="16"
+                               Foreground="#888888"
+                               Margin="0,0,0,32"/>
+
                     <!-- taby -->
-                    <Grid Margin="0,0,0,28">
+                    <Grid Margin="0,0,0,24">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -110,44 +99,27 @@
                                 Click="BtnLogin_Click"
                                 Grid.Column="0"
                                 Content="Prihlásenie"
-                                Height="40"
-                                FontSize="15"
-                                FontWeight="SemiBold"
-                                Background="Transparent"
-                                Foreground="#111111"
-                                BorderThickness="0,0,0,2"
-                                BorderBrush="#111111"/>
+                                Height="38" FontSize="14" FontWeight="SemiBold"
+                                Background="Transparent" Foreground="#111111"
+                                BorderThickness="0,0,0,2" BorderBrush="#111111"/>
                         <Button x:Name="Register"
                                 Click="BtnRegister_Click"
                                 Grid.Column="1"
                                 Content="Registrácia"
-                                Height="40"
-                                FontSize="15"
-                                FontWeight="Normal"
-                                Background="Transparent"
-                                Foreground="#AAAAAA"
-                                BorderThickness="0,0,0,1"
-                                BorderBrush="#E0E0E0"/>
+                                Height="38" FontSize="14"
+                                Background="Transparent" Foreground="#AAAAAA"
+                                BorderThickness="0,0,0,1" BorderBrush="#E0E0E0"/>
                     </Grid>
 
-                    <!-- LOGIN PANEL -->
+                    <!-- LOGIN -->
                     <Border x:Name="PanelLoginBorder" Visibility="Visible">
                         <StackPanel>
-
-                            <TextBlock Text="Email"
-                                       FontSize="12"
-                                       FontWeight="SemiBold"
-                                       Foreground="#555555"
-                                       Margin="0,0,0,6"/>
+                            <TextBlock Text="Email" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="#555555" Margin="0,0,0,6"/>
                             <TextBox x:Name="LoginMeno"
-                                     Height="46"
-                                     FontSize="14"
-                                     Padding="14,0"
-                                     Margin="0,0,0,18"
-                                     VerticalContentAlignment="Center"
-                                     Background="#F8F8F8"
-                                     BorderBrush="#E5E5EA"
-                                     BorderThickness="1"
+                                     Height="52" FontSize="15" Padding="16,0"
+                                     Margin="0,0,0,16" VerticalContentAlignment="Center"
+                                     Background="#F8F8F8" BorderBrush="#E8E8E8" BorderThickness="1"
                                      KeyDown="Input_KeyDown">
                                 <TextBox.Style>
                                     <Style TargetType="TextBox">
@@ -157,7 +129,7 @@
                                                     <Setter.Value>
                                                         <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                                             <VisualBrush.Visual>
-                                                                <Label Content="vas@email.com" FontSize="14" Foreground="#BBBBBB" Padding="14,0,0,0"/>
+                                                                <Label Content="vas@email.com" FontSize="14" Foreground="#CCCCCC" Padding="14,0,0,0"/>
                                                             </VisualBrush.Visual>
                                                         </VisualBrush>
                                                     </Setter.Value>
@@ -168,16 +140,11 @@
                                 </TextBox.Style>
                             </TextBox>
 
-                            <TextBlock Text="Heslo"
-                                       FontSize="12"
-                                       FontWeight="SemiBold"
-                                       Foreground="#555555"
-                                       Margin="0,0,0,6"/>
-                            <Grid Margin="0,0,0,24">
+                            <TextBlock Text="Heslo" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="#555555" Margin="0,0,0,6"/>
+                            <Grid Margin="0,0,0,26">
                                 <PasswordBox x:Name="LoginHeslo"
-                                             Height="46"
-                                             FontSize="14"
-                                             Padding="14,0"
+                                             Height="52" FontSize="15" Padding="16,0"
                                              VerticalContentAlignment="Center"
                                              PasswordChanged="LoginHeslo_PasswordChanged"
                                              KeyDown="Input_KeyDown">
@@ -186,10 +153,8 @@
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="PasswordBox">
-                                                        <Border Background="#F8F8F8"
-                                                                BorderBrush="#E5E5EA"
-                                                                BorderThickness="1"
-                                                                CornerRadius="6">
+                                                        <Border Background="#F8F8F8" BorderBrush="#E8E8E8"
+                                                                BorderThickness="1" CornerRadius="4">
                                                             <ScrollViewer x:Name="PART_ContentHost" Margin="14,0"/>
                                                         </Border>
                                                     </ControlTemplate>
@@ -198,55 +163,50 @@
                                         </Style>
                                     </PasswordBox.Style>
                                 </PasswordBox>
-                                <TextBlock x:Name="LoginHesloHint"
-                                           Text="••••••••"
-                                           Padding="14,0,0,0"
-                                           FontSize="15"
-                                           Foreground="#BBBBBB"
-                                           VerticalAlignment="Center"
-                                           IsHitTestVisible="False"/>
+                                <TextBlock x:Name="LoginHesloHint" Text="••••••••"
+                                           Padding="14,0,0,0" FontSize="15" Foreground="#CCCCCC"
+                                           VerticalAlignment="Center" IsHitTestVisible="False"/>
                             </Grid>
 
                             <Button x:Name="MainButton"
                                     Click="Button_Click"
                                     Content="Prihlásiť sa"
-                                    Height="48"
-                                    FontSize="15"
-                                    FontWeight="SemiBold"
-                                    Margin="0,0,0,14"
-                                    Background="#111111"
-                                    Foreground="White"
-                                    BorderThickness="0"/>
+                                    Height="54" FontSize="16" FontWeight="SemiBold"
+                                    Margin="0,0,0,12"
+                                    Background="#111111" Foreground="White" BorderThickness="0">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="10">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
 
                             <Button x:Name="ForgotPasswordButton"
                                     Click="Button_Click_1"
                                     Content="Zabudnuté heslo?"
-                                    FontSize="13"
-                                    Background="Transparent"
-                                    Foreground="#AAAAAA"
-                                    BorderThickness="0"
+                                    FontSize="13" Background="Transparent"
+                                    Foreground="#AAAAAA" BorderThickness="0"
                                     HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Border>
 
-                    <!-- REGISTER PANEL -->
+                    <!-- REGISTER -->
                     <Border x:Name="PanelRegisterBorder" Visibility="Collapsed">
                         <StackPanel>
-
-                            <TextBlock Text="Meno"
-                                       FontSize="12"
-                                       FontWeight="SemiBold"
-                                       Foreground="#555555"
-                                       Margin="0,0,0,6"/>
+                            <TextBlock Text="Meno" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="#555555" Margin="0,0,0,6"/>
                             <TextBox x:Name="RegisterMeno"
-                                     Height="46"
-                                     FontSize="14"
-                                     Padding="14,0"
-                                     Margin="0,0,0,16"
-                                     VerticalContentAlignment="Center"
-                                     Background="#F8F8F8"
-                                     BorderBrush="#E5E5EA"
-                                     BorderThickness="1"
+                                     Height="52" FontSize="15" Padding="16,0"
+                                     Margin="0,0,0,14" VerticalContentAlignment="Center"
+                                     Background="#F8F8F8" BorderBrush="#E8E8E8" BorderThickness="1"
                                      KeyDown="Input_KeyDown">
                                 <TextBox.Style>
                                     <Style TargetType="TextBox">
@@ -256,7 +216,7 @@
                                                     <Setter.Value>
                                                         <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                                             <VisualBrush.Visual>
-                                                                <Label Content="Vaše meno" FontSize="14" Foreground="#BBBBBB" Padding="14,0,0,0"/>
+                                                                <Label Content="Vaše meno" FontSize="14" Foreground="#CCCCCC" Padding="14,0,0,0"/>
                                                             </VisualBrush.Visual>
                                                         </VisualBrush>
                                                     </Setter.Value>
@@ -267,20 +227,12 @@
                                 </TextBox.Style>
                             </TextBox>
 
-                            <TextBlock Text="Email"
-                                       FontSize="12"
-                                       FontWeight="SemiBold"
-                                       Foreground="#555555"
-                                       Margin="0,0,0,6"/>
+                            <TextBlock Text="Email" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="#555555" Margin="0,0,0,6"/>
                             <TextBox x:Name="RegisterGmail"
-                                     Height="46"
-                                     FontSize="14"
-                                     Padding="14,0"
-                                     Margin="0,0,0,16"
-                                     VerticalContentAlignment="Center"
-                                     Background="#F8F8F8"
-                                     BorderBrush="#E5E5EA"
-                                     BorderThickness="1"
+                                     Height="52" FontSize="15" Padding="16,0"
+                                     Margin="0,0,0,14" VerticalContentAlignment="Center"
+                                     Background="#F8F8F8" BorderBrush="#E8E8E8" BorderThickness="1"
                                      KeyDown="Input_KeyDown">
                                 <TextBox.Style>
                                     <Style TargetType="TextBox">
@@ -290,7 +242,7 @@
                                                     <Setter.Value>
                                                         <VisualBrush AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                                             <VisualBrush.Visual>
-                                                                <Label Content="vas@email.com" FontSize="14" Foreground="#BBBBBB" Padding="14,0,0,0"/>
+                                                                <Label Content="vas@email.com" FontSize="14" Foreground="#CCCCCC" Padding="14,0,0,0"/>
                                                             </VisualBrush.Visual>
                                                         </VisualBrush>
                                                     </Setter.Value>
@@ -301,16 +253,11 @@
                                 </TextBox.Style>
                             </TextBox>
 
-                            <TextBlock Text="Heslo"
-                                       FontSize="12"
-                                       FontWeight="SemiBold"
-                                       Foreground="#555555"
-                                       Margin="0,0,0,6"/>
-                            <Grid Margin="0,0,0,24">
+                            <TextBlock Text="Heslo" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="#555555" Margin="0,0,0,6"/>
+                            <Grid Margin="0,0,0,26">
                                 <PasswordBox x:Name="RegisterHeslo"
-                                             Height="46"
-                                             FontSize="14"
-                                             Padding="14,0"
+                                             Height="52" FontSize="15" Padding="16,0"
                                              VerticalContentAlignment="Center"
                                              PasswordChanged="RegisterHeslo_PasswordChanged"
                                              KeyDown="Input_KeyDown">
@@ -319,10 +266,8 @@
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="PasswordBox">
-                                                        <Border Background="#F8F8F8"
-                                                                BorderBrush="#E5E5EA"
-                                                                BorderThickness="1"
-                                                                CornerRadius="6">
+                                                        <Border Background="#F8F8F8" BorderBrush="#E8E8E8"
+                                                                BorderThickness="1" CornerRadius="4">
                                                             <ScrollViewer x:Name="PART_ContentHost" Margin="14,0"/>
                                                         </Border>
                                                     </ControlTemplate>
@@ -331,23 +276,29 @@
                                         </Style>
                                     </PasswordBox.Style>
                                 </PasswordBox>
-                                <TextBlock x:Name="RegisterHesloHint"
-                                           Text="••••••••"
-                                           Padding="14,0,0,0"
-                                           FontSize="15"
-                                           Foreground="#BBBBBB"
-                                           VerticalAlignment="Center"
-                                           IsHitTestVisible="False"/>
+                                <TextBlock x:Name="RegisterHesloHint" Text="••••••••"
+                                           Padding="14,0,0,0" FontSize="15" Foreground="#CCCCCC"
+                                           VerticalAlignment="Center" IsHitTestVisible="False"/>
                             </Grid>
 
                             <Button Click="Button_Click"
                                     Content="Registrovať sa"
-                                    Height="48"
-                                    FontSize="15"
-                                    FontWeight="SemiBold"
-                                    Background="#111111"
-                                    Foreground="White"
-                                    BorderThickness="0"/>
+                                    Height="54" FontSize="16" FontWeight="SemiBold"
+                                    Background="#111111" Foreground="White" BorderThickness="0">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="10">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
                         </StackPanel>
                     </Border>
 

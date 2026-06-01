@@ -61,6 +61,8 @@ namespace bankova_aplikacia
             {
                 Dispatcher.Invoke(() => SpinnerOverlay.Visibility = Visibility.Collapsed);
             }
+
+            await ChatPanel.NacitajKontext();
         }
 
         void NastavCenu(TextBlock txt, Security s)

@@ -26,7 +26,7 @@ namespace bankova_aplikacia
 
         void PrepniPanel(UIElement panel, Button btn)
         {
-            UIElement[] panely = { PanelPrehlad, PanelHistoria, PanelInvesticie, PanelUcet, PanelNastavenia, PanelAsistent };
+            UIElement[] panely = { PanelPrehlad, PanelHistoria, PanelInvesticie, PanelUcet, PanelNastavenia };
             foreach (var p in panely)
                 p.Visibility = Visibility.Collapsed;
 
@@ -100,18 +100,10 @@ namespace bankova_aplikacia
             await PanelNastavenia.NacitajUdaje();
         }
 
-        private async void BtnAsistent_Click(object sender, RoutedEventArgs e)
-        {
-            PulseButton(BtnAsistent);
-            PrepniPanel(PanelAsistent, BtnAsistent);
-            TopbarTitle.Text = "AI Asistent";
-            await PanelAsistent.NacitajKontext();
-        }
-
         private void BtnTema_Click(object sender, RoutedEventArgs e)
         {
             App.PrepniTemu();
-            IkonaTema.Text = App.JeTmavy ? "🌞" : "🌙";
+            IkonaTema.Text = App.JeTmavy ? "" : "";
         }
 
         private void BtnOdhlasit_Click(object sender, RoutedEventArgs e)

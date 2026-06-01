@@ -64,7 +64,15 @@ namespace bankova_aplikacia
             var doc = snap.Documents[0].ToDictionary();
             string hash = doc["Heslo"].ToString()!;
 
-            return BCrypt.Net.BCrypt.Verify(heslo, hash);
+            try
+            {
+                return BCrypt.Net.BCrypt.Verify(heslo, hash);
+            }
+            catch
+            {
+                // hash nie je BCrypt format (napr. starý SHA256) – treba resetovať heslo
+                return false;
+            }
         }
 
         public static async Task<bool> EmailExistuje(string gmail)

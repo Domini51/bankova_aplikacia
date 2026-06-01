@@ -1,10 +1,11 @@
-using BCrypt.Net;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Firestore;
 using Google.Cloud.Firestore.V1;
 using HarfBuzzSharp;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -34,6 +35,12 @@ namespace bankova_aplikacia
             catch (Exception ex) { MessageBox.Show("Init chyba: " + ex.Message); }
         }
 
+        static string HashHeslo(string heslo)
+        {
+            var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(heslo));
+            return Convert.ToHexString(bytes).ToLower();
+        }
+
         static CollectionReference Pouzivatelia() => db!.Collection("Pouzivatelia");
         static CollectionReference Portfolio() => db!.Collection("Portfolio");
         static CollectionReference Historia() => db!.Collection("Historia");
@@ -47,7 +54,7 @@ namespace bankova_aplikacia
             {
                 ["Meno"] = meno,
                 ["Gmail"] = gmail,
-                ["Heslo"] = BCrypt.Net.BCrypt.HashPassword(heslo)
+                ["Heslo"] = HashHeslo(heslo)
             };
             await Pouzivatelia().AddAsync(data);
             return true;
@@ -64,7 +71,7 @@ namespace bankova_aplikacia
             var doc = snap.Documents[0].ToDictionary();
             string hash = doc["Heslo"].ToString()!;
 
-            return BCrypt.Net.BCrypt.Verify(heslo, hash);
+            return HashHeslo(heslo) == hash;
         }
 
         public static async Task<bool> EmailExistuje(string gmail)
@@ -84,7 +91,7 @@ namespace bankova_aplikacia
         {
             var docRef = await NajdiPouzivatela(gmail);
             if (docRef == null) return false;
-            await docRef.UpdateAsync("Heslo", BCrypt.Net.BCrypt.HashPassword(noveHeslo));
+            await docRef.UpdateAsync("Heslo", HashHeslo(noveHeslo));
             return true;
         }
 

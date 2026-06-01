@@ -10,7 +10,6 @@
                        Foreground="{DynamicResource HlavnyText}"
                        Margin="0,0,0,24"/>
 
-            <!-- Profil -->
             <Border Padding="24"
                     Margin="0,0,0,16"
                     Background="{DynamicResource PanelBg}"
@@ -25,7 +24,6 @@
                                Foreground="{DynamicResource SekundarnyText}"
                                Margin="0,0,0,16"/>
 
-                    <!-- Avatar + info -->
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                         <Border Width="54" Height="54"
                                 Background="{DynamicResource AkcentFarba}"
@@ -52,7 +50,6 @@
 
                     <Border Height="1" Background="{DynamicResource Oddelovac}" Margin="0,0,0,16"/>
 
-                    <!-- Zmeniť meno -->
                     <Grid Margin="0,0,0,14">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -81,7 +78,6 @@
 
                     <Border Height="1" Background="{DynamicResource Oddelovac}" Margin="0,0,0,14"/>
 
-                    <!-- Zmeniť heslo -->
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -110,8 +106,6 @@
 
                 </StackPanel>
             </Border>
-
-            <!-- Vzhľad -->
 
         </StackPanel>
     </ScrollViewer>

@@ -1,6 +1,8 @@
+using BCrypt.Net;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Firestore;
 using Google.Cloud.Firestore.V1;
+using HarfBuzzSharp;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -45,7 +47,7 @@ namespace bankova_aplikacia
             {
                 ["Meno"] = meno,
                 ["Gmail"] = gmail,
-                ["Heslo"] = heslo
+                ["Heslo"] = BCrypt.Net.BCrypt.HashPassword(heslo)
             };
             await Pouzivatelia().AddAsync(data);
             return true;
@@ -55,9 +57,14 @@ namespace bankova_aplikacia
         {
             var snap = await Pouzivatelia()
                 .WhereEqualTo("Gmail", gmail)
-                .WhereEqualTo("Heslo", heslo)
                 .GetSnapshotAsync();
-            return snap.Count > 0;
+
+            if (snap.Count == 0) return false;
+
+            var doc = snap.Documents[0].ToDictionary();
+            string hash = doc["Heslo"].ToString()!;
+
+            return BCrypt.Net.BCrypt.Verify(heslo, hash);
         }
 
         public static async Task<bool> EmailExistuje(string gmail)
@@ -77,7 +84,7 @@ namespace bankova_aplikacia
         {
             var docRef = await NajdiPouzivatela(gmail);
             if (docRef == null) return false;
-            await docRef.UpdateAsync("Heslo", noveHeslo);
+            await docRef.UpdateAsync("Heslo", BCrypt.Net.BCrypt.HashPassword(noveHeslo));
             return true;
         }
 

@@ -15,7 +15,7 @@
                         BorderThickness="1"
                         CornerRadius="10">
                     <StackPanel>
-                        <TextBlock Text="Zostatok na účte"
+                        <TextBlock Text="Stav účtu"
                                    Margin="0,0,0,6"
                                    FontSize="13"
                                    Foreground="{DynamicResource SekundarnyText}"/>
@@ -32,16 +32,16 @@
                                        VerticalAlignment="Center"/>
                             <Button Grid.Column="1"
                                     Click="BtnVybrat_Click"
-                                    Content="Vybrať"
-                                    Height="40" Width="100"
+                                    Content="Výber"
+                                    Height="43" Width="100"
                                     FontSize="14"
                                     VerticalAlignment="Center"
-                                    Background="#E24B4A"
+                                    Background="Black"
                                     Foreground="White"
                                     BorderThickness="0"/>
                         </Grid>
                         <Border Height="1" Background="{DynamicResource Oddelovac}" Margin="0,14,0,14"/>
-                        <TextBlock Text="Celková hodnota portfólia"
+                        <TextBlock Text="Hodnota portfólia"
                                    Margin="0,0,0,4"
                                    FontSize="13"
                                    Foreground="{DynamicResource SekundarnyText}"/>
@@ -66,7 +66,7 @@
                             <RowDefinition Height="380"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0"
-                                   Text="Rozloženie portfólia"
+                                   Text="Kde mám peniaze"
                                    Margin="0,0,0,10"
                                    FontSize="18"
                                    FontWeight="SemiBold"
@@ -85,7 +85,7 @@
                         BorderThickness="1"
                         CornerRadius="10">
                     <StackPanel>
-                        <TextBlock Text="Moje portfólio"
+                        <TextBlock Text="Moje pozície"
                                    Margin="0,0,0,15"
                                    FontSize="18"
                                    FontWeight="SemiBold"
@@ -145,7 +145,7 @@
                         </ItemsControl>
 
                         <TextBlock x:Name="TxtPrazdnePortfolio"
-                                   Text="Zatiaľ žiadne investície."
+                                   Text="Žiadne pozície."
                                    Margin="0,10,0,0"
                                    FontSize="14"
                                    Foreground="{DynamicResource SekundarnyText}"
@@ -182,7 +182,7 @@
                              StrokeThickness="5"
                              StrokeDashArray="10 5"/>
                 </Border>
-                <TextBlock Text="Načítavam portfólio..."
+                <TextBlock Text="Chvíľku..."
                            Margin="0,12,0,0"
                            FontSize="14"
                            Foreground="{DynamicResource StrednyText}"

@@ -255,7 +255,7 @@ namespace bankova_aplikacia
                     AktualizujGrafPortfolia(grafData2);
                 });
             }
-            catch { /* kurzy nedostupne, necháme posledné hodnoty */ }
+            catch {  }
         }
 
         void AktualizujGrafPortfolia(List<(string sym, double val)> items)

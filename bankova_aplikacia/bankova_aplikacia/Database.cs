@@ -5,6 +5,9 @@ using Google.Cloud.Firestore.V1;
 using HarfBuzzSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -64,15 +67,19 @@ namespace bankova_aplikacia
             var doc = snap.Documents[0].ToDictionary();
             string hash = doc["Heslo"].ToString()!;
 
-            try
+            // BCrypt hash starts with $2
+            if (hash.StartsWith("$2"))
             {
-                return BCrypt.Net.BCrypt.Verify(heslo, hash);
+                try { return BCrypt.Net.BCrypt.Verify(heslo, hash); }
+                catch { return false; }
             }
-            catch
-            {
-                // hash nie je BCrypt format (napr. starý SHA256) – treba resetovať heslo
-                return false;
-            }
+
+            // Legacy SHA256 hash – verify and transparently migrate to BCrypt
+            string sha256 = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(heslo))).ToLower();
+            if (sha256 != hash) return false;
+
+            await snap.Documents[0].Reference.UpdateAsync("Heslo", BCrypt.Net.BCrypt.HashPassword(heslo));
+            return true;
         }
 
         public static async Task<bool> EmailExistuje(string gmail)

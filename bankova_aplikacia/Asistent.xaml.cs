@@ -136,7 +136,7 @@ namespace bankova_aplikacia
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _http.PostAsync(
-                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={_apiKey}",
+                $"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={_apiKey}",
                 httpContent);
 
             string responseJson = await response.Content.ReadAsStringAsync();

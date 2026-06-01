@@ -1,10 +1,10 @@
-using Anthropic.SDK;
-using Anthropic.SDK.Messaging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,9 +20,11 @@ namespace bankova_aplikacia
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "bankova_aplikacia", "api-key.txt");
 
+        static readonly HttpClient _http = new();
+
         string _apiKey = "";
         string _systemPrompt = "";
-        readonly List<Message> _historia = new();
+        readonly List<(string role, string text)> _historia = new();
 
         public Asistent()
         {
@@ -71,7 +73,7 @@ namespace bankova_aplikacia
                         string sym = p.ContainsKey("Symbol") ? p["Symbol"].ToString()! : "?";
                         double kusy = p.ContainsKey("Kusy") ? Convert.ToDouble(p["Kusy"]) : 0;
                         double suma = p.ContainsKey("SumaEur") ? Convert.ToDouble(p["SumaEur"]) : 0;
-                        sbPortfolio.AppendLine($"  - {sym}: {kusy:F4} ks (nakúpené za {suma:F2} €)");
+                        sbPortfolio.AppendLine($"  {sym}: {kusy:F4} ks (nakúpené za {suma:F2} €)");
                     }
                 }
 
@@ -91,8 +93,7 @@ namespace bankova_aplikacia
                     {
                         double cena = data[sym][Field.RegularMarketPrice];
                         double zmena = data[sym][Field.RegularMarketChangePercent];
-                        string sign = zmena >= 0 ? "+" : "";
-                        sbCeny.AppendLine($"  {sym}: {cena:F2} USD ({sign}{zmena:F2}%)");
+                        sbCeny.AppendLine($"  {sym}: {cena:F2} USD ({(zmena >= 0 ? "+" : "")}{zmena:F2}%)");
                     }
                     cenyText = sbCeny.ToString();
                 }
@@ -101,12 +102,12 @@ namespace bankova_aplikacia
                     cenyText = "  Momentálne nedostupné";
                 }
 
-                _systemPrompt = $"Si investičný asistent v aplikácii Investičná Banka.\n\n" +
+                _systemPrompt = "Si investičný asistent v aplikácii Investičná Banka.\n\n" +
                     $"Aktuálne dáta ({DateTime.Now:dd.MM.yyyy HH:mm}):\n" +
                     $"Zostatok: {zostatok:F2} €\n\n" +
                     $"Portfólio:\n{sbPortfolio}\n" +
                     $"Kurzy (USD):\n{cenyText}\n" +
-                    "Dostupné aktíva v appke: SPY (S&P 500 ETF), URTH (MSCI World ETF), AAPL, TSLA, NVDA, BTC, ETH.\n\n" +
+                    "Dostupné aktíva: SPY (S&P 500 ETF), URTH (MSCI World ETF), AAPL, TSLA, NVDA, BTC, ETH.\n\n" +
                     "Odpovedaj vždy v slovenčine. Buď stručný a praktický, dávaj konkrétne rady.";
 
                 PridajSpravu("Ahoj! Vidím tvoj účet aj aktuálne kurzy. Čím ti môžem pomôcť s investovaním?", jeUzivatel: false);
@@ -115,6 +116,48 @@ namespace bankova_aplikacia
             {
                 SpinnerOverlay.Visibility = Visibility.Collapsed;
             }
+        }
+
+        async Task<string> VoajGeminiAsync()
+        {
+            var contents = _historia.Select(h => new
+            {
+                role = h.role,
+                parts = new[] { new { text = h.text } }
+            });
+
+            var requestObj = new
+            {
+                system_instruction = new { parts = new[] { new { text = _systemPrompt } } },
+                contents
+            };
+
+            string json = JsonSerializer.Serialize(requestObj);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _http.PostAsync(
+                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={_apiKey}",
+                httpContent);
+
+            string responseJson = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                using var errDoc = JsonDocument.Parse(responseJson);
+                string errMsg = errDoc.RootElement
+                    .GetProperty("error")
+                    .GetProperty("message")
+                    .GetString() ?? responseJson;
+                throw new Exception(errMsg);
+            }
+
+            using var doc = JsonDocument.Parse(responseJson);
+            return doc.RootElement
+                .GetProperty("candidates")[0]
+                .GetProperty("content")
+                .GetProperty("parts")[0]
+                .GetProperty("text")
+                .GetString() ?? "(prázdna odpoveď)";
         }
 
         void PridajSpravu(string text, bool jeUzivatel)
@@ -164,10 +207,7 @@ namespace bankova_aplikacia
             UlozKluc(kluc);
         }
 
-        private async void BtnPoslat_Click(object sender, RoutedEventArgs e)
-        {
-            await PosliSpravu();
-        }
+        private async void BtnPoslat_Click(object sender, RoutedEventArgs e) => await PosliSpravu();
 
         private async void TxtVstup_KeyDown(object sender, KeyEventArgs e)
         {
@@ -186,7 +226,7 @@ namespace bankova_aplikacia
             if (string.IsNullOrEmpty(_apiKey))
             {
                 ApiKeyPanel.Visibility = Visibility.Visible;
-                MessageBox.Show("Najprv zadaj Claude API kľúč.");
+                MessageBox.Show("Najprv zadaj Gemini API kľúč.");
                 return;
             }
 
@@ -195,30 +235,15 @@ namespace bankova_aplikacia
             BtnPoslat.IsEnabled = false;
 
             PridajSpravu(text, jeUzivatel: true);
-            _historia.Add(new Message { Role = RoleType.User, Content = new List<ContentBase> { new TextContent { Text = text } } });
+            _historia.Add(("user", text));
 
             TxtSpinnerText.Text = "Asistent premýšľa...";
             SpinnerOverlay.Visibility = Visibility.Visible;
 
             try
             {
-                var client = new AnthropicClient(_apiKey);
-                var response = await client.Messages.GetClaudeMessageAsync(new MessageParameters
-                {
-                    Model = "claude-3-5-haiku-20241022",
-                    MaxTokens = 1024,
-                    System = new List<SystemMessage> { new SystemMessage(_systemPrompt) },
-                    Messages = new List<Message>(_historia)
-                });
-
-                string odpoved = string.Join("", response.Content
-                    .OfType<TextContent>()
-                    .Select(c => c.Text));
-
-                if (string.IsNullOrEmpty(odpoved))
-                    odpoved = response.Content.FirstOrDefault()?.ToString() ?? "(prázdna odpoveď)";
-
-                _historia.Add(new Message { Role = RoleType.Assistant, Content = new List<ContentBase> { new TextContent { Text = odpoved } } });
+                string odpoved = await VoajGeminiAsync();
+                _historia.Add(("model", odpoved));
                 PridajSpravu(odpoved, jeUzivatel: false);
             }
             catch (Exception ex)

@@ -22,7 +22,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
-                           Text="Claude API kľúč:"
+                           Text="Gemini API kľúč:"
                            FontSize="13"
                            Foreground="{DynamicResource SekundarnyText}"
                            VerticalAlignment="Center"

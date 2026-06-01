@@ -101,6 +101,18 @@
                     <Button.RenderTransform><ScaleTransform/></Button.RenderTransform>
                 </Button>
 
+                <Button x:Name="BtnAsistent"
+                        Style="{StaticResource NavButton}"
+                        Click="BtnAsistent_Click"
+                        Height="48"
+                        FontSize="15"
+                        Padding="20,0,0,0"
+                        Foreground="#888888"
+                        RenderTransformOrigin="0.5,0.5">
+                    <TextBlock Text="AI Asistent" VerticalAlignment="Center"/>
+                    <Button.RenderTransform><ScaleTransform/></Button.RenderTransform>
+                </Button>
+
             </StackPanel>
 
             <!-- bottom -->
@@ -186,11 +198,12 @@
                 </Grid>
             </Border>
 
-            <local:VypocetVydavkou x:Name="PanelPrehlad"  Grid.Row="1" Visibility="Visible"/>
-            <local:Historia        x:Name="PanelHistoria"  Grid.Row="1" Visibility="Collapsed"/>
+            <local:VypocetVydavkou x:Name="PanelPrehlad"   Grid.Row="1" Visibility="Visible"/>
+            <local:Historia        x:Name="PanelHistoria"   Grid.Row="1" Visibility="Collapsed"/>
             <local:Investicie      x:Name="PanelInvesticie" Grid.Row="1" Visibility="Collapsed"/>
             <local:Ucet            x:Name="PanelUcet"       Grid.Row="1" Visibility="Collapsed"/>
             <local:Nastavenia      x:Name="PanelNastavenia" Grid.Row="1" Visibility="Collapsed"/>
+            <local:Asistent        x:Name="PanelAsistent"   Grid.Row="1" Visibility="Collapsed"/>
 
         </Grid>
     </Grid>

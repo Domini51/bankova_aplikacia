@@ -120,18 +120,20 @@ namespace bankova_aplikacia
 
         async Task<string> VoajGeminiAsync()
         {
-            var contents = _historia.Select(h => new
+            // Inject system context as opening user/model pair (v1 API doesn't support system_instruction)
+            var contextPair = new object[]
+            {
+                new { role = "user",  parts = new[] { new { text = _systemPrompt } } },
+                new { role = "model", parts = new[] { new { text = "Rozumiem, mám prístup k tvojim finančným údajom a som pripravený pomôcť." } } }
+            };
+
+            var history = _historia.Select(h => (object)new
             {
                 role = h.role,
                 parts = new[] { new { text = h.text } }
             });
 
-            var requestObj = new
-            {
-                system_instruction = new { parts = new[] { new { text = _systemPrompt } } },
-                contents
-            };
-
+            var requestObj = new { contents = contextPair.Concat(history) };
             string json = JsonSerializer.Serialize(requestObj);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
 

@@ -59,7 +59,7 @@
                         Background="#1E1E1E"
                         Foreground="White"
                         BorderThickness="3,0,0,0"
-                        BorderBrush="#2E6DA4"
+                        BorderBrush="#1A1A1A"
                         RenderTransformOrigin="0.5,0.5">
                     <TextBlock Text="Výpočet výdavkov" VerticalAlignment="Center"/>
                     <Button.RenderTransform><ScaleTransform/></Button.RenderTransform>

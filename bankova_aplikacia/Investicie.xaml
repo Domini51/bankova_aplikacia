@@ -265,7 +265,7 @@
                         </EventTrigger>
                     </Border.Triggers>
                     <Ellipse Width="60" Height="60"
-                             Stroke="#2E6DA4"
+                             Stroke="#1A1A1A"
                              StrokeThickness="5"
                              StrokeDashArray="10 5"/>
                 </Border>

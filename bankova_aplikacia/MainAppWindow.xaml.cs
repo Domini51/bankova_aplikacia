@@ -43,7 +43,7 @@ namespace bankova_aplikacia
             btn.Background = new SolidColorBrush(Color.FromRgb(30, 30, 30));
             btn.Foreground = Brushes.White;
             btn.BorderThickness = new Thickness(3, 0, 0, 0);
-            btn.BorderBrush = new SolidColorBrush(Color.FromRgb(46, 109, 164));
+            btn.BorderBrush = new SolidColorBrush(Color.FromRgb(26, 26, 26));
             _aktivneTlacidlo = btn;
         }
 

@@ -28,10 +28,13 @@ namespace bankova_aplikacia
         public static void PrepniTemu()
         {
             JeTmavy = !JeTmavy;
-            var dict = new ResourceDictionary
-            {
-                Source = new Uri($"Themes/{(JeTmavy ? "Dark" : "Light")}.xaml", UriKind.Relative)
-            };
+            string nazovTemy;
+            if (JeTmavy)
+                nazovTemy = "Dark";
+            else
+                nazovTemy = "Light";
+            var dict = new ResourceDictionary();
+            dict.Source = new Uri("Themes/" + nazovTemy + ".xaml", UriKind.Relative);
             Current.Resources.MergedDictionaries[0] = dict;
         }
     }

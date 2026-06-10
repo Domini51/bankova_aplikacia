@@ -8,12 +8,12 @@ namespace bankova_aplikacia
 {
     public partial class MainAppWindow : Window
     {
-        Button? _aktivneTlacidlo;
+        Button aktivneTlacidlo = null;
 
         public MainAppWindow()
         {
             InitializeComponent();
-            _aktivneTlacidlo = BtnPrehlad;
+            aktivneTlacidlo = BtnPrehlad;
             TopbarTitle.Text = "Výpočet výdavkov";
             _ = NacitajUdajeUzivatela();
         }
@@ -33,18 +33,18 @@ namespace bankova_aplikacia
             panel.Visibility = Visibility.Visible;
             SpustitFadeIn(panel);
 
-            if (_aktivneTlacidlo != null)
+            if (aktivneTlacidlo != null)
             {
-                _aktivneTlacidlo.Background = Brushes.Transparent;
-                _aktivneTlacidlo.Foreground = new SolidColorBrush(Color.FromRgb(136, 136, 136));
-                _aktivneTlacidlo.BorderThickness = new Thickness(0);
+                aktivneTlacidlo.Background = Brushes.Transparent;
+                aktivneTlacidlo.Foreground = new SolidColorBrush(Color.FromRgb(136, 136, 136));
+                aktivneTlacidlo.BorderThickness = new Thickness(0);
             }
 
             btn.Background = new SolidColorBrush(Color.FromRgb(30, 30, 30));
             btn.Foreground = Brushes.White;
             btn.BorderThickness = new Thickness(3, 0, 0, 0);
             btn.BorderBrush = new SolidColorBrush(Color.FromRgb(26, 26, 26));
-            _aktivneTlacidlo = btn;
+            aktivneTlacidlo = btn;
         }
 
         void SpustitFadeIn(UIElement el)

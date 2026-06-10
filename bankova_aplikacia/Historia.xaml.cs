@@ -18,12 +18,12 @@ namespace bankova_aplikacia
         public string Celkom { get; set; } = "";
         public string Typ { get; set; } = "";
         public string TypFarba { get; set; } = "#888888";
-        public List<HistoriaChip> Polozky { get; set; } = new();
+        public List<HistoriaChip> Polozky { get; set; } = new List<HistoriaChip>();
     }
 
     public partial class Historia : UserControl
     {
-        static readonly HashSet<string> _ignorovane = new() { "Gmail", "Datum", "Typ", "Celkom" };
+        static HashSet<string> ignorovane = new HashSet<string> { "Gmail", "Datum", "Typ", "Celkom" };
 
         public Historia()
         {
@@ -36,40 +36,40 @@ namespace bankova_aplikacia
 
             if (historia.Count == 0)
             {
-                ZoznamHistorie.ItemsSource = new[] { new HistoriaPolozka
-                {
-                    Datum = "Žiadna história",
-                    Celkom = "",
-                    Typ = "",
-                    Polozky = new()
-                }};
+                var prazdna = new HistoriaPolozka();
+                prazdna.Datum = "Žiadna história";
+                prazdna.Celkom = "";
+                prazdna.Typ = "";
+                prazdna.Polozky = new List<HistoriaChip>();
+                ZoznamHistorie.ItemsSource = new[] { prazdna };
                 return;
             }
 
             var zoznam = new List<HistoriaPolozka>();
             foreach (var inv in historia)
             {
-                string Get(string k) => inv.ContainsKey(k) ? inv[k].ToString()! : "-";
-                string typ = Get("Typ");
+                string datum  = inv.ContainsKey("Datum")  ? inv["Datum"].ToString()  : "-";
+                string celkom = inv.ContainsKey("Celkom") ? inv["Celkom"].ToString() : "-";
+                string typ    = inv.ContainsKey("Typ")    ? inv["Typ"].ToString()    : "-";
+
                 if (typ != "Nákup" && typ != "Predaj" && typ != "Sporiaci") continue;
 
                 var polozky = new List<HistoriaChip>();
                 foreach (var kv in inv)
                 {
-                    if (_ignorovane.Contains(kv.Key)) continue;
-                    string val = kv.Value?.ToString() ?? "";
+                    if (ignorovane.Contains(kv.Key)) continue;
+                    string val = kv.Value != null ? kv.Value.ToString() : "";
                     if (string.IsNullOrEmpty(val) || val == "-") continue;
                     polozky.Add(new HistoriaChip { Kluc = kv.Key, Hodnota = val.Replace("-", "") });
                 }
 
-                zoznam.Add(new HistoriaPolozka
-                {
-                    Datum = Get("Datum"),
-                    Celkom = Get("Celkom"),
-                    Typ = typ,
-                    TypFarba = TypNaFarbu(typ),
-                    Polozky = polozky
-                });
+                var polozka = new HistoriaPolozka();
+                polozka.Datum    = datum;
+                polozka.Celkom   = celkom;
+                polozka.Typ      = typ;
+                polozka.TypFarba = TypNaFarbu(typ);
+                polozka.Polozky  = polozky;
+                zoznam.Add(polozka);
             }
 
             zoznam.Sort((a, b) =>
@@ -87,13 +87,13 @@ namespace bankova_aplikacia
             ZoznamHistorie.ItemsSource = zoznam;
         }
 
-        static string TypNaFarbu(string typ) => typ switch
+        static string TypNaFarbu(string typ)
         {
-            "Nákup" => "#2E6DA4",
-            "Predaj" => "#E24B4A",
-            "Zostatok" => "#32B432",
-            "Sporiaci" => "#FFA500",
-            _ => "#888888"
-        };
+            if (typ == "Nákup")    return "#2E6DA4";
+            if (typ == "Predaj")   return "#E24B4A";
+            if (typ == "Zostatok") return "#32B432";
+            if (typ == "Sporiaci") return "#FFA500";
+            return "#888888";
+        }
     }
 }

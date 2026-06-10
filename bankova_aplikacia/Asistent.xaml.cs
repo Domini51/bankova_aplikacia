@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -20,11 +19,11 @@ namespace bankova_aplikacia
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "bankova_aplikacia", "api-key.txt");
 
-        static readonly HttpClient _http = new();
+        static HttpClient http = new HttpClient();
 
-        string _apiKey = "";
-        string _systemPrompt = "";
-        readonly List<(string role, string text)> _historia = new();
+        string apiKey = "";
+        string systemPrompt = "";
+        List<Dictionary<string, string>> historia = new List<Dictionary<string, string>>();
 
         public Asistent()
         {
@@ -34,16 +33,16 @@ namespace bankova_aplikacia
         void NacitajKluc()
         {
             if (!File.Exists(KeyPath)) return;
-            _apiKey = File.ReadAllText(KeyPath).Trim();
-            if (!string.IsNullOrEmpty(_apiKey))
+            apiKey = File.ReadAllText(KeyPath).Trim();
+            if (!string.IsNullOrEmpty(apiKey))
                 ApiKeyPanel.Visibility = Visibility.Collapsed;
         }
 
         void UlozKluc(string kluc)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(KeyPath)!);
+            Directory.CreateDirectory(Path.GetDirectoryName(KeyPath));
             File.WriteAllText(KeyPath, kluc);
-            _apiKey = kluc;
+            apiKey = kluc;
             ApiKeyPanel.Visibility = Visibility.Collapsed;
         }
 
@@ -51,7 +50,8 @@ namespace bankova_aplikacia
         {
             NacitajKluc();
 
-            if (_historia.Count > 0) return;
+            // kontext staci nacitat raz
+            if (historia.Count > 0) return;
 
             SpinnerOverlay.Visibility = Visibility.Visible;
             TxtSpinnerText.Text = "Načítavam kontext...";
@@ -70,10 +70,10 @@ namespace bankova_aplikacia
                 {
                     foreach (var p in portfolio)
                     {
-                        string sym = p.ContainsKey("Symbol") ? p["Symbol"].ToString()! : "?";
-                        double kusy = p.ContainsKey("Kusy") ? Convert.ToDouble(p["Kusy"]) : 0;
-                        double suma = p.ContainsKey("SumaEur") ? Convert.ToDouble(p["SumaEur"]) : 0;
-                        sbPortfolio.AppendLine($"  {sym}: {kusy:F4} ks (nakúpené za {suma:F2} €)");
+                        string sym  = p.ContainsKey("Symbol")  ? p["Symbol"].ToString()          : "?";
+                        double kusy = p.ContainsKey("Kusy")    ? Convert.ToDouble(p["Kusy"])      : 0;
+                        double suma = p.ContainsKey("SumaEur") ? Convert.ToDouble(p["SumaEur"])   : 0;
+                        sbPortfolio.AppendLine("  " + sym + ": " + kusy.ToString("F4") + " ks (nakúpené za " + suma.ToString("F2") + " €)");
                     }
                 }
 
@@ -89,11 +89,12 @@ namespace bankova_aplikacia
                         .QueryAsync();
 
                     var sbCeny = new StringBuilder();
-                    foreach (var sym in symboly)
+                    foreach (string sym in symboly)
                     {
-                        double cena = data[sym][Field.RegularMarketPrice];
+                        double cena  = data[sym][Field.RegularMarketPrice];
                         double zmena = data[sym][Field.RegularMarketChangePercent];
-                        sbCeny.AppendLine($"  {sym}: {cena:F2} USD ({(zmena >= 0 ? "+" : "")}{zmena:F2}%)");
+                        string znak  = zmena >= 0 ? "+" : "";
+                        sbCeny.AppendLine("  " + sym + ": " + cena.ToString("F2") + " USD (" + znak + zmena.ToString("F2") + "%)");
                     }
                     cenyText = sbCeny.ToString();
                 }
@@ -102,15 +103,15 @@ namespace bankova_aplikacia
                     cenyText = "  Momentálne nedostupné";
                 }
 
-                _systemPrompt = "Si investičný asistent v aplikácii Investičná Banka.\n\n" +
-                    $"Aktuálne dáta ({DateTime.Now:dd.MM.yyyy HH:mm}):\n" +
-                    $"Zostatok: {zostatok:F2} €\n\n" +
-                    $"Portfólio:\n{sbPortfolio}\n" +
-                    $"Kurzy (USD):\n{cenyText}\n" +
+                systemPrompt = "Si investičný asistent v aplikácii Investičná Banka.\n\n" +
+                    "Aktuálne dáta (" + DateTime.Now.ToString("dd.MM.yyyy HH:mm") + "):\n" +
+                    "Zostatok: " + zostatok.ToString("F2") + " €\n\n" +
+                    "Portfólio:\n" + sbPortfolio.ToString() + "\n" +
+                    "Kurzy (USD):\n" + cenyText + "\n" +
                     "Dostupné aktíva: SPY (S&P 500 ETF), URTH (MSCI World ETF), AAPL, TSLA, NVDA, BTC, ETH.\n\n" +
                     "Odpovedaj vždy v slovenčine. Buď stručný a praktický, dávaj konkrétne rady.";
 
-                PridajSpravu("Ahoj! Vidím tvoj účet aj aktuálne kurzy. Čím ti môžem pomôcť s investovaním?", jeUzivatel: false);
+                PridajSpravu("Ahoj! Vidím tvoj účet aj aktuálne kurzy. Čím ti môžem pomôcť s investovaním?", false);
             }
             finally
             {
@@ -120,25 +121,21 @@ namespace bankova_aplikacia
 
         async Task<string> VoajGeminiAsync()
         {
-            // Inject system context as opening user/model pair (v1 API doesn't support system_instruction)
-            var contextPair = new object[]
-            {
-                new { role = "user",  parts = new[] { new { text = _systemPrompt } } },
-                new { role = "model", parts = new[] { new { text = "Rozumiem, mám prístup k tvojim finančným údajom a som pripravený pomôcť." } } }
-            };
+            var obsah = new List<object>();
+            obsah.Add(new { role = "user",  parts = new[] { new { text = systemPrompt } } });
+            obsah.Add(new { role = "model", parts = new[] { new { text = "Rozumiem, mám prístup k tvojim finančným údajom a som pripravený pomôcť." } } });
 
-            var history = _historia.Select(h => (object)new
+            foreach (var h in historia)
             {
-                role = h.role,
-                parts = new[] { new { text = h.text } }
-            });
+                obsah.Add(new { role = h["role"], parts = new[] { new { text = h["text"] } } });
+            }
 
-            var requestObj = new { contents = contextPair.Concat(history) };
+            var requestObj = new { contents = obsah };
             string json = JsonSerializer.Serialize(requestObj);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _http.PostAsync(
-                $"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={_apiKey}",
+            var response = await http.PostAsync(
+                "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=" + apiKey,
                 httpContent);
 
             string responseJson = await response.Content.ReadAsStringAsync();
@@ -164,52 +161,59 @@ namespace bankova_aplikacia
 
         void PridajSpravu(string text, bool jeUzivatel)
         {
-            var container = new StackPanel
+            var container = new StackPanel();
+            container.HorizontalAlignment = jeUzivatel ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+            container.Margin = new Thickness(0, 6, 0, 6);
+            container.MaxWidth = 580;
+
+            Brush bubbleBg;
+            Brush textFg;
+            if (jeUzivatel)
             {
-                HorizontalAlignment = jeUzivatel ? HorizontalAlignment.Right : HorizontalAlignment.Left,
-                Margin = new Thickness(0, 6, 0, 6),
-                MaxWidth = 580
+                bubbleBg = new SolidColorBrush(Color.FromRgb(17, 17, 17));
+                textFg = Brushes.White;
+            }
+            else
+            {
+                bubbleBg = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                textFg = Application.Current.Resources["HlavnyText"] as Brush
+                         ?? new SolidColorBrush(Color.FromRgb(26, 26, 26));
+            }
+
+            CornerRadius rohove;
+            if (jeUzivatel)
+                rohove = new CornerRadius(18, 18, 4, 18);
+            else
+                rohove = new CornerRadius(18, 18, 18, 4);
+
+            Brush okraj;
+            if (jeUzivatel)
+                okraj = Brushes.Transparent;
+            else
+                okraj = new SolidColorBrush(Color.FromRgb(229, 229, 234));
+
+            var bubble = new Border();
+            bubble.Padding = new Thickness(14, 10, 14, 10);
+            bubble.CornerRadius = rohove;
+            bubble.Background = bubbleBg;
+            bubble.BorderBrush = okraj;
+            bubble.BorderThickness = new Thickness(1);
+            bubble.Child = new TextBlock
+            {
+                Text = text,
+                TextWrapping = TextWrapping.Wrap,
+                FontSize = 14,
+                LineHeight = 22,
+                Foreground = textFg
             };
 
-            Brush bubbleBg = jeUzivatel
-                ? new SolidColorBrush(Color.FromRgb(17, 17, 17))
-                : new SolidColorBrush(Color.FromRgb(255, 255, 255));
-
-            Brush textFg = jeUzivatel
-                ? Brushes.White
-                : (Application.Current.Resources["HlavnyText"] as Brush
-                    ?? new SolidColorBrush(Color.FromRgb(26, 26, 26)));
-
-            var bubble = new Border
-            {
-                Padding = new Thickness(14, 10, 14, 10),
-                CornerRadius = jeUzivatel
-                    ? new CornerRadius(18, 18, 4, 18)
-                    : new CornerRadius(18, 18, 18, 4),
-                Background = bubbleBg,
-                BorderBrush = jeUzivatel
-                    ? Brushes.Transparent
-                    : new SolidColorBrush(Color.FromRgb(229, 229, 234)),
-                BorderThickness = new Thickness(1),
-                Child = new TextBlock
-                {
-                    Text = text,
-                    TextWrapping = TextWrapping.Wrap,
-                    FontSize = 14,
-                    LineHeight = 22,
-                    Foreground = textFg
-                }
-            };
-
-            var cas = new TextBlock
-            {
-                Text = DateTime.Now.ToString("HH:mm"),
-                FontSize = 11,
-                Foreground = Application.Current.Resources["SekundarnyText"] as Brush
-                             ?? new SolidColorBrush(Color.FromRgb(142, 142, 147)),
-                HorizontalAlignment = jeUzivatel ? HorizontalAlignment.Right : HorizontalAlignment.Left,
-                Margin = new Thickness(4, 3, 4, 0)
-            };
+            var cas = new TextBlock();
+            cas.Text = DateTime.Now.ToString("HH:mm");
+            cas.FontSize = 11;
+            cas.Foreground = Application.Current.Resources["SekundarnyText"] as Brush
+                             ?? new SolidColorBrush(Color.FromRgb(142, 142, 147));
+            cas.HorizontalAlignment = jeUzivatel ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+            cas.Margin = new Thickness(4, 3, 4, 0);
 
             container.Children.Add(bubble);
             container.Children.Add(cas);
@@ -224,7 +228,10 @@ namespace bankova_aplikacia
             UlozKluc(kluc);
         }
 
-        private async void BtnPoslat_Click(object sender, RoutedEventArgs e) => await PosliSpravu();
+        private async void BtnPoslat_Click(object sender, RoutedEventArgs e)
+        {
+            await PosliSpravu();
+        }
 
         private async void TxtVstup_KeyDown(object sender, KeyEventArgs e)
         {
@@ -240,7 +247,7 @@ namespace bankova_aplikacia
             string text = TxtVstup.Text.Trim();
             if (string.IsNullOrEmpty(text)) return;
 
-            if (string.IsNullOrEmpty(_apiKey))
+            if (string.IsNullOrEmpty(apiKey))
             {
                 ApiKeyPanel.Visibility = Visibility.Visible;
                 MessageBox.Show("Najprv zadaj Gemini API kľúč.");
@@ -251,8 +258,11 @@ namespace bankova_aplikacia
             TxtVstup.IsEnabled = false;
             BtnPoslat.IsEnabled = false;
 
-            PridajSpravu(text, jeUzivatel: true);
-            _historia.Add(("user", text));
+            PridajSpravu(text, true);
+            var zaznam = new Dictionary<string, string>();
+            zaznam["role"] = "user";
+            zaznam["text"] = text;
+            historia.Add(zaznam);
 
             TxtSpinnerText.Text = "Asistent premýšľa...";
             SpinnerOverlay.Visibility = Visibility.Visible;
@@ -260,13 +270,16 @@ namespace bankova_aplikacia
             try
             {
                 string odpoved = await VoajGeminiAsync();
-                _historia.Add(("model", odpoved));
-                PridajSpravu(odpoved, jeUzivatel: false);
+                var odpZaznam = new Dictionary<string, string>();
+                odpZaznam["role"] = "model";
+                odpZaznam["text"] = odpoved;
+                historia.Add(odpZaznam);
+                PridajSpravu(odpoved, false);
             }
             catch (Exception ex)
             {
-                _historia.RemoveAt(_historia.Count - 1);
-                PridajSpravu("Chyba: " + ex.Message, jeUzivatel: false);
+                historia.RemoveAt(historia.Count - 1);
+                PridajSpravu("Chyba: " + ex.Message, false);
             }
             finally
             {

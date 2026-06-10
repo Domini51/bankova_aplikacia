@@ -8,7 +8,7 @@ namespace bankova_aplikacia
 {
     public partial class loginWindow : Window
     {
-        bool _jeLogin = true;
+        bool jeLogin = true;
 
         public loginWindow()
         {
@@ -25,17 +25,26 @@ namespace bankova_aplikacia
             catch { return false; }
         }
 
-        // prepne medzi login / register tabom
         void PrepniTab(bool naLogin)
         {
-            _jeLogin = naLogin;
+            jeLogin = naLogin;
 
             PanelLoginBorder.Visibility = naLogin ? Visibility.Visible : Visibility.Collapsed;
             PanelRegisterBorder.Visibility = naLogin ? Visibility.Collapsed : Visibility.Visible;
             ForgotPasswordButton.Visibility = naLogin ? Visibility.Visible : Visibility.Collapsed;
 
-            var aktivna = naLogin ? Login : Register;
-            var neaktivna = naLogin ? Register : Login;
+            Button aktivna;
+            Button neaktivna;
+            if (naLogin)
+            {
+                aktivna = Login;
+                neaktivna = Register;
+            }
+            else
+            {
+                aktivna = Register;
+                neaktivna = Login;
+            }
 
             aktivna.FontWeight = FontWeights.SemiBold;
             aktivna.Foreground = new SolidColorBrush(Color.FromRgb(26, 26, 26));
@@ -48,12 +57,19 @@ namespace bankova_aplikacia
             neaktivna.BorderThickness = new Thickness(0, 0, 0, 1);
         }
 
-        private void BtnLogin_Click(object sender, RoutedEventArgs e) => PrepniTab(true);
-        private void BtnRegister_Click(object sender, RoutedEventArgs e) => PrepniTab(false);
+        private void BtnLogin_Click(object sender, RoutedEventArgs e)
+        {
+            PrepniTab(true);
+        }
+
+        private void BtnRegister_Click(object sender, RoutedEventArgs e)
+        {
+            PrepniTab(false);
+        }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (_jeLogin)
+            if (jeLogin)
             {
                 string gmail = LoginMeno.Text;
                 string heslo = LoginHeslo.Password;
@@ -118,15 +134,23 @@ namespace bankova_aplikacia
         private void LoginHeslo_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (LoginHesloHint != null)
-                LoginHesloHint.Visibility = LoginHeslo.Password.Length == 0
-                    ? Visibility.Visible : Visibility.Collapsed;
+            {
+                if (LoginHeslo.Password.Length == 0)
+                    LoginHesloHint.Visibility = Visibility.Visible;
+                else
+                    LoginHesloHint.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void RegisterHeslo_PasswordChanged(object sender, RoutedEventArgs e)
         {
             if (RegisterHesloHint != null)
-                RegisterHesloHint.Visibility = RegisterHeslo.Password.Length == 0
-                    ? Visibility.Visible : Visibility.Collapsed;
+            {
+                if (RegisterHeslo.Password.Length == 0)
+                    RegisterHesloHint.Visibility = Visibility.Visible;
+                else
+                    RegisterHesloHint.Visibility = Visibility.Collapsed;
+            }
         }
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
@@ -147,7 +171,10 @@ namespace bankova_aplikacia
                 if (string.IsNullOrEmpty(noveHeslo)) return;
 
                 bool zmenene = await Database.ZmenHeslo(gmail, noveHeslo);
-                MessageBox.Show(zmenene ? "Heslo bolo úspešne zmenené!" : "Chyba pri zmene hesla!");
+                if (zmenene)
+                    MessageBox.Show("Heslo bolo úspešne zmenené!");
+                else
+                    MessageBox.Show("Chyba pri zmene hesla!");
             }
             catch (Exception ex)
             {

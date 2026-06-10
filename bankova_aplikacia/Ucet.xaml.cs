@@ -42,14 +42,11 @@ namespace bankova_aplikacia
             var zoznam = new List<object>();
             foreach (var poz in portfolio)
             {
-                string Get(string k) => poz.ContainsKey(k) ? poz[k].ToString()! : "-";
-                double GetD(string k) => poz.ContainsKey(k) ? Convert.ToDouble(poz[k]) : 0;
-
-                string symbol = Get("Symbol");
-                double kusy   = GetD("Kusy");
-                double suma   = GetD("SumaEur");
-                string docId  = Get("DocId");
-                string datum  = Get("Datum");
+                string symbol = ZistiText(poz, "Symbol");
+                double kusy   = ZistiCislo(poz, "Kusy");
+                double suma   = ZistiCislo(poz, "SumaEur");
+                string docId  = ZistiText(poz, "DocId");
+                string datum  = ZistiText(poz, "Datum");
 
                 zoznam.Add(new
                 {
@@ -61,7 +58,7 @@ namespace bankova_aplikacia
                     DocId = docId,
                     Kusy = kusy,
                     SumaEur = suma,
-                    Symbol2 = symbol  // pre predaj
+                    Symbol2 = symbol
                 });
             }
 
@@ -72,7 +69,7 @@ namespace bankova_aplikacia
             foreach (var poz in portfolio)
             {
                 double suma = poz.ContainsKey("SumaEur") ? Convert.ToDouble(poz["SumaEur"]) : 0;
-                string sym = poz.ContainsKey("Symbol") ? poz["Symbol"].ToString()! : "";
+                string sym  = poz.ContainsKey("Symbol")  ? poz["Symbol"].ToString()          : "";
                 celkomNakup += suma;
                 grafData.Add((sym, suma));
             }
@@ -81,7 +78,6 @@ namespace bankova_aplikacia
 
             SpinnerOverlay.Visibility = Visibility.Collapsed;
 
-            // donacitaj aktualne kurzy na pozadi
             _ = AktualizujKurzy(portfolio);
         }
 
@@ -90,7 +86,7 @@ namespace bankova_aplikacia
             double zostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
 
             string vstup = Microsoft.VisualBasic.Interaction.InputBox(
-                $"Dostupný zostatok: {zostatok:F2} €\n\nKoľko chceš vybrať?",
+                "Dostupný zostatok: " + zostatok.ToString("F2") + " €\n\nKoľko chceš vybrať?",
                 "Výber", "0");
 
             if (string.IsNullOrWhiteSpace(vstup)) return;
@@ -101,30 +97,29 @@ namespace bankova_aplikacia
             { MessageBox.Show("Zadaj platné číslo!"); return; }
 
             if (suma > zostatok)
-            { MessageBox.Show($"Nemáš dostatok! Zostatok: {zostatok:F2} €"); return; }
+            { MessageBox.Show("Nemáš dostatok! Zostatok: " + zostatok.ToString("F2") + " €"); return; }
 
             await Database.UlozZostatok(App.PrihlasenyEmail, zostatok - suma);
-            await Database.UlozHistoriu(App.PrihlasenyEmail, new Dictionary<string, object>
-            {
-                ["Gmail"]  = App.PrihlasenyEmail,
-                ["Datum"]  = DateTime.Now.ToString("dd.MM.yyyy HH:mm"),
-                ["Typ"]    = "Výber",
-                ["Celkom"] = suma.ToString("F2") + " €"
-            });
+
+            var zaznam = new Dictionary<string, object>();
+            zaznam["Gmail"]  = App.PrihlasenyEmail;
+            zaznam["Datum"]  = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
+            zaznam["Typ"]    = "Výber";
+            zaznam["Celkom"] = suma.ToString("F2") + " €";
+            await Database.UlozHistoriu(App.PrihlasenyEmail, zaznam);
 
             TxtUcetZostatok.Text = (zostatok - suma).ToString("F2") + " €";
-            MessageBox.Show($"Vybratých {suma:F2} €");
+            MessageBox.Show("Vybratých " + suma.ToString("F2") + " €");
         }
 
         private async void BtnPredat_Click(object sender, RoutedEventArgs e)
         {
             dynamic item = ((Button)sender).DataContext;
-            string docId   = item.DocId.ToString();
-            string symbol  = item.Symbol.ToString();
+            string docId    = item.DocId.ToString();
+            string symbol   = item.Symbol.ToString();
             double celkKusy = (double)item.Kusy;
             double sumaEur  = (double)item.SumaEur;
 
-            // Nacitaj aktualnu cenu
             double aktCena = celkKusy > 0 ? sumaEur / celkKusy : 0;
             try
             {
@@ -134,9 +129,8 @@ namespace bankova_aplikacia
             }
             catch { }
 
-            // Opytaj sa kolko kusov chce predat
             string vstup = Microsoft.VisualBasic.Interaction.InputBox(
-                $"Máš {celkKusy:F4} ks {symbol} (aktuálna cena: {aktCena:F2} €/ks)\n\nKoľko kusov chceš predať?",
+                "Máš " + celkKusy.ToString("F4") + " ks " + symbol + " (aktuálna cena: " + aktCena.ToString("F2") + " €/ks)\n\nKoľko kusov chceš predať?",
                 "Predaj", celkKusy.ToString("F4"));
 
             if (string.IsNullOrWhiteSpace(vstup)) return;
@@ -148,39 +142,38 @@ namespace bankova_aplikacia
             { MessageBox.Show("Zadaj platné číslo!"); return; }
 
             if (predavaneKusy > celkKusy)
-            { MessageBox.Show($"Nemáš dosť kusov! Máš len {celkKusy:F4} ks."); return; }
+            { MessageBox.Show("Nemáš dosť kusov! Máš len " + celkKusy.ToString("F4") + " ks."); return; }
 
             double predavanaSuma = predavaneKusy * aktCena;
 
             var result = MessageBox.Show(
-                $"Predať {predavaneKusy:F4} ks {symbol} za {predavanaSuma:F2} €?",
+                "Predať " + predavaneKusy.ToString("F4") + " ks " + symbol + " za " + predavanaSuma.ToString("F2") + " €?",
                 "Potvrdiť predaj", MessageBoxButton.YesNo);
             if (result != MessageBoxResult.Yes) return;
 
             await Database.CiastocnyPredaj(docId, predavaneKusy, predavaneKusy / celkKusy * sumaEur);
             double zostatok = await Database.NacitajZostatok(App.PrihlasenyEmail);
             await Database.UlozZostatok(App.PrihlasenyEmail, zostatok + predavanaSuma);
-            await Database.UlozHistoriu(App.PrihlasenyEmail, new Dictionary<string, object>
-            {
-                ["Gmail"]  = App.PrihlasenyEmail,
-                ["Datum"]  = DateTime.Now.ToString("dd.MM.yyyy HH:mm"),
-                ["Typ"]    = "Predaj",
-                ["Celkom"] = predavanaSuma.ToString("F2") + " €",
-                [symbol]   = predavaneKusy.ToString("F4") + " ks (" + predavanaSuma.ToString("F2") + " €)"
-            });
 
-            MessageBox.Show($"Predaných {predavaneKusy:F4} ks {symbol} za {predavanaSuma:F2} €");
+            var zaznam = new Dictionary<string, object>();
+            zaznam["Gmail"]  = App.PrihlasenyEmail;
+            zaznam["Datum"]  = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
+            zaznam["Typ"]    = "Predaj";
+            zaznam["Celkom"] = predavanaSuma.ToString("F2") + " €";
+            zaznam[symbol]   = predavaneKusy.ToString("F4") + " ks (" + predavanaSuma.ToString("F2") + " €)";
+            await Database.UlozHistoriu(App.PrihlasenyEmail, zaznam);
+
+            MessageBox.Show("Predaných " + predavaneKusy.ToString("F4") + " ks " + symbol + " za " + predavanaSuma.ToString("F2") + " €");
             await NacitajPortfolio();
         }
 
         async Task AktualizujKurzy(List<Dictionary<string, object>> portfolio)
         {
-            // ziskaj unikatne symboly
             var symboly = new List<string>();
             foreach (var p in portfolio)
             {
                 if (!p.ContainsKey("Symbol")) continue;
-                string s = p["Symbol"].ToString()!;
+                string s = p["Symbol"].ToString();
                 string ySymbol = (s == "BTC" || s == "ETH") ? s + "-USD" : s;
                 if (!symboly.Contains(ySymbol)) symboly.Add(ySymbol);
             }
@@ -193,25 +186,26 @@ namespace bankova_aplikacia
                     .Fields(Field.RegularMarketPrice)
                     .QueryAsync();
 
-                // aktualizuj polozky v zozname
                 var aktualizovany = new List<object>();
                 foreach (var poz in portfolio)
                 {
-                    string Get(string k) => poz.ContainsKey(k) ? poz[k].ToString()! : "-";
-                    double GetD(string k) => poz.ContainsKey(k) ? Convert.ToDouble(poz[k]) : 0;
-
-                    string symbol = Get("Symbol");
-                    double kusy   = GetD("Kusy");
-                    double suma   = GetD("SumaEur");
-                    string docId  = Get("DocId");
-                    string datum  = Get("Datum");
+                    string symbol = ZistiText(poz, "Symbol");
+                    double kusy   = ZistiCislo(poz, "Kusy");
+                    double suma   = ZistiCislo(poz, "SumaEur");
+                    string docId  = ZistiText(poz, "DocId");
+                    string datum  = ZistiText(poz, "Datum");
 
                     string ySymbol = (symbol == "BTC" || symbol == "ETH") ? symbol + "-USD" : symbol;
                     double aktCena = data.ContainsKey(ySymbol) ? (double)data[ySymbol][Field.RegularMarketPrice] : 0;
                     double aktHodnota = kusy * aktCena;
                     double zisk = aktHodnota - suma;
 
-                    string ziskText = (zisk >= 0 ? "+" : "") + zisk.ToString("F2") + " €";
+                    string ziskText;
+                    if (zisk >= 0)
+                        ziskText = "+" + zisk.ToString("F2") + " €";
+                    else
+                        ziskText = zisk.ToString("F2") + " €";
+
                     string farba = zisk >= 0 ? "#32B432" : "#DC3232";
 
                     aktualizovany.Add(new
@@ -231,7 +225,7 @@ namespace bankova_aplikacia
                 double celkomHodnota = 0;
                 foreach (var poz in portfolio)
                 {
-                    string sym = poz.ContainsKey("Symbol") ? poz["Symbol"].ToString()! : "";
+                    string sym = poz.ContainsKey("Symbol") ? poz["Symbol"].ToString() : "";
                     string yS  = (sym == "BTC" || sym == "ETH") ? sym + "-USD" : sym;
                     double k   = poz.ContainsKey("Kusy") ? Convert.ToDouble(poz["Kusy"]) : 0;
                     double c   = data.ContainsKey(yS) ? (double)data[yS][Field.RegularMarketPrice] : 0;
@@ -241,7 +235,7 @@ namespace bankova_aplikacia
                 var grafData2 = new List<(string, double)>();
                 foreach (var poz in portfolio)
                 {
-                    string sym = poz.ContainsKey("Symbol") ? poz["Symbol"].ToString()! : "";
+                    string sym = poz.ContainsKey("Symbol") ? poz["Symbol"].ToString() : "";
                     string yS  = (sym == "BTC" || sym == "ETH") ? sym + "-USD" : sym;
                     double k   = poz.ContainsKey("Kusy") ? Convert.ToDouble(poz["Kusy"]) : 0;
                     double c   = data.ContainsKey(yS) ? (double)data[yS][Field.RegularMarketPrice] : 0;
@@ -255,7 +249,7 @@ namespace bankova_aplikacia
                     AktualizujGrafPortfolia(grafData2);
                 });
             }
-            catch {  }
+            catch { }
         }
 
         void AktualizujGrafPortfolia(List<(string sym, double val)> items)
@@ -266,15 +260,28 @@ namespace bankova_aplikacia
             foreach (var (sym, val) in items)
             {
                 if (val <= 0) continue;
-                serie.Add(new PieSeries<double>
-                {
-                    Values = new double[] { val },
-                    Name = sym,
-                    Fill = new SolidColorPaint(SKColor.Parse(farby[i % farby.Length]))
-                });
+                var ps = new PieSeries<double>();
+                ps.Values = new double[] { val };
+                ps.Name = sym;
+                ps.Fill = new SolidColorPaint(SKColor.Parse(farby[i % farby.Length]));
+                serie.Add(ps);
                 i++;
             }
             GrafPortfolia.Series = serie;
+        }
+
+        static string ZistiText(Dictionary<string, object> d, string k)
+        {
+            if (d.ContainsKey(k))
+                return d[k].ToString();
+            return "-";
+        }
+
+        static double ZistiCislo(Dictionary<string, object> d, string k)
+        {
+            if (!d.ContainsKey(k))
+                return 0;
+            return Convert.ToDouble(d[k]);
         }
     }
 }

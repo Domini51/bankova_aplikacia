@@ -2,10 +2,8 @@ using BCrypt.Net;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Firestore;
 using Google.Cloud.Firestore.V1;
-using HarfBuzzSharp;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -67,14 +65,14 @@ namespace bankova_aplikacia
             var doc = snap.Documents[0].ToDictionary();
             string hash = doc["Heslo"].ToString()!;
 
-            // BCrypt hash starts with $2
+            // bcrypt hash zacina na $2
             if (hash.StartsWith("$2"))
             {
                 try { return BCrypt.Net.BCrypt.Verify(heslo, hash); }
                 catch { return false; }
             }
 
-            // Legacy SHA256 hash – verify and transparently migrate to BCrypt
+            // stary SHA256, over a migruj na bcrypt
             string sha256 = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(heslo))).ToLower();
             if (sha256 != hash) return false;
 

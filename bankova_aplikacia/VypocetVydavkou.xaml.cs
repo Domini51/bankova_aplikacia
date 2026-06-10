@@ -19,23 +19,42 @@ namespace bankova_aplikacia
             IsVisibleChanged += (_, e) => { if ((bool)e.NewValue) AktualizujGrafVydavkov(); };
         }
 
-        // vráti dvojicu (nazovBox, sumaBox, listBox) pre dané tlačidlo
-        (TextBox nazov, TextBox suma, ListBox zoznam)? NajdiKomponenty(Button btn)
-        {
-            if (!(btn.Parent is Grid grid)) return null;
-
-            if (grid.Children.Contains(NazovV1)) return (NazovV1, Suma1, ZoznamVydavkov);
-            if (grid.Children.Contains(NazovV2)) return (NazovV2, Suma2, ZoznamVydavkov2);
-            if (grid.Children.Contains(NazovV3)) return (NazovV3, Suma3, ZoznamVydavkov3);
-            return (NazovV4, Suma4, ZoznamVydavkov4);
-        }
-
         private void BtnPridajVydavok_Click(object sender, RoutedEventArgs e)
         {
-            var komp = NajdiKomponenty((Button)sender);
-            if (komp == null) return;
+            Button btn = (Button)sender;
+            Grid grid = btn.Parent as Grid;
+            if (grid == null) return;
 
-            var (nazovBox, sumaBox, zoznam) = komp.Value;
+            TextBox nazovBox = null;
+            TextBox sumaBox = null;
+            ListBox zoznam = null;
+
+            if (grid.Children.Contains(NazovV1))
+            {
+                nazovBox = NazovV1;
+                sumaBox = Suma1;
+                zoznam = ZoznamVydavkov;
+            }
+            else if (grid.Children.Contains(NazovV2))
+            {
+                nazovBox = NazovV2;
+                sumaBox = Suma2;
+                zoznam = ZoznamVydavkov2;
+            }
+            else if (grid.Children.Contains(NazovV3))
+            {
+                nazovBox = NazovV3;
+                sumaBox = Suma3;
+                zoznam = ZoznamVydavkov3;
+            }
+            else
+            {
+                nazovBox = NazovV4;
+                sumaBox = Suma4;
+                zoznam = ZoznamVydavkov4;
+            }
+
+            if (nazovBox == null) return;
 
             string nazov = nazovBox.Text;
             if (string.IsNullOrWhiteSpace(nazov) || nazov == "Názov výdavku") return;
@@ -84,7 +103,7 @@ namespace bankova_aplikacia
             return celkom;
         }
 
-        double ParseSuma(string? text)
+        double ParseSuma(string text)
         {
             if (text == null) return 0;
             var parts = text.Split('-');
@@ -118,17 +137,15 @@ namespace bankova_aplikacia
             double novy = aktualny + zostatok;
             await Database.UlozZostatok(App.PrihlasenyEmail, novy);
 
-            await Database.UlozHistoriu(App.PrihlasenyEmail, new Dictionary<string, object>
-            {
-                ["Gmail"]  = App.PrihlasenyEmail,
-                ["Datum"]  = DateTime.Now.ToString("dd.MM.yyyy HH:mm"),
-                ["Typ"]    = "Zostatok",
-                ["Celkom"] = zostatok.ToString("F2") + " €"
-            });
+            var zaznam = new Dictionary<string, object>();
+            zaznam["Gmail"]  = App.PrihlasenyEmail;
+            zaznam["Datum"]  = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
+            zaznam["Typ"]    = "Zostatok";
+            zaznam["Celkom"] = zostatok.ToString("F2") + " €";
+            await Database.UlozHistoriu(App.PrihlasenyEmail, zaznam);
 
             MessageBox.Show("Na účet bolo pripísaných " + zostatok.ToString("F2") + " €\nCelkový zostatok: " + novy.ToString("F2") + " €");
 
-            // vymazat vsetky vydavky a resetovat panel
             foreach (var lb in new[] { ZoznamVydavkov, ZoznamVydavkov2, ZoznamVydavkov3, ZoznamVydavkov4 })
                 lb.Items.Clear();
 
@@ -156,12 +173,11 @@ namespace bankova_aplikacia
             var serie = new List<ISeries>();
             for (int i = 0; i < 4; i++)
             {
-                serie.Add(new PieSeries<double>
-                {
-                    Values = new double[] { hodnoty[i] },
-                    Name = nazvy[i],
-                    Fill = new SolidColorPaint(SKColor.Parse(farby[i]))
-                });
+                var ps = new PieSeries<double>();
+                ps.Values = new double[] { hodnoty[i] };
+                ps.Name = nazvy[i];
+                ps.Fill = new SolidColorPaint(SKColor.Parse(farby[i]));
+                serie.Add(ps);
             }
 
             GrafVydavkov.Series = serie;
@@ -175,7 +191,6 @@ namespace bankova_aplikacia
             return s;
         }
 
-        // placeholder handlery pre textboxy
         private void NazovBox_GotFocus(object sender, RoutedEventArgs e)
         {
             var box = (TextBox)sender;
